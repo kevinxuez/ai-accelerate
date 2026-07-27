@@ -1,0 +1,15 @@
+{
+  "file": "Copy of Pro Cards - Crypto.docx",
+  "labeled_by": "manual review of the supplied 4-page DOCX and serialized OOXML",
+  "junk": [1],
+  "cards": [
+    {"n": 1, "header": 2, "cite": [3], "body": [4], "flags": ["paraphrase_no_source"]},
+    {"n": 2, "header": null, "cite": [5], "body": [7], "flags": ["no_header"]},
+    {"n": 3, "header": 9, "cite": [10, 11], "body": [12], "flags": []},
+    {"n": 4, "header": 14, "cite": [15, 16], "body": [18], "flags": []},
+    {"n": 5, "header": 20, "cite": [21], "body": [22], "flags": ["fully_marked"]},
+    {"n": 6, "header": 24, "cite": [25, 26], "body": [26], "flags": ["cite_body_same_paragraph"]},
+    {"n": 7, "header": 28, "cite": [29], "body": [30], "flags": ["no_marking"]},
+    {"n": 8, "header": 32, "cite": [33], "body": [34], "flags": ["cite_is_bare_headline", "no_marking"]}
+  ]
+}

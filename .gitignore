@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+.env
+.venv/
+.casefile_pending/
+casefile/chroma_db/*
+!casefile/chroma_db/.gitkeep
+casefile/data/tool_calls.jsonl
+casefile/data/calendar_events.json
+token.json
+credentials.json
+background/*
+
