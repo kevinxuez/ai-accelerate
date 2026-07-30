@@ -9,13 +9,17 @@ import os
 import re
 import tempfile
 import uuid
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from casefile.config import Settings, get_settings
-from casefile.llm import AnthropicJSONClient
+from casefile.llm import AnthropicJSONClient, LLMResponseError, LLMUnavailable
 from casefile.models import CardBoundary, CardRecord, ParagraphRecord
+from casefile.security.audit import SecurityAuditor
+from casefile.security.prompt_guard import inspect_text
 
 from .boundary_pass import BARE_URL, run_boundary_pass
 from .field_pass import label_card, parse_citation
@@ -46,6 +50,8 @@ class IngestionPreview:
     field_method: str
     validation: dict[str, Any]
     cards: list[dict[str, Any]]
+    document_injection_risk: str = "low"
+    document_injection_signals: list[str] = field(default_factory=list)
 
     @property
     def counts(self) -> dict[str, int]:
@@ -79,6 +85,12 @@ class IngestionPreview:
         ]
         if flagged:
             lines.append("  review: " + "; ".join(flagged))
+        if self.document_injection_risk != "low":
+            lines.append(
+                "  document injection risk: "
+                f"{self.document_injection_risk} "
+                f"({', '.join(self.document_injection_signals)})"
+            )
         lines.append(
             f"Resolution: {self.resolution} ({self.resolution_confidence} confidence)."
         )
@@ -94,8 +106,9 @@ class IngestionPreview:
             "token", "source_file", "source_sha256", "resolution",
             "resolution_confidence", "marking_convention", "marking_votes",
             "boundary_method", "field_method", "validation", "cards",
+            "document_injection_risk", "document_injection_signals",
         }
-        return cls(**{key: value[key] for key in allowed})
+        return cls(**{key: value[key] for key in allowed if key in value})
 
 
 def _sha256_file(path: Path) -> str:
@@ -169,6 +182,10 @@ def is_indexable(card: dict[str, Any]) -> bool:
         card.get("ingest_status") != "incomplete"
         and bool(card.get("body"))
         and not (set(card.get("flags", [])) & NON_INDEXABLE_FLAGS)
+        and not (
+            card.get("injection_risk") == "high"
+            and not bool(card.get("injection_approved"))
+        )
     )
 
 
@@ -200,6 +217,7 @@ class IngestionPipeline:
         self.llm = llm or AnthropicJSONClient(
             self.settings.anthropic_api_key, self.settings.model
         )
+        self.security_audit = SecurityAuditor(self.settings.security_audit_path)
 
     def preview(
         self,
@@ -214,9 +232,22 @@ class IngestionPipeline:
         records = paragraph_records(path)
         by_id: dict[int, ParagraphRecord] = {record.i: record for record in records}
         convention, votes = detect_convention(records)
-        boundary_result, validation, boundary_method = run_boundary_pass(
-            records, client=self.llm, use_model=use_model
+        document_decision = inspect_text(
+            "\n".join(record.text for record in records),
+            trust="untrusted_document",
         )
+        model_boundary_allowed = use_model and document_decision.safe_for_model
+        boundary_result, validation, boundary_method = run_boundary_pass(
+            records, client=self.llm, use_model=model_boundary_allowed
+        )
+        if use_model and not document_decision.safe_for_model:
+            boundary_method = "guarded-heuristic"
+            self.security_audit.record(
+                "document_model_processing_constrained",
+                decision=document_decision,
+                raw_text="\n".join(record.text for record in records),
+                details={"source_file": path.name, "stage": "boundary"},
+            )
         resolved, confidence = _resolution(path, resolution)
         cards: list[CardRecord] = []
         field_methods: set[str] = set()
@@ -231,14 +262,51 @@ class IngestionPipeline:
                 boundary.body, by_id, card_marking
             )
             flags = _boundary_flags(boundary, body, cite, read_spans)
-            labels, field_method = label_card(
-                header=header,
-                tag=tag,
-                cite=cite,
-                body=body,
-                source_file=path.name,
-                client=self.llm if use_model else None,
+            guard_decision = inspect_text(
+                "\n".join(part for part in (header, tag, cite, body) if part),
+                trust="untrusted_document",
             )
+            model_processing_skipped = use_model and not guard_decision.safe_for_model
+            if guard_decision.risk != "low":
+                flags.add("prompt_injection_suspected")
+                self.security_audit.record(
+                    "card_prompt_injection_detected",
+                    decision=guard_decision,
+                    raw_text="\n".join(part for part in (header, tag, cite, body) if part),
+                    details={
+                        "source_file": path.name,
+                        "card_content_sha256": hashlib.sha256(
+                            "\n".join(
+                                part for part in (header, tag, cite, body) if part
+                            ).encode("utf-8")
+                        ).hexdigest(),
+                    },
+                )
+            try:
+                labels, field_method = label_card(
+                    header=header,
+                    tag=tag,
+                    cite=cite,
+                    body=body,
+                    source_file=path.name,
+                    client=(
+                        self.llm
+                        if use_model and guard_decision.safe_for_model
+                        else None
+                    ),
+                )
+            except (LLMUnavailable, LLMResponseError, ValidationError):
+                labels, _ = label_card(
+                    header=header,
+                    tag=tag,
+                    cite=cite,
+                    body=body,
+                    source_file=path.name,
+                    client=None,
+                )
+                field_method = "heuristic-fallback"
+            if model_processing_skipped:
+                field_method = "guarded-heuristic"
             field_methods.add(field_method)
             flags.update(labels.get("flags", []))
             if labels.get("evidence_type") == "paraphrased" and not labels.get(
@@ -288,6 +356,9 @@ class IngestionPipeline:
                     source_paragraphs=source_paragraphs,
                     embedding_text=embedding_text,
                     returned_document=returned_document,
+                    injection_risk=guard_decision.risk,
+                    injection_signals=guard_decision.signals,
+                    model_processing_skipped=model_processing_skipped,
                     **citation,
                 )
             )
@@ -314,6 +385,8 @@ class IngestionPipeline:
             field_method="+".join(sorted(field_methods)) or "none",
             validation=validation,
             cards=[card.to_dict() for card in cards],
+            document_injection_risk=document_decision.risk,
+            document_injection_signals=document_decision.signals,
         )
         if stage:
             _atomic_json(self.settings.pending_dir / f"{token}.json", preview.to_dict())
@@ -354,6 +427,35 @@ class IngestionPipeline:
             "total_records": len(saved),
             "cards_path": str(self.settings.cards_path),
         }
+
+    def approve_quarantined_card(self, card_id: str) -> dict[str, Any]:
+        """Separately approve one high-risk card for retrieval without changing its text."""
+        if not re.fullmatch(r"[0-9a-f]{64}", card_id):
+            raise ValueError("Invalid card id")
+        if not self.settings.cards_path.exists():
+            raise FileNotFoundError("No ingested cards are available")
+        loaded = json.loads(self.settings.cards_path.read_text(encoding="utf-8"))
+        if not isinstance(loaded, list):
+            raise ValueError("Card ledger is malformed")
+        found = False
+        for card in loaded:
+            if card.get("id") == card_id:
+                if card.get("injection_risk") != "high":
+                    raise ValueError("Only high-risk quarantined cards require approval")
+                card["injection_approved"] = True
+                found = True
+                break
+        if not found:
+            raise FileNotFoundError("Card id was not found")
+        _atomic_json(self.settings.cards_path, loaded)
+        from casefile.retrieval import CaseFileIndex
+
+        searchable = CaseFileIndex(self.settings).rebuild_cards(loaded)
+        self.security_audit.record(
+            "quarantined_card_approved",
+            details={"card_id": card_id, "searchable_records": searchable},
+        )
+        return {"card_id": card_id, "injection_approved": True, "searchable_records": searchable}
 
 
 def main() -> None:

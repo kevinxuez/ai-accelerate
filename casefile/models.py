@@ -9,6 +9,7 @@ from typing import Any, Literal
 Role = Literal["student", "coach"]
 Side = Literal["pro", "con", "unknown"]
 IngestStatus = Literal["ok", "flagged", "incomplete"]
+Risk = Literal["low", "medium", "high"]
 
 
 @dataclass
@@ -99,6 +100,11 @@ class CardRecord:
     source_paragraphs: list[int]
     embedding_text: str
     returned_document: str
+    content_trust: Literal["untrusted_document"] = "untrusted_document"
+    injection_risk: Risk = "low"
+    injection_signals: list[str] = field(default_factory=list)
+    model_processing_skipped: bool = False
+    injection_approved: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -112,6 +118,10 @@ class RuleChunk:
     text: str
     document: str
     event: str = "Public Forum"
+    content_trust: Literal["untrusted_document"] = "untrusted_document"
+    injection_risk: Risk = "low"
+    injection_signals: list[str] = field(default_factory=list)
+    injection_approved: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -130,4 +140,3 @@ class ProgressRecord:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
-

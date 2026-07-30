@@ -13,6 +13,7 @@ from typing import Any
 from casefile.config import Settings, get_settings
 from casefile.ingest.pipeline import is_indexable
 from casefile.models import RuleChunk
+from casefile.security.prompt_guard import inspect_text
 
 
 DIMENSIONS = 384
@@ -54,6 +55,7 @@ def chunk_rules(path: str | Path) -> list[RuleChunk]:
         if not content:
             return
         identity = f"{source.name}:{current_number}:{current_title}"
+        decision = inspect_text(content, trust="untrusted_document")
         chunks.append(
             RuleChunk(
                 id=hashlib.sha256(identity.encode("utf-8")).hexdigest(),
@@ -61,6 +63,8 @@ def chunk_rules(path: str | Path) -> list[RuleChunk]:
                 section_title=current_title,
                 text=content,
                 document=source.name,
+                injection_risk=decision.risk,
+                injection_signals=decision.signals,
             )
         )
 
@@ -131,6 +135,11 @@ class CaseFileIndex:
                 continue
             chunks.extend(chunk_rules(path))
         payload = [chunk.to_dict() for chunk in chunks]
+        searchable = [
+            chunk
+            for chunk in chunks
+            if chunk.injection_risk != "high" or chunk.injection_approved
+        ]
         rules_json = self.settings.data_dir / "rules_chunks.json"
         rules_json.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -143,13 +152,13 @@ class CaseFileIndex:
             collection = self._client.get_or_create_collection(
                 "rules", metadata={"hnsw:space": "cosine"}
             )
-            if chunks:
+            if searchable:
                 collection.upsert(
-                    ids=[chunk.id for chunk in chunks],
-                    documents=[chunk.text for chunk in chunks],
+                    ids=[chunk.id for chunk in searchable],
+                    documents=[chunk.text for chunk in searchable],
                     embeddings=[
                         hash_embedding(f"{chunk.section_title}\n{chunk.text}")
-                        for chunk in chunks
+                        for chunk in searchable
                     ],
                     metadatas=[
                         {
@@ -158,10 +167,10 @@ class CaseFileIndex:
                             "document": chunk.document,
                             "event": chunk.event,
                         }
-                        for chunk in chunks
+                        for chunk in searchable
                     ],
                 )
-        return len(chunks)
+        return len(searchable)
 
     def search_cards(
         self,
@@ -227,7 +236,12 @@ class CaseFileIndex:
         ]
 
     def search_rules(self, question: str, n: int = 3) -> list[dict[str, Any]]:
-        chunks = self._load_rule_chunks()
+        chunks = [
+            chunk
+            for chunk in self._load_rule_chunks()
+            if chunk.get("injection_risk", "low") != "high"
+            or bool(chunk.get("injection_approved"))
+        ]
         if not chunks:
             return []
         query_vector = hash_embedding(question)
@@ -246,7 +260,13 @@ class CaseFileIndex:
             reverse=True,
         )
         return [
-            {**chunk, "score": round(score, 6), "_chunk_id": chunk["id"]}
+            {
+                **chunk,
+                "content_trust": chunk.get("content_trust", "untrusted_document"),
+                "retrieval_trust": "untrusted_retrieval",
+                "score": round(score, 6),
+                "_chunk_id": chunk["id"],
+            }
             for score, chunk in ranked[:n]
             if score >= self.settings.min_relevance
         ]
@@ -271,7 +291,10 @@ class CaseFileIndex:
         # The returned document always starts with the intact citation.
         return {
             **card,
+            "content_trust": card.get("content_trust", "untrusted_document"),
+            "retrieval_trust": "untrusted_retrieval",
+            "injection_risk": card.get("injection_risk", "low"),
+            "injection_signals": card.get("injection_signals", []),
             "score": round(score, 6),
             "_chunk_id": card["id"],
         }
-

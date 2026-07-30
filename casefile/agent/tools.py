@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import tempfile
 import threading
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,6 +18,23 @@ from casefile.config import Settings, get_settings
 from casefile.ingest.pipeline import IngestionPipeline
 from casefile.models import ProgressRecord
 from casefile.retrieval import CaseFileIndex
+from casefile.security.prompt_guard import (
+    BLOCKED_RESPONSE,
+    inspect_text,
+    redact_secrets,
+    summarize_untrusted_text,
+)
+from casefile.security.schemas import (
+    ApproveCardArgs,
+    AssessmentArgs,
+    DrillArgs,
+    IngestArgs,
+    ProgressArgs,
+    ScheduleArgs,
+    SearchCardsArgs,
+    SearchRulesArgs,
+)
+from pydantic import ValidationError
 
 from .roles import available_tools, denial
 
@@ -60,8 +79,18 @@ class CaseFileTools:
         active_resolution = resolution or context.resolution
         if not active_resolution:
             return "[INVALID] resolution is required for evidence retrieval."
+        try:
+            args = SearchCardsArgs(
+                query=query, side=side, resolution=active_resolution, n=n
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
+        decision = inspect_text(args.query, trust="untrusted_user")
+        if decision.action == "block":
+            self._audit(context, "search_cards", {"query": query}, BLOCKED_RESPONSE)
+            return BLOCKED_RESPONSE
         result = self.index.search_cards(
-            query, resolution=active_resolution, side=side, n=max(1, min(n, 10))
+            args.query, resolution=args.resolution, side=args.side, n=args.n
         )
         self._audit(
             context,
@@ -76,7 +105,15 @@ class CaseFileTools:
     ) -> list[dict[str, Any]] | str:
         if "search_rules" not in available_tools(context.role):
             return self._denied(context, "search rules", "search_rules")
-        result = self.index.search_rules(question, n=max(1, min(n, 8)))
+        try:
+            args = SearchRulesArgs(question=question, n=n)
+        except ValidationError as exc:
+            return self._invalid(exc)
+        decision = inspect_text(args.question, trust="untrusted_user")
+        if decision.action == "block":
+            self._audit(context, "search_rules", {"question": question}, BLOCKED_RESPONSE)
+            return BLOCKED_RESPONSE
+        result = self.index.search_rules(args.question, n=args.n)
         self._audit(context, "search_rules", {"question": question, "n": n}, result)
         return result
 
@@ -99,15 +136,24 @@ class CaseFileTools:
         if side not in {"pro", "con"}:
             return "[INVALID] side must be 'pro' or 'con'."
         active_resolution = resolution or context.resolution
+        try:
+            args = DrillArgs(
+                student_id=student_id,
+                speech_position=speech_position,
+                resolution=active_resolution,
+                side=side,
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
         records = self._read_progress()
         recent = next(
             (record for record in reversed(records) if record.get("student_id") == student_id),
             None,
         )
         weakness_tags = list((recent or {}).get("weakness_tags", []))
-        query = " ".join(weakness_tags) or f"{speech_position} evidence"
+        query = " ".join(weakness_tags) or f"{args.speech_position} evidence"
         cards = self.index.search_cards(
-            query, resolution=active_resolution, side=side, n=3
+            query, resolution=args.resolution, side=args.side, n=3
         )
         card_refs = [
             {
@@ -119,9 +165,9 @@ class CaseFileTools:
         ]
         drill = {
             "student_id": student_id,
-            "speech_position": speech_position,
-            "resolution": active_resolution,
-            "side": side,
+            "speech_position": args.speech_position,
+            "resolution": args.resolution,
+            "side": args.side,
             "weakness_tags": weakness_tags,
             "instructions": self._drill_instructions(speech_position, weakness_tags, card_refs),
             "card_refs": card_refs,
@@ -149,18 +195,36 @@ class CaseFileTools:
         weakness_tags: list[str],
         assessment_text: str,
         date: str | None = None,
+        idempotency_key: str | None = None,
     ) -> dict[str, Any] | str:
         if context.role != "coach" or "log_assessment" not in available_tools(context.role):
             return self._denied(context, "log assessment records", "log_assessment")
-        if not student_id or not assessment_text.strip():
-            return "[INVALID] student_id and assessment_text are required."
+        try:
+            args = AssessmentArgs(
+                student_id=student_id,
+                speech_position=speech_position,
+                resolution=resolution,
+                weakness_tags=weakness_tags,
+                assessment_text=assessment_text,
+                date=date,
+                idempotency_key=idempotency_key,
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
+        decision = inspect_text(args.assessment_text, trust="untrusted_user")
+        if not decision.safe_for_write_tools:
+            self._audit(context, "log_assessment", {"assessment_text": assessment_text}, BLOCKED_RESPONSE)
+            return BLOCKED_RESPONSE
+        prior = self._idempotent_result("log_assessment", args.idempotency_key)
+        if prior is not None:
+            return prior
         record = ProgressRecord(
-            student_id=student_id,
-            date=date or datetime.now(timezone.utc).date().isoformat(),
-            speech_position=speech_position,
-            resolution=resolution,
-            weakness_tags=sorted({tag.strip().lower() for tag in weakness_tags if tag.strip()}),
-            assessment_text=assessment_text.strip(),
+            student_id=args.student_id,
+            date=args.date or datetime.now(timezone.utc).date().isoformat(),
+            speech_position=args.speech_position,
+            resolution=args.resolution,
+            weakness_tags=sorted({tag.lower() for tag in args.weakness_tags}),
+            assessment_text=args.assessment_text,
             author_role="coach",
             author_id=context.user_id,
         ).to_dict()
@@ -168,6 +232,9 @@ class CaseFileTools:
             records = self._read_progress()
             records.append(record)
             self._atomic_json(self.settings.progress_path, records)
+            self._save_idempotent_result(
+                "log_assessment", args.idempotency_key, record
+            )
         self._audit(context, "log_assessment", record, {"written": True})
         return record
 
@@ -182,10 +249,14 @@ class CaseFileTools:
                 "read progress records for another student",
                 "get_progress",
             )
+        try:
+            args = ProgressArgs(student_id=student_id)
+        except ValidationError as exc:
+            return self._invalid(exc)
         result = [
             record
             for record in self._read_progress()
-            if record.get("student_id") == student_id
+            if record.get("student_id") == args.student_id
         ]
         self._audit(context, "get_progress", {"student_id": student_id}, result)
         return result
@@ -200,11 +271,31 @@ class CaseFileTools:
         dry_run: bool = True,
         confirmation_token: str | None = None,
         use_model: bool = True,
+        idempotency_key: str | None = None,
     ) -> dict[str, Any] | str:
         if context.role != "coach" or "ingest_cards" not in available_tools(context.role):
             return self._denied(context, "ingest evidence cards", "ingest_cards")
-        if confirmation_token:
-            result = self.ingestion.confirm(confirmation_token)
+        try:
+            args = IngestArgs(
+                file_path=file_path,
+                resolution=resolution,
+                side=side,
+                dry_run=dry_run,
+                confirmation_token=confirmation_token,
+                use_model=use_model,
+                idempotency_key=idempotency_key,
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
+        if args.confirmation_token:
+            prior = self._idempotent_result("ingest_confirm", args.idempotency_key)
+            if prior is not None:
+                return prior
+            self._validate_pending_ingest_path(args.confirmation_token)
+            result = self.ingestion.confirm(args.confirmation_token)
+            self._save_idempotent_result(
+                "ingest_confirm", args.idempotency_key, result
+            )
             self._audit(
                 context,
                 "ingest_cards",
@@ -212,17 +303,28 @@ class CaseFileTools:
                 result,
             )
             return result
-        if not file_path:
+        if not args.file_path:
             return "[INVALID] file_path or confirmation_token is required."
-        if not dry_run:
+        if not args.dry_run:
             return "[INVALID] a preview confirmation_token is required before writing."
+        safe_path = self._resolve_ingest_path(args.file_path)
         preview = self.ingestion.preview(
-            file_path,
-            resolution=resolution or context.resolution,
-            default_side=side,
-            use_model=use_model,
+            safe_path,
+            resolution=args.resolution or context.resolution,
+            default_side=args.side,
+            use_model=args.use_model,
         )
         result = preview.to_dict(include_cards=False)
+        result["quarantined_cards"] = [
+            {
+                "id": card["id"],
+                "injection_risk": card.get("injection_risk", "low"),
+                "injection_signals": card.get("injection_signals", []),
+            }
+            for card in preview.cards
+            if card.get("injection_risk") == "high"
+            and not card.get("injection_approved")
+        ]
         result["summary"] = preview.summary()
         self._audit(
             context,
@@ -237,6 +339,40 @@ class CaseFileTools:
         )
         return result
 
+    def approve_quarantined_card(
+        self,
+        context: ToolContext,
+        *,
+        card_id: str,
+        idempotency_key: str | None = None,
+    ) -> dict[str, Any] | str:
+        if (
+            context.role != "coach"
+            or "approve_quarantined_card" not in available_tools(context.role)
+        ):
+            return self._denied(
+                context, "approve quarantined evidence", "approve_quarantined_card"
+            )
+        try:
+            args = ApproveCardArgs(
+                card_id=card_id, idempotency_key=idempotency_key
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
+        prior = self._idempotent_result(
+            "approve_quarantined_card", args.idempotency_key
+        )
+        if prior is not None:
+            return prior
+        result = self.ingestion.approve_quarantined_card(args.card_id)
+        self._save_idempotent_result(
+            "approve_quarantined_card", args.idempotency_key, result
+        )
+        self._audit(
+            context, "approve_quarantined_card", {"card_id": args.card_id}, result
+        )
+        return result
+
     def schedule_session(
         self,
         context: ToolContext,
@@ -246,6 +382,8 @@ class CaseFileTools:
         duration_minutes: int = 45,
         attendee_email: str | None = None,
         timezone_name: str = "America/Chicago",
+        confirmation_token: str | None = None,
+        idempotency_key: str | None = None,
     ) -> dict[str, Any] | str:
         if "schedule_session" not in available_tools(context.role):
             return self._denied(context, "schedule sessions", "schedule_session")
@@ -253,43 +391,163 @@ class CaseFileTools:
             return self._denied(
                 context, "schedule a session for another student", "schedule_session"
             )
-        if not 15 <= duration_minutes <= 180:
-            return "[INVALID] duration_minutes must be between 15 and 180."
         try:
-            local_start = datetime.fromisoformat(start)
-            zone = ZoneInfo(timezone_name)
+            args = ScheduleArgs(
+                student_id=student_id,
+                start=start,
+                duration_minutes=duration_minutes,
+                attendee_email=attendee_email,
+                timezone_name=timezone_name,
+                confirmation_token=confirmation_token,
+                idempotency_key=idempotency_key,
+            )
+        except ValidationError as exc:
+            return self._invalid(exc)
+        decision = inspect_text(
+            "\n".join(
+                value
+                for value in (
+                    args.student_id,
+                    args.attendee_email or "",
+                )
+                if value
+            ),
+            trust="untrusted_user",
+        )
+        if not decision.safe_for_write_tools:
+            self._audit(
+                context,
+                "schedule_session",
+                {"student_id": args.student_id},
+                BLOCKED_RESPONSE,
+            )
+            return BLOCKED_RESPONSE
+        prior = self._idempotent_result("schedule_session", args.idempotency_key)
+        if prior is not None:
+            return prior
+        if not self.settings.mock_calendar and args.confirmation_token:
+            pending = self.settings.calendar_pending_dir / f"{args.confirmation_token}.json"
+            if not pending.exists():
+                return "[INVALID] Calendar confirmation token was not found or was already used."
+            staged = json.loads(pending.read_text(encoding="utf-8"))
+            if staged.get("caller_id") != context.user_id:
+                return self._denied(
+                    context, "confirm another caller's calendar event", "schedule_session"
+                )
+            result = self._google_calendar_event(staged["event"])
+            pending.unlink()
+            self._save_idempotent_result(
+                "schedule_session", args.idempotency_key, result
+            )
+            self._audit(
+                context,
+                "schedule_session",
+                {"confirmation_token": args.confirmation_token},
+                result,
+            )
+            return result
+        try:
+            local_start = datetime.fromisoformat(args.start)
+            zone = ZoneInfo(args.timezone_name)
             if local_start.tzinfo is None:
                 local_start = local_start.replace(tzinfo=zone)
         except (ValueError, TypeError) as exc:
             return f"[INVALID] start/timezone is not valid: {exc}"
         from datetime import timedelta
 
-        local_end = local_start + timedelta(minutes=duration_minutes)
+        local_end = local_start + timedelta(minutes=args.duration_minutes)
         event_body = {
-            "summary": f"CaseFile coaching session — {student_id}",
+            "summary": f"CaseFile coaching session — {args.student_id}",
             "description": f"Public Forum coaching for resolution {context.resolution}",
-            "start": {"dateTime": local_start.isoformat(), "timeZone": timezone_name},
-            "end": {"dateTime": local_end.isoformat(), "timeZone": timezone_name},
+            "start": {"dateTime": local_start.isoformat(), "timeZone": args.timezone_name},
+            "end": {"dateTime": local_end.isoformat(), "timeZone": args.timezone_name},
         }
-        if attendee_email:
-            event_body["attendees"] = [{"email": attendee_email}]
-        result = (
-            self._mock_calendar_event(event_body)
-            if self.settings.mock_calendar
-            else self._google_calendar_event(event_body)
-        )
+        if args.attendee_email:
+            event_body["attendees"] = [{"email": args.attendee_email}]
+        if self.settings.mock_calendar:
+            result = self._mock_calendar_event(event_body)
+        else:
+            token = uuid.uuid4().hex
+            staged = {
+                "caller_id": context.user_id,
+                "event": event_body,
+            }
+            self._atomic_json(self.settings.calendar_pending_dir / f"{token}.json", staged)
+            result = {
+                "confirmation_required": True,
+                "confirmation_token": token,
+                "event": event_body,
+                "summary": (
+                    "A real Google Calendar write requires confirmation. "
+                    f"Confirm with token: {token}"
+                ),
+            }
+        if not result.get("confirmation_required"):
+            self._save_idempotent_result(
+                "schedule_session", args.idempotency_key, result
+            )
         self._audit(
             context,
             "schedule_session",
             {
-                "student_id": student_id,
-                "start": start,
-                "duration_minutes": duration_minutes,
-                "timezone_name": timezone_name,
+                "student_id": args.student_id,
+                "start": args.start,
+                "duration_minutes": args.duration_minutes,
+                "timezone_name": args.timezone_name,
             },
             result,
         )
         return result
+
+    @staticmethod
+    def _invalid(exc: ValidationError) -> str:
+        first = exc.errors(include_url=False)[0]
+        location = ".".join(str(item) for item in first.get("loc", ())) or "arguments"
+        return f"[INVALID] {location}: {first.get('msg', 'invalid value')}."
+
+    def _resolve_ingest_path(self, value: str) -> Path:
+        path = Path(value).expanduser().resolve()
+        if not path.is_file():
+            raise FileNotFoundError(f"Ingest file was not found: {path}")
+        if path.suffix.lower() != ".docx":
+            raise ValueError("Only .docx ingestion is supported")
+        if not any(path.is_relative_to(root) for root in self.settings.allowed_ingest_roots):
+            roots = ", ".join(str(root) for root in self.settings.allowed_ingest_roots)
+            raise ValueError(f"Ingest path is outside configured roots: {roots}")
+        return path
+
+    def _validate_pending_ingest_path(self, token: str) -> None:
+        pending = self.settings.pending_dir / f"{token}.json"
+        if not pending.exists():
+            raise FileNotFoundError("Confirmation token was not found or was already used")
+        value = json.loads(pending.read_text(encoding="utf-8"))
+        self._resolve_ingest_path(str(value.get("source_file", "")))
+
+    def _read_idempotency(self) -> dict[str, Any]:
+        if not self.settings.idempotency_path.exists():
+            return {}
+        value = json.loads(self.settings.idempotency_path.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+
+    def _idempotent_result(self, operation: str, key: str | None) -> Any | None:
+        if not key:
+            return None
+        return self._read_idempotency().get(self._idempotency_slot(operation, key))
+
+    def _save_idempotent_result(
+        self, operation: str, key: str | None, result: Any
+    ) -> None:
+        if not key:
+            return
+        with _write_lock:
+            values = self._read_idempotency()
+            values[self._idempotency_slot(operation, key)] = result
+            self._atomic_json(self.settings.idempotency_path, values)
+
+    @staticmethod
+    def _idempotency_slot(operation: str, key: str) -> str:
+        digest = hashlib.sha256(key.encode("utf-8")).hexdigest()
+        return f"{operation}:{digest}"
 
     def _denied(self, context: ToolContext, action: str, tool: str) -> str:
         result = denial(context.role, action)
@@ -325,17 +583,36 @@ class CaseFileTools:
         entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "tool": tool,
-            "arguments": arguments,
+            "arguments": self._safe_audit_arguments(arguments),
             "caller_role": context.role,
             "caller_id": context.user_id,
             "active_resolution": context.resolution,
             "retrieved_chunk_ids": retrieved,
-            "outcome": "denied" if isinstance(result, str) and result.startswith("[DENIED]") else "ok",
+            "outcome": (
+                "denied"
+                if isinstance(result, str) and result.startswith("[DENIED]")
+                else "blocked"
+                if isinstance(result, str)
+                and result.startswith("[BLOCKED_PROMPT_INJECTION]")
+                else "ok"
+            ),
         }
         with _write_lock:
             self.settings.audit_path.parent.mkdir(parents=True, exist_ok=True)
             with self.settings.audit_path.open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+    @staticmethod
+    def _safe_audit_arguments(arguments: dict[str, Any]) -> dict[str, Any]:
+        safe: dict[str, Any] = {}
+        for key, value in arguments.items():
+            if key in {"query", "question", "assessment_text"} and isinstance(value, str):
+                safe[key] = summarize_untrusted_text(value)
+            elif key == "file_path" and isinstance(value, str):
+                safe[key] = str(Path(value).name)
+            else:
+                safe[key] = redact_secrets(value, key=key)
+        return safe
 
     @staticmethod
     def _drill_instructions(

@@ -7,7 +7,17 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from pydantic import ValidationError
+
 from casefile.llm import AnthropicJSONClient, LLMResponseError, LLMUnavailable
+from casefile.security.audit import RateLimiter, SecurityAuditor
+from casefile.security.prompt_guard import (
+    BLOCKED_RESPONSE,
+    GuardDecision,
+    inspect_text,
+    summarize_untrusted_text,
+)
+from casefile.security.schemas import ClassifierOutput
 
 from .prompts import CLASSIFIER_SYSTEM
 from .state import AgentState
@@ -15,16 +25,6 @@ from .tools import CaseFileTools, ToolContext
 
 
 MAX_ITERATIONS = 5
-INTENTS = {
-    "retrieve_evidence",
-    "explain_rule",
-    "generate_drill",
-    "progress",
-    "ingest_cards",
-    "schedule_session",
-    "integrity_refusal",
-    "unknown",
-}
 SPEECH_POSITIONS = (
     "first constructive",
     "second constructive",
@@ -88,7 +88,13 @@ def _confirmation_token(text: str) -> str | None:
 
 def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]:
     lowered = text.lower()
-    if _confirmation_token(text) and re.search(r"\bconfirm\b", lowered):
+    if (
+        _confirmation_token(text)
+        and re.search(r"\bconfirm\b", lowered)
+        and re.search(r"\b(?:calendar|schedule|session|meeting)\b", lowered)
+    ):
+        intent = "schedule_session"
+    elif _confirmation_token(text) and re.search(r"\bconfirm\b", lowered):
         intent = "ingest_cards"
     elif re.search(
         r"\b(?:ingest|import|upload)\b|"
@@ -142,7 +148,11 @@ def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]
             missing.append("DOCX file path")
         if not state.get("resolution"):
             missing.append("resolution")
-    elif intent == "schedule_session" and not parameters["start"]:
+    elif (
+        intent == "schedule_session"
+        and not parameters["start"]
+        and not parameters["confirmation_token"]
+    ):
         missing.append("start time in ISO format")
     elif intent == "unknown":
         missing.append("whether you want evidence, a rule, a drill, or progress")
@@ -160,6 +170,8 @@ def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]
 class AgentNodes:
     tools: CaseFileTools
     llm: AnthropicJSONClient
+    security_audit: SecurityAuditor
+    rate_limiter: RateLimiter
 
     def receive_request(self, state: AgentState) -> AgentState:
         role = state.get("role", "")
@@ -172,21 +184,92 @@ class AgentNodes:
         return {
             "iterations": int(state.get("iterations", 0)),
             "tool_trace": list(state.get("tool_trace", [])),
+            "security_events": list(state.get("security_events", [])),
+        }
+
+    def screen_request(self, state: AgentState) -> AgentState:
+        text = _message(state)
+        decision = inspect_text(text, trust="untrusted_user")
+        if not self.rate_limiter.allow(
+            f"agent:{state.get('user_id', '')}:{state.get('role', '')}"
+        ):
+            decision = GuardDecision(
+                risk="high",
+                action="block",
+                signals=["request_rate_limit"],
+                safe_for_model=False,
+                safe_for_write_tools=False,
+                trust="untrusted_user",
+            )
+        event = {
+            "event": "request_screened",
+            "risk": decision.risk,
+            "action": decision.action,
+            "signals": decision.signals,
+        }
+        self.security_audit.record(
+            "request_screened",
+            decision=decision,
+            request_id=state.get("request_id"),
+            user_id=state.get("user_id"),
+            raw_text=text,
+            details={"role": state.get("role"), "resolution": state.get("resolution")},
+        )
+        return {
+            "security_decision": decision.to_dict(),
+            "security_events": [*state.get("security_events", []), event],
+        }
+
+    def block_prompt_injection(self, state: AgentState) -> AgentState:
+        signals = state.get("security_decision", {}).get("signals", [])
+        response = (
+            "[RATE_LIMITED] Request rate limit exceeded."
+            if "request_rate_limit" in signals
+            else BLOCKED_RESPONSE
+        )
+        return {
+            "intent": "unknown",
+            "response": response,
+            "tool_trace": list(state.get("tool_trace", [])),
         }
 
     def classify_intent(self, state: AgentState) -> AgentState:
         text = _message(state)
         classified = deterministic_classification(text, state)
-        if self.llm.available:
+        deterministic_intent = classified["intent"]
+        decision = state.get("security_decision", {})
+        if self.llm.available and decision.get("safe_for_model", True):
             try:
                 value = self.llm.complete_json(
                     system=CLASSIFIER_SYSTEM.format(
                         tools=", ".join(sorted(self.tools.names_for_role(state["role"])))
                     ),
-                    user=text,
+                    user=json.dumps(
+                        {
+                            "trust": "untrusted_user",
+                            "length": len(text),
+                            "content": text,
+                        },
+                        ensure_ascii=False,
+                    ),
                     max_tokens=500,
+                    schema=ClassifierOutput,
                 )
-                if value.get("intent") in INTENTS:
+                value = ClassifierOutput.model_validate(value).model_dump(mode="json")
+                # A model may resolve an unknown read-only request, but cannot create
+                # write authority or override a deterministic policy/safety route.
+                if (
+                    deterministic_intent == "unknown"
+                    and value.get("intent")
+                    in {
+                        "retrieve_evidence",
+                        "explain_rule",
+                        "generate_drill",
+                        "progress",
+                        "integrity_refusal",
+                        "unknown",
+                    }
+                ):
                     classified["intent"] = value["intent"]
                     for key in (
                         "side", "student_id", "speech_position", "file_path",
@@ -197,7 +280,7 @@ class AgentNodes:
                     for key in ("clarification_needed", "clarification_question"):
                         if key in value:
                             classified[key] = value[key]
-            except (LLMUnavailable, LLMResponseError):
+            except (LLMUnavailable, LLMResponseError, ValidationError):
                 pass
         intent = classified.pop("intent")
         clarification_needed = bool(classified.pop("clarification_needed", False))
@@ -230,7 +313,16 @@ class AgentNodes:
             "schedule_session": "schedule_session",
             "integrity_refusal": "integrity_refusal",
         }
-        return {"next_action": mapping.get(state.get("intent", "unknown"), "unknown")}
+        action = mapping.get(state.get("intent", "unknown"), "unknown")
+        decision = state.get("security_decision", {})
+        message = _message(state)
+        write_request = action in {"ingest_cards", "schedule_session"} or (
+            action == "progress"
+            and bool(re.search(r"\b(?:log|record|add)\b", message, re.I))
+        )
+        if write_request and not decision.get("safe_for_write_tools", True):
+            action = "security_block"
+        return {"next_action": action}
 
     def execute_tools(self, state: AgentState) -> AgentState:
         if int(state.get("iterations", 0)) >= MAX_ITERATIONS:
@@ -274,6 +366,7 @@ class AgentNodes:
                         else []
                     ),
                     "assessment_text": assessment,
+                    "idempotency_key": state.get("request_id"),
                 }
                 result = self.tools.log_assessment(context, **arguments)
                 if params.get("start") and re.search(
@@ -284,6 +377,7 @@ class AgentNodes:
                         "student_id": student_id,
                         "start": params["start"],
                         "duration_minutes": 45,
+                        "idempotency_key": state.get("request_id"),
                     }
                     calendar_result = self.tools.schedule_session(
                         context, **calendar_arguments
@@ -296,12 +390,12 @@ class AgentNodes:
                         [
                             {
                                 "tool": "log_assessment",
-                                "arguments": arguments,
+                                "arguments": self._trace_arguments(arguments),
                                 "result_type": type(assessment_result).__name__,
                             },
                             {
                                 "tool": "schedule_session",
-                                "arguments": calendar_arguments,
+                                "arguments": self._trace_arguments(calendar_arguments),
                                 "result_type": type(calendar_result).__name__,
                             },
                         ]
@@ -316,6 +410,7 @@ class AgentNodes:
                 "side": params.get("side") if params.get("side") in {"pro", "con"} else None,
                 "dry_run": not bool(params.get("confirmation_token")),
                 "confirmation_token": params.get("confirmation_token"),
+                "idempotency_key": state.get("request_id"),
             }
             result = self.tools.ingest_cards(context, **arguments)
         elif action == "schedule_session":
@@ -326,8 +421,13 @@ class AgentNodes:
                 "start": params.get("start") or "",
                 "duration_minutes": int(duration.group(1)) if duration else 45,
                 "attendee_email": email.group(0) if email else None,
+                "confirmation_token": params.get("confirmation_token"),
+                "idempotency_key": state.get("request_id"),
             }
             result = self.tools.schedule_session(context, **arguments)
+        elif action == "security_block":
+            arguments = {}
+            result = BLOCKED_RESPONSE
         elif action == "integrity_refusal":
             arguments = {}
             result = {
@@ -339,7 +439,11 @@ class AgentNodes:
             result = "I couldn't determine an action."
         if not trace_entries:
             trace_entries.append(
-                {"tool": action, "arguments": arguments, "result_type": type(result).__name__}
+                {
+                    "tool": action,
+                    "arguments": self._trace_arguments(arguments),
+                    "result_type": type(result).__name__,
+                }
             )
         trace = [*state.get("tool_trace", []), *trace_entries]
         return {"tool_result": result, "tool_trace": trace}
@@ -405,6 +509,8 @@ class AgentNodes:
         if action == "ingest_cards":
             return {"response": result.get("summary", json.dumps(result, indent=2))}
         if action == "schedule_session":
+            if result.get("confirmation_required"):
+                return {"response": result["summary"]}
             mode = "mock calendar" if result.get("mock") else "Google Calendar"
             return {
                 "response": f"Session scheduled in {mode}: {result['start']['dateTime']} (event {result['id']})."
@@ -412,6 +518,18 @@ class AgentNodes:
         if action == "integrity_refusal":
             return {"response": f"{result['refusal']} {result['alternative']}"}
         return {"response": json.dumps(result, ensure_ascii=False, indent=2)}
+
+    @staticmethod
+    def _trace_arguments(arguments: dict[str, Any]) -> dict[str, Any]:
+        safe: dict[str, Any] = {}
+        for key, value in arguments.items():
+            if key in {"query", "question", "assessment_text"} and isinstance(value, str):
+                safe[key] = summarize_untrusted_text(value)
+            elif "token" in key.lower() or "idempotency" in key.lower():
+                safe[key] = "[REDACTED]" if value else value
+            else:
+                safe[key] = value
+        return safe
 
     def should_continue(self, state: AgentState) -> AgentState:
         iterations = int(state.get("iterations", 0)) + 1

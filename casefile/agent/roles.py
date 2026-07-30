@@ -18,6 +18,7 @@ TOOLS_BY_ROLE = {
         "log_assessment",
         "get_progress",
         "ingest_cards",
+        "approve_quarantined_card",
         "schedule_session",
     },
 }
@@ -29,4 +30,3 @@ def available_tools(role: str) -> set[str]:
 
 def denial(role: str, action: str) -> str:
     return f"[DENIED] role '{role}' cannot {action}."
-

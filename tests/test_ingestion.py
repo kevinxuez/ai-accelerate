@@ -87,3 +87,25 @@ def test_confirmation_writes_once_and_rebuilds_search_index(
     with pytest.raises(FileNotFoundError):
         pipeline.confirm(preview.token)
 
+
+def test_invalid_model_output_falls_back_to_deterministic_ingestion(
+    sample_docx, isolated_settings
+):
+    class InvalidModel:
+        available = True
+
+        def complete_json(self, **kwargs):
+            return {"unexpected": "schema smuggling"}
+
+    preview = IngestionPipeline(
+        isolated_settings, llm=InvalidModel()
+    ).preview(
+        sample_docx,
+        resolution="2026-09-CRYPTO",
+        default_side="pro",
+        use_model=True,
+        stage=False,
+    )
+    assert preview.boundary_method == "heuristic-fallback"
+    assert preview.field_method == "heuristic-fallback"
+    assert preview.validation["valid"] is True

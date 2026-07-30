@@ -13,6 +13,8 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any
 
+from pydantic import BaseModel, ValidationError
+
 
 class LLMUnavailable(RuntimeError):
     pass
@@ -38,6 +40,7 @@ class AnthropicJSONClient:
         system: str,
         user: str,
         max_tokens: int = 4000,
+        schema: type[BaseModel] | None = None,
     ) -> dict[str, Any]:
         if not self.api_key:
             raise LLMUnavailable("ANTHROPIC_API_KEY is not configured")
@@ -77,4 +80,11 @@ class AnthropicJSONClient:
             raise LLMResponseError(f"Model did not return valid JSON: {exc}") from exc
         if not isinstance(value, dict):
             raise LLMResponseError("Model JSON must be an object")
+        if schema is not None:
+            try:
+                return schema.model_validate(value).model_dump(mode="json")
+            except ValidationError as exc:
+                raise LLMResponseError(
+                    f"Model JSON failed the {schema.__name__} schema"
+                ) from exc
         return value

@@ -23,6 +23,12 @@ def _env_bool(name: str, default: bool) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _env_roots(name: str, defaults: tuple[Path, ...]) -> tuple[Path, ...]:
+    value = os.getenv(name)
+    raw = value.split(os.pathsep) if value else [str(path) for path in defaults]
+    return tuple(Path(path).expanduser().resolve() for path in raw if path.strip())
+
+
 @dataclass(frozen=True)
 class Settings:
     data_dir: Path = _env_path("CASEFILE_DATA_DIR", PACKAGE_ROOT / "data")
@@ -36,6 +42,10 @@ class Settings:
         "GOOGLE_CALENDAR_CREDENTIALS", REPO_ROOT / "credentials.json"
     )
     google_token: Path = _env_path("GOOGLE_CALENDAR_TOKEN", REPO_ROOT / "token.json")
+    allowed_ingest_roots: tuple[Path, ...] = _env_roots(
+        "CASEFILE_INGEST_ROOTS", (REPO_ROOT / "background",)
+    )
+    requests_per_minute: int = int(os.getenv("CASEFILE_REQUESTS_PER_MINUTE", "60"))
 
     @property
     def cards_path(self) -> Path:
@@ -53,12 +63,24 @@ class Settings:
     def pending_dir(self) -> Path:
         return self.data_dir / ".casefile_pending"
 
+    @property
+    def calendar_pending_dir(self) -> Path:
+        return self.data_dir / ".calendar_pending"
+
+    @property
+    def security_audit_path(self) -> Path:
+        return self.data_dir / "security_events.jsonl"
+
+    @property
+    def idempotency_path(self) -> Path:
+        return self.data_dir / "idempotency.json"
+
     def ensure_runtime_dirs(self) -> None:
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.chroma_dir.mkdir(parents=True, exist_ok=True)
         self.pending_dir.mkdir(parents=True, exist_ok=True)
+        self.calendar_pending_dir.mkdir(parents=True, exist_ok=True)
 
 
 def get_settings() -> Settings:
     return Settings()
-

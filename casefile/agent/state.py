@@ -25,4 +25,6 @@ class AgentState(TypedDict, total=False):
     tool_result: Any
     tool_trace: list[dict[str, Any]]
     response: str
-
+    request_id: str
+    security_decision: dict[str, Any]
+    security_events: list[dict[str, Any]]

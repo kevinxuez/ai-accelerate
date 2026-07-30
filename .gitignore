@@ -6,11 +6,13 @@ __pycache__/
 .env
 .venv/
 .casefile_pending/
+.calendar_pending/
 casefile/chroma_db/*
 !casefile/chroma_db/.gitkeep
 casefile/data/tool_calls.jsonl
+casefile/data/security_events.jsonl
+casefile/data/idempotency.json
 casefile/data/calendar_events.json
 token.json
 credentials.json
 background/*
-

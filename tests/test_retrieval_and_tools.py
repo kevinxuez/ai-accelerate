@@ -31,6 +31,9 @@ def test_filtered_retrieval_and_explicit_empty_branch(sample_docx, isolated_sett
     assert cards
     assert cards[0]["cite_full"].startswith("Federal Trade Commission")
     assert cards[0]["returned_document"].startswith(cards[0]["cite_full"])
+    assert cards[0]["content_trust"] == "untrusted_document"
+    assert cards[0]["retrieval_trust"] == "untrusted_retrieval"
+    assert cards[0]["injection_risk"] == "low"
     assert index.search_cards(
         "consumer protection", resolution="WRONG-RESOLUTION", side="pro"
     ) == []
@@ -54,6 +57,16 @@ def test_role_checks_live_inside_tools(isolated_settings):
         weakness_tags=["collapse"],
         assessment_text="Needs work.",
     ) == "[DENIED] role 'student' cannot log assessment records."
+    assert tools.ingest_cards(
+        student,
+        file_path="anything.docx",
+        dry_run=False,
+    ) == "[DENIED] role 'student' cannot ingest evidence cards."
+    assert tools.ingest_cards(
+        coach,
+        file_path="anything.docx",
+        dry_run=False,
+    ) == "[INVALID] a preview confirmation_token is required before writing."
     written = tools.log_assessment(
         coach,
         student_id="alice",
