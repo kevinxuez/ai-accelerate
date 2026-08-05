@@ -16,6 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from casefile.agent.graph import CaseFileAgent
 from casefile.agent.tools import ToolContext
+from casefile.api.nsda import provider_router as nsda_provider_router
 from casefile.api.nsda import router as nsda_mock_router
 from casefile.config import get_settings
 from casefile.security.audit import RateLimiter
@@ -23,6 +24,7 @@ from casefile.security.audit import RateLimiter
 
 app = FastAPI(title="CaseFile", version="0.1.0")
 app.include_router(nsda_mock_router)
+app.include_router(nsda_provider_router)
 DEMO_HTML = Path(__file__).with_name("demo.html").read_text(encoding="utf-8")
 MAX_DOCX_FILES = 5_000
 MAX_DOCX_UNCOMPRESSED_BYTES = 50 * 1024 * 1024

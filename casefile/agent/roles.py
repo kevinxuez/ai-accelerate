@@ -6,7 +6,9 @@ from __future__ import annotations
 TOOLS_BY_ROLE = {
     "student": {
         "search_cards",
+        "generate_argument",
         "search_rules",
+        "get_current_topic",
         "generate_drill",
         "coach_simulation",
         "get_progress",
@@ -15,7 +17,9 @@ TOOLS_BY_ROLE = {
     },
     "coach": {
         "search_cards",
+        "generate_argument",
         "search_rules",
+        "get_current_topic",
         "generate_drill",
         "coach_simulation",
         "log_assessment",

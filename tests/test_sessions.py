@@ -78,6 +78,44 @@ def test_explicit_new_intent_replaces_pending_clarification(isolated_settings) -
     assert result["awaiting_clarification"] is False
 
 
+def test_evidence_search_replaces_pending_ingestion_even_with_joined_word_typo(
+    isolated_settings,
+) -> None:
+    agent = CaseFileAgent(isolated_settings)
+    session_id = "session-ingest-to-search"
+
+    first = agent.ask(
+        "Could you help me add this file",
+        role="student",
+        user_id="student-1",
+        resolution="R1",
+        session_id=session_id,
+    )
+    assert first["intent"] == "ingest_cards"
+    assert "DOCX" in first["response"]
+
+    continued = agent.ask(
+        "Add a file?",
+        role="student",
+        user_id="student-1",
+        resolution="R1",
+        session_id=session_id,
+    )
+    assert continued["intent"] == "ingest_cards"
+
+    switched = agent.ask(
+        "Help find someevidence for me",
+        role="student",
+        user_id="student-1",
+        resolution="R1",
+        session_id=session_id,
+    )
+    assert switched["intent"] == "retrieve_evidence"
+    assert switched["resumed_from_clarification"] is False
+    assert switched["response"] == "Please provide side (Pro or Con)."
+    assert "DOCX" not in switched["response"]
+
+
 def test_simulated_coach_continues_in_student_session_and_can_end(
     isolated_settings,
 ) -> None:

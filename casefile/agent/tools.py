@@ -9,6 +9,7 @@ import tempfile
 import threading
 import uuid
 from dataclasses import dataclass
+from datetime import date as calendar_date
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ from zoneinfo import ZoneInfo
 from casefile.config import Settings, get_settings
 from casefile.ingest.pipeline import IngestionPipeline
 from casefile.models import ProgressRecord
+from casefile.providers.nsda import NSDANotFound, NSDAProviderError, build_nsda_provider
 from casefile.retrieval import CaseFileIndex
 from casefile.security.prompt_guard import (
     BLOCKED_RESPONSE,
@@ -27,6 +29,7 @@ from casefile.security.prompt_guard import (
 from casefile.security.schemas import (
     ApproveCardArgs,
     AssessmentArgs,
+    CurrentTopicArgs,
     DrillArgs,
     IngestArgs,
     ProgressArgs,
@@ -71,6 +74,7 @@ class CaseFileTools:
         side: str,
         resolution: str | None = None,
         n: int = 5,
+        source_files: list[str] | None = None,
     ) -> list[dict[str, Any]] | str:
         if "search_cards" not in available_tools(context.role):
             return self._denied(context, "search evidence", "search_cards")
@@ -81,7 +85,11 @@ class CaseFileTools:
             return "[INVALID] resolution is required for evidence retrieval."
         try:
             args = SearchCardsArgs(
-                query=query, side=side, resolution=active_resolution, n=n
+                query=query,
+                side=side,
+                resolution=active_resolution,
+                n=n,
+                source_files=source_files or [],
             )
         except ValidationError as exc:
             return self._invalid(exc)
@@ -90,12 +98,22 @@ class CaseFileTools:
             self._audit(context, "search_cards", {"query": query}, BLOCKED_RESPONSE)
             return BLOCKED_RESPONSE
         result = self.index.search_cards(
-            args.query, resolution=args.resolution, side=args.side, n=args.n
+            args.query,
+            resolution=args.resolution,
+            side=args.side,
+            source_files=args.source_files,
+            n=args.n,
         )
         self._audit(
             context,
             "search_cards",
-            {"query": query, "side": side, "resolution": active_resolution, "n": n},
+            {
+                "query": query,
+                "side": side,
+                "resolution": active_resolution,
+                "n": n,
+                "source_files": args.source_files,
+            },
             result,
         )
         return result
@@ -115,6 +133,61 @@ class CaseFileTools:
             return BLOCKED_RESPONSE
         result = self.index.search_rules(args.question, n=args.n)
         self._audit(context, "search_rules", {"question": question, "n": n}, result)
+        return result
+
+    def get_current_topic(
+        self,
+        context: ToolContext,
+        *,
+        event: str = "Public Forum",
+        as_of: str | None = None,
+    ) -> dict[str, Any] | str:
+        """Read the configured NSDA-compatible provider's current topic."""
+
+        if "get_current_topic" not in available_tools(context.role):
+            return self._denied(context, "look up the current topic", "get_current_topic")
+        try:
+            args = CurrentTopicArgs(event=event, as_of=as_of)
+            requested_date = (
+                calendar_date.fromisoformat(args.as_of) if args.as_of else None
+            )
+        except (ValidationError, ValueError) as exc:
+            if isinstance(exc, ValidationError):
+                return self._invalid(exc)
+            return "[INVALID] as_of must be a valid date in YYYY-MM-DD format."
+
+        provider = build_nsda_provider(self.settings)
+        try:
+            topic = provider.current_topic(args.event, as_of=requested_date)
+            metadata = provider.metadata()
+        except NSDANotFound:
+            result: dict[str, Any] | str = (
+                f"No NSDA-compatible {args.event} topic is available"
+                + (f" for {args.as_of}." if args.as_of else ".")
+            )
+        except NSDAProviderError:
+            result = "[UNAVAILABLE] The configured NSDA-compatible provider could not return a topic."
+        else:
+            result = {
+                "topic": topic,
+                "provider": metadata.get("provider", "NSDA-compatible provider"),
+                "backend": provider.backend,
+                "dataset_version": metadata.get("dataset_version"),
+                "mock": bool(metadata.get("mock")),
+                "synthetic": bool(metadata.get("synthetic")),
+                "disclaimer": metadata.get("disclaimer", ""),
+            }
+        finally:
+            close = getattr(provider, "close", None)
+            if callable(close):
+                close()
+
+        self._audit(
+            context,
+            "get_current_topic",
+            {"event": args.event, "as_of": args.as_of},
+            result,
+        )
         return result
 
     def generate_drill(

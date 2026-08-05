@@ -4,7 +4,8 @@ title: 11 · Synthetic NSDA provider
 flowchart TD
     A(["CaseFile consumer or<br/>external test client"]) --> B{"Entry surface"}
     B -- Mock REST API --> C["GET /mock/nsda/v1<br/>resource"]
-    B -- Provider adapter --> D{"NSDA_BASE_URL<br/>configured?"}
+    B -- Provider facade --> R["GET /nsda/v1<br/>resource"]
+    R --> D{"NSDA_BASE_URL<br/>configured?"}
     D -- no --> E["Read validated bundled<br/>mock dataset"]
     D -- yes --> F["Call compatible HTTPS provider<br/>with timeout and optional bearer token"]
     C --> G["Validate query parameters"]

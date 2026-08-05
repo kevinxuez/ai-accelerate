@@ -339,7 +339,7 @@ flowchart TD
 ```
 
 The detailed visual graph for every implemented workflow is in
-[`AGENT_WORKFLOWS.md`](AGENT_WORKFLOWS.md).
+the editable and rendered [`workflow-diagrams/`](workflow-diagrams/README.md) package.
 
 **Say:**
 

@@ -134,6 +134,7 @@ class NSDAMetadata(NSDAModel):
 class NSDAEnvelope(NSDAModel):
     provider: str = Field(min_length=1, max_length=200)
     provider_code: str = Field(pattern=r"^nsda$")
+    backend: str | None = Field(default=None, min_length=1, max_length=50)
     mock: Literal[True]
     synthetic: Literal[True]
     dataset_version: str = Field(min_length=1, max_length=50)

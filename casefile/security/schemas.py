@@ -5,7 +5,14 @@ from __future__ import annotations
 import re
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    field_validator,
+    model_validator,
+)
 
 
 Identifier = Annotated[str, StringConstraints(min_length=1, max_length=100)]
@@ -22,10 +29,12 @@ class StrictModel(BaseModel):
 class ClassifierOutput(StrictModel):
     intent: Literal[
         "retrieve_evidence",
+        "generate_argument",
         "explain_rule",
         "generate_drill",
         "coach_simulation",
         "progress",
+        "current_topic",
         "ingest_cards",
         "schedule_session",
         "integrity_refusal",
@@ -115,11 +124,23 @@ class SearchCardsArgs(StrictModel):
     side: Literal["pro", "con"]
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=200)]
     n: int = Field(default=5, ge=1, le=10)
+    source_files: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=300)]
+    ] = Field(default_factory=list, max_length=20)
 
 
 class SearchRulesArgs(StrictModel):
     question: Annotated[str, StringConstraints(min_length=1, max_length=20_000)]
     n: int = Field(default=3, ge=1, le=8)
+
+
+class CurrentTopicArgs(StrictModel):
+    event: Annotated[str, StringConstraints(min_length=1, max_length=100)] = (
+        "Public Forum"
+    )
+    as_of: Annotated[
+        str, StringConstraints(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    ] | None = None
 
 
 class DrillArgs(StrictModel):
@@ -142,6 +163,75 @@ class EvidenceArgumentOutput(StrictModel):
     citations_used: list[
         Annotated[str, StringConstraints(min_length=1, max_length=200)]
     ] = Field(min_length=1, max_length=5)
+
+
+ArgumentComponent = Literal[
+    "claim",
+    "warrant",
+    "evidence",
+    "impact",
+    "resolution_link",
+    "likely_response",
+]
+SupportStatus = Literal["supported", "partially_supported", "unsupported"]
+
+
+class ArgumentRequestOutput(StrictModel):
+    side: Literal["pro", "con", "unknown"]
+    subject: Annotated[str, StringConstraints(max_length=500)]
+    entities: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    ] = Field(max_length=12)
+    requested_components: list[ArgumentComponent] = Field(max_length=6)
+    speech_position: Annotated[str, StringConstraints(max_length=100)] | None
+    length_seconds: int | None = Field(default=None, ge=10, le=600)
+    format: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    source_files: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=300)]
+    ] = Field(max_length=20)
+    clarification_needed: bool
+    clarification_question: Annotated[str, StringConstraints(max_length=300)] | None
+
+    @model_validator(mode="after")
+    def validate_clarification(self) -> "ArgumentRequestOutput":
+        if self.clarification_needed and not self.clarification_question:
+            raise ValueError("clarification_question is required when clarification is needed")
+        if not self.clarification_needed and (self.side == "unknown" or not self.subject):
+            raise ValueError("side and subject are required for argument generation")
+        return self
+
+
+class ArgumentSectionOutput(StrictModel):
+    text: Annotated[str, StringConstraints(min_length=1, max_length=2000)]
+    support: SupportStatus
+    citations: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=64)]
+    ] = Field(max_length=5)
+
+    @model_validator(mode="after")
+    def validate_support_citations(self) -> "ArgumentSectionOutput":
+        if self.support in {"supported", "partially_supported"} and not self.citations:
+            raise ValueError("supported sections require at least one card citation")
+        if self.support == "unsupported" and self.citations:
+            raise ValueError("unsupported sections cannot claim card citations")
+        return self
+
+
+class ArgumentDraftOutput(StrictModel):
+    title: Annotated[str, StringConstraints(min_length=1, max_length=200)]
+    format: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+    claim: ArgumentSectionOutput
+    warrant: ArgumentSectionOutput
+    evidence: ArgumentSectionOutput
+    impact: ArgumentSectionOutput
+    resolution_link: ArgumentSectionOutput
+    likely_response: ArgumentSectionOutput
+    unsupported_facts: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=500)]
+    ] = Field(max_length=12)
+    source_card_ids: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=64)]
+    ] = Field(max_length=5)
 
 
 class ProgressArgs(StrictModel):

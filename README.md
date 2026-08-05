@@ -61,6 +61,8 @@ FastAPI app, and regression evals work without credentials.
 - Student ownership checks and in-function authorization for protected records and writes.
 - Atomic progress writes, argument/role/chunk-id audit logs, mock or Google Calendar events,
   FastAPI plus a responsive demo console, and portable search/drill MCP tools.
+- A versioned synthetic NSDA mock API plus a configurable provider facade for topics, mock
+  rules, tournaments, and non-sensitive member eligibility records.
 - A 20-case golden regression set across citation faithfulness, routing/authorization, and
   evidence integrity, plus a 50-query candidate generator in the planned 20/15/10/5 mix.
 - A ranked retrieval benchmark with relevant chunk IDs, cross-side/cross-resolution hard
@@ -293,7 +295,7 @@ CaseFile includes a read-only NSDA-compatible mock API for integration developme
 fixture is fictional and every response is labeled `mock: true` and `synthetic: true`, with
 a dataset version and a disclaimer that it is not an official NSDA API or publication.
 
-Available routes:
+The always-local mock service is available at:
 
 - `GET /mock/nsda/v1/metadata`
 - `GET /mock/nsda/v1/topics/current?event=pf&as_of=2026-08-04`
@@ -301,10 +303,15 @@ Available routes:
 - `GET /mock/nsda/v1/tournaments?state=CA&event=pf`
 - `GET /mock/nsda/v1/members/student-1`
 
-With `NSDA_BASE_URL` unset, `build_nsda_provider()` reads the bundled validated fixture.
-Set `NSDA_BASE_URL` to an NSDA-compatible HTTPS service to use the HTTP adapter; plain HTTP
-is accepted only for loopback development. `NSDA_API_KEY` is sent as a bearer token when
-configured, and provider requests use `NSDA_TIMEOUT_SECONDS`.
+The application-facing provider facade exposes the same resource paths under `/nsda/v1`.
+With `NSDA_BASE_URL` unset, that facade reads the validated file selected by
+`NSDA_MOCK_DATA`. Set `NSDA_BASE_URL` to an NSDA-compatible HTTPS service and the facade
+uses the HTTP adapter instead; plain HTTP is accepted only for loopback development.
+`NSDA_API_KEY` is sent as a bearer token when configured, and provider requests use
+`NSDA_TIMEOUT_SECONDS`.
+
+`GET /health` reports `nsda_backend` as `mock` or `http`, matching the provider selected for
+the `/nsda/v1` facade. The `/mock/nsda/v1` fixture remains local regardless of that setting.
 
 Synthetic rule records remain separate from the authoritative rule index. They do not make
 `search_rules` answer a real rules question: approved, versioned source documents still have
@@ -369,8 +376,9 @@ about real debate-corpus retrieval quality.
 ## Presentation and security design
 
 - The implemented request graph and each evidence, rules, drill, coaching, progress,
-  ingestion, scheduling, compound-task, and MCP workflow are diagrammed in
-  [`docs/AGENT_WORKFLOWS.md`](docs/AGENT_WORKFLOWS.md).
+  ingestion, scheduling, compound-task, MCP, and synthetic NSDA provider workflow are
+  available as editable Mermaid sources and rendered PNGs under
+  [`docs/workflow-diagrams/`](docs/workflow-diagrams/README.md).
 - The timed presentation runbook, setup checklist, narration, expected results, and backup
   paths are in [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md).
 - The implemented direct/indirect prompt-injection design, acceptance criteria, and
@@ -386,6 +394,7 @@ casefile/
   chroma_db/    optional persistent Chroma collections
   agent/        state, sessions, nodes, graph, prompts, roles, and tools
   api/          FastAPI backend and responsive demo console
+  providers/    synthetic NSDA fixture plus local and HTTPS-compatible provider adapters
   mcp/          stdio server and client demo
   evals/        candidate generation, golden set, rubric, judge, cached results
   security/     prompt guard, strict schemas, redacted audit, and rate limiting

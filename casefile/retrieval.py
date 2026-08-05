@@ -184,18 +184,24 @@ class CaseFileIndex:
         *,
         resolution: str,
         side: str | None = None,
+        source_files: list[str] | None = None,
         n: int = 5,
         min_relevance: float | None = None,
     ) -> list[dict[str, Any]]:
         if not resolution:
             raise ValueError("resolution is required for card retrieval")
         threshold = self.settings.min_relevance if min_relevance is None else min_relevance
+        allowed_sources = set(source_files or [])
         cards = [
             card
             for card in self._load_cards()
             if is_indexable(card)
             and card.get("resolution") == resolution
             and (side is None or card.get("side") == side)
+            and (
+                not allowed_sources
+                or str(card.get("source_file", "")) in allowed_sources
+            )
         ]
         if not cards:
             return []
@@ -205,6 +211,17 @@ class CaseFileIndex:
                 clauses: list[dict[str, Any]] = [{"resolution": {"$eq": resolution}}]
                 if side is not None:
                     clauses.append({"side": {"$eq": side}})
+                if allowed_sources:
+                    sources = sorted(allowed_sources)
+                    clauses.append(
+                        {
+                            "source_file": (
+                                {"$eq": sources[0]}
+                                if len(sources) == 1
+                                else {"$in": sources}
+                            )
+                        }
+                    )
                 where: dict[str, Any] = clauses[0] if len(clauses) == 1 else {"$and": clauses}
                 result = self._client.get_collection("cards").query(
                     query_embeddings=[hash_embedding(query)],
@@ -240,6 +257,27 @@ class CaseFileIndex:
             for score, card in ranked[:n]
             if score >= threshold
         ]
+
+    def available_card_files(
+        self,
+        *,
+        resolution: str,
+        side: str | None = None,
+    ) -> list[str]:
+        """List committed, searchable evidence files for the active context."""
+
+        if not resolution:
+            return []
+        return sorted(
+            {
+                str(card.get("source_file", "")).strip()
+                for card in self._load_cards()
+                if is_indexable(card)
+                and card.get("resolution") == resolution
+                and (side is None or card.get("side") == side)
+                and str(card.get("source_file", "")).strip()
+            }
+        )
 
     def search_rules(self, question: str, n: int = 3) -> list[dict[str, Any]]:
         chunks = [

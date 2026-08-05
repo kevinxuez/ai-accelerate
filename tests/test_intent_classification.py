@@ -50,6 +50,22 @@ def test_explicit_search_language_routes_to_retrieval(message, side):
     assert result["clarification_needed"] is False
 
 
+@pytest.mark.parametrize(
+    "message",
+    [
+        "Help find some evidence for me.",
+        "Help find someevidence for me.",
+    ],
+)
+def test_conversational_evidence_search_asks_for_side_not_a_docx(message):
+    result = _classify(message)
+
+    assert result["intent"] == "retrieve_evidence"
+    assert result["side"] == "unknown"
+    assert result["clarification_question"] == "Please provide side (Pro or Con)."
+    assert "DOCX" not in result["clarification_question"]
+
+
 @pytest.mark.parametrize("message", ["Evidence", "I need help with evidence."])
 def test_underspecified_evidence_asks_which_operation(message):
     result = _classify(message)
@@ -71,6 +87,21 @@ def test_coach_is_a_simulation_intent_not_a_user_role():
     assert result["intent"] == "coach_simulation"
     assert result["speech_position"] == "summary"
     assert result["side"] == "pro"
+    assert result["clarification_needed"] is False
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "What is the current Public Forum topic?",
+        "What's the latest PF resolution?",
+        "Show me the Lincoln-Douglas topic for 2026-08-04.",
+    ],
+)
+def test_current_topic_language_routes_to_nsda_provider(message):
+    result = _classify(message)
+
+    assert result["intent"] == "current_topic"
     assert result["clarification_needed"] is False
 
 

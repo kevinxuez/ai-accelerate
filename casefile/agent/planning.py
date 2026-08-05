@@ -11,7 +11,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 TaskAction = Literal[
     "search_cards",
+    "generate_argument",
     "search_rules",
+    "current_topic",
     "generate_drill",
     "coach_simulation",
     "progress",
@@ -27,7 +29,9 @@ TaskStatus = Literal["success", "failed", "skipped"]
 
 ACTION_MODES: dict[str, TaskMode] = {
     "search_cards": "read",
+    "generate_argument": "read",
     "search_rules": "read",
+    "current_topic": "read",
     "generate_drill": "read",
     "coach_simulation": "read",
     "progress": "read",
@@ -43,8 +47,11 @@ FAILURE_PREFIXES = (
     "[BLOCKED",
     "[DENIED]",
     "[INVALID]",
+    "[UNAVAILABLE]",
     "[RATE_LIMITED]",
     "[STOPPED]",
+    "[MODEL_REQUIRED]",
+    "[MODEL_FAILED]",
 )
 
 

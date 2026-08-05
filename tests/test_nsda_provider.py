@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import json
+from dataclasses import replace
 from datetime import date
 
 import httpx
 import pytest
 from fastapi.testclient import TestClient
 
+import casefile.api.nsda as nsda_api
+from casefile.agent.graph import CaseFileAgent
 from casefile.api.main import app
 from casefile.providers.nsda import (
     HTTPNSDAProvider,
     MockNSDAProvider,
     NSDANotFound,
+    build_nsda_provider,
 )
 
 
@@ -42,6 +47,28 @@ def test_mock_nsda_provider_is_explicitly_synthetic_and_filterable() -> None:
     assert provider.get_member("student-1")["status"] == "active"
     with pytest.raises(NSDANotFound):
         provider.get_member("missing-member")
+
+
+def test_provider_builder_honors_configured_mock_data(
+    tmp_path, isolated_settings
+) -> None:
+    payload = MockNSDAProvider().dataset.model_dump(mode="json")
+    payload["dataset_version"] = "custom-fixture-test"
+    custom_fixture = tmp_path / "custom-nsda.json"
+    custom_fixture.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    settings = replace(
+        isolated_settings,
+        nsda_base_url=None,
+        nsda_mock_data=custom_fixture,
+    )
+
+    provider = build_nsda_provider(settings)
+
+    assert isinstance(provider, MockNSDAProvider)
+    assert provider.metadata()["dataset_version"] == "custom-fixture-test"
 
 
 def test_mock_nsda_api_returns_versioned_envelopes_and_404s() -> None:
@@ -77,6 +104,90 @@ def test_mock_nsda_api_returns_versioned_envelopes_and_404s() -> None:
     missing = client.get("/mock/nsda/v1/members/does-not-exist")
     assert missing.status_code == 404
     assert "Synthetic NSDA member was not found" in missing.json()["detail"]
+
+
+def test_configured_nsda_facade_uses_bundled_mock_by_default() -> None:
+    response = TestClient(app).get(
+        "/nsda/v1/topics/current",
+        params={"event": "pf", "as_of": "2026-08-04"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["backend"] == "mock"
+    assert response.json()["data"]["id"] == "pf-2026-07-demo"
+
+
+def test_chat_agent_uses_configured_nsda_provider_for_current_topic(
+    isolated_settings,
+) -> None:
+    settings = replace(isolated_settings, nsda_base_url=None)
+    agent = CaseFileAgent(settings)
+
+    result = agent.ask(
+        "What is the current Public Forum topic for 2026-08-04?",
+        role="student",
+        user_id="student-1",
+        resolution="2026-09-CRYPTO",
+    )
+
+    assert result["intent"] == "current_topic"
+    assert result["tool_trace"][0]["tool"] == "current_topic"
+    assert result["task_trace"][0]["status"] == "success"
+    assert "four-day instructional week" in result["response"]
+    assert "Synthetic NSDA-compatible fixture" in result["response"]
+    assert "not an official NSDA" in result["response"]
+
+
+def test_configured_nsda_facade_calls_selected_provider(monkeypatch) -> None:
+    class FakeHTTPProvider:
+        backend = "http"
+
+        def metadata(self):
+            return {
+                "provider": "National Speech & Debate Association",
+                "provider_code": "nsda",
+                "backend": "mock",
+                "dataset_version": "remote-test",
+                "generated_at": "2026-08-04T00:00:00Z",
+                "mock": True,
+                "synthetic": True,
+                "disclaimer": "Synthetic remote fixture.",
+                "counts": {
+                    "topics": 1,
+                    "rules": 0,
+                    "tournaments": 0,
+                    "members": 0,
+                },
+            }
+
+        def current_topic(self, event="Public Forum", *, as_of=None):
+            return {
+                "id": "remote-topic",
+                "event": event,
+                "as_of": as_of.isoformat() if as_of else None,
+                "synthetic": True,
+            }
+
+    monkeypatch.setattr(
+        nsda_api,
+        "get_configured_nsda_provider",
+        lambda: FakeHTTPProvider(),
+    )
+
+    response = TestClient(app).get(
+        "/nsda/v1/topics/current",
+        params={"event": "pf", "as_of": "2026-08-04"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["backend"] == "http"
+    assert response.json()["dataset_version"] == "remote-test"
+    assert response.json()["data"] == {
+        "id": "remote-topic",
+        "event": "pf",
+        "as_of": "2026-08-04",
+        "synthetic": True,
+    }
 
 
 def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:

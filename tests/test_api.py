@@ -15,11 +15,15 @@ def test_demo_console_is_served_with_safe_testing_controls() -> None:
     assert response.headers["content-type"].startswith("text/html")
     assert "CaseFile Demo Console" in response.text
     assert 'data-testid="scenario-evidence"' in response.text
+    assert 'data-testid="scenario-topic"' in response.text
     assert 'data-testid="scenario-coaching"' in response.text
     assert 'data-testid="role-select"' not in response.text
     assert "Coach access" not in response.text
     assert 'data-testid="send-button"' in response.text
     assert 'data-testid="attachment-input"' in response.text
+    assert 'data-testid="submitted-prompt"' in response.text
+    assert 'data-testid="prompt-entered"' in response.text
+    assert 'byId("prompt-entered").textContent = message' in response.text
     assert "/chat/with-attachment" in response.text
     assert "Confirm evidence import" in response.text
     assert "Agent trace" in response.text

@@ -86,14 +86,37 @@ COACH_SIMULATION_REQUEST = re.compile(
     r"give\s+me\s+debate\s+feedback|drill\s+me\s+like\s+a\s+coach)\b",
     re.I,
 )
+CURRENT_TOPIC_REQUEST = re.compile(
+    r"\b(?:current|latest|new|official|this\s+month(?:'s)?)\b.{0,80}"
+    r"\b(?:topic|resolution)\b|"
+    r"\b(?:topic|resolution)\b.{0,80}"
+    r"\b(?:current|latest|right\s+now|this\s+month)\b|"
+    r"\bwhat(?:'s|\s+is)\b.{0,60}"
+    r"\b(?:public\s+forum|pf|lincoln[-\s]douglas|ld|nsda)?\s*"
+    r"(?:topic|resolution)\b|"
+    r"\b(?:public\s+forum|pf|lincoln[-\s]douglas|ld|nsda)\b.{0,40}"
+    r"\b(?:topic|resolution)\b",
+    re.I | re.S,
+)
 
 QUERY_STOPWORDS = {
-    "about", "against", "and", "are", "card", "cards", "clarification",
+    "about", "against", "and", "any", "are", "card", "cards", "clarification",
     "con", "do", "does", "evidence", "find", "for", "from", "get", "have",
-    "locate", "look", "me", "on", "please", "pro", "pull", "request",
-    "retrieve", "search", "show", "side", "source", "sources", "supporting",
-    "the", "user", "want", "what", "which", "whose", "with",
+    "help", "locate", "look", "me", "on", "please", "pro", "pull", "request",
+    "retrieve", "search", "show", "side", "some", "source", "sources",
+    "supporting", "the", "user", "want", "what", "which", "whose", "with",
 }
+
+
+def _normalize_intent_text(text: str) -> str:
+    """Repair a narrow class of joined determiners without rewriting user content."""
+
+    return re.sub(
+        r"\b(some|any|the)(?=(?:evidence|cards?|sources?|documents?|files?)\b)",
+        r"\1 ",
+        text,
+        flags=re.I,
+    )
 
 
 def _message(state: AgentState) -> str:
@@ -138,6 +161,17 @@ def _file_path(text: str) -> str | None:
 
 def _start(text: str) -> str | None:
     match = re.search(r"\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?\b", text)
+    return match.group(0) if match else None
+
+
+def _topic_event(text: str) -> str:
+    if re.search(r"\b(?:lincoln[-\s]douglas|ld)\b", text, re.I):
+        return "Lincoln-Douglas"
+    return "Public Forum"
+
+
+def _topic_as_of(text: str) -> str | None:
+    match = re.search(r"\b\d{4}-\d{2}-\d{2}\b", text)
     return match.group(0) if match else None
 
 
@@ -260,9 +294,11 @@ def _compound_actions(text: str, state: AgentState) -> list[str]:
         text,
         re.I,
     )
+    current_topic = CURRENT_TOPIC_REQUEST.search(text)
 
     add("search_cards", evidence)
     add("search_rules", rule)
+    add("current_topic", current_topic)
     add("generate_drill", drill)
     if assessment_write is not None and state.get("role") == "coach":
         add("log_assessment", assessment_write)
@@ -368,22 +404,24 @@ def _ambiguous_question(
         )
     return (
         "What would you like to do: search evidence, import a DOCX file, check "
-        "a rule, generate a drill, view progress, or schedule a session?"
+        "a rule, look up the current topic, generate a drill, view progress, or "
+        "schedule a session?"
     )
 
 
 def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]:
-    lowered = text.lower()
+    classification_text = _normalize_intent_text(text)
+    lowered = classification_text.lower()
     parameters = {
-        "side": _side(text),
-        "student_id": _student_id(text),
-        "speech_position": _speech_position(text),
-        "file_path": _file_path(text),
-        "confirmation_token": _confirmation_token(text),
-        "start": _start(text),
+        "side": _side(classification_text),
+        "student_id": _student_id(classification_text),
+        "speech_position": _speech_position(classification_text),
+        "file_path": _file_path(classification_text),
+        "confirmation_token": _confirmation_token(classification_text),
+        "start": _start(classification_text),
     }
-    ingest_request = bool(INGEST_REQUEST.search(text))
-    retrieve_request = bool(RETRIEVE_REQUEST.search(text))
+    ingest_request = bool(INGEST_REQUEST.search(classification_text))
+    retrieve_request = bool(RETRIEVE_REQUEST.search(classification_text))
     ambiguity = ""
     if (
         parameters["confirmation_token"]
@@ -393,12 +431,14 @@ def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]
         intent = "schedule_session"
     elif parameters["confirmation_token"] and re.search(r"\bconfirm\b", lowered):
         intent = "ingest_cards"
-    elif INTEGRITY_REQUEST.search(text):
+    elif INTEGRITY_REQUEST.search(classification_text):
         intent = "integrity_refusal"
     elif ingest_request and not retrieve_request:
         intent = "ingest_cards"
-    elif COACH_SIMULATION_REQUEST.search(text):
+    elif COACH_SIMULATION_REQUEST.search(classification_text):
         intent = "coach_simulation"
+    elif CURRENT_TOPIC_REQUEST.search(classification_text) and not retrieve_request:
+        intent = "current_topic"
     elif "drill" in lowered or "practice" in lowered:
         intent = "generate_drill"
     elif re.search(r"\b(?:progress|assessment|weakness|feedback|record)\b", lowered):
@@ -415,7 +455,7 @@ def deterministic_classification(text: str, state: AgentState) -> dict[str, Any]
     if intent == "unknown":
         if ingest_request and retrieve_request:
             ambiguity = "evidence_action"
-        elif EVIDENCE_NOUN.search(text):
+        elif EVIDENCE_NOUN.search(classification_text):
             ambiguity = "evidence_action"
         elif parameters["file_path"]:
             ambiguity = "docx_action"
@@ -547,6 +587,7 @@ class AgentNodes:
                         "generate_drill",
                         "coach_simulation",
                         "progress",
+                        "current_topic",
                         "integrity_refusal",
                         "unknown",
                     }
@@ -601,6 +642,7 @@ class AgentNodes:
         mapping = {
             "retrieve_evidence": "search_cards",
             "explain_rule": "search_rules",
+            "current_topic": "current_topic",
             "generate_drill": "generate_drill",
             "coach_simulation": "coach_simulation",
             "progress": "progress",
@@ -639,6 +681,7 @@ class AgentNodes:
         task_ids = {
             "search_cards": "evidence",
             "search_rules": "rules",
+            "current_topic": "current_topic",
             "generate_drill": "drill",
             "coach_simulation": "coach_simulation",
             "progress": "progress",
@@ -687,6 +730,11 @@ class AgentNodes:
             return {"query": message, "side": params["side"], "n": 3}
         if action == "search_rules":
             return {"question": message, "n": 3}
+        if action == "current_topic":
+            return {
+                "event": _topic_event(message),
+                "as_of": _topic_as_of(message),
+            }
         if action == "generate_drill":
             return {
                 "student_id": student_id,
@@ -885,6 +933,8 @@ class AgentNodes:
             return self.tools.search_cards(context, **arguments)
         if task.action == "search_rules":
             return self.tools.search_rules(context, **arguments)
+        if task.action == "current_topic":
+            return self.tools.get_current_topic(context, **arguments)
         if task.action == "generate_drill":
             return self.tools.generate_drill(context, **arguments)
         if task.action == "coach_simulation":
@@ -1101,6 +1151,7 @@ class AgentNodes:
             labels = {
                 "search_cards": "Evidence",
                 "search_rules": "Rules",
+                "current_topic": "Current topic",
                 "generate_drill": "Drill",
                 "coach_simulation": "Coach simulation",
                 "progress": "Progress",
@@ -1160,6 +1211,24 @@ class AgentNodes:
                 f"{chunk['document']}:\n{chunk['text']}"
                 for chunk in result
             )
+        if action == "current_topic":
+            topic = result["topic"]
+            provenance = (
+                "Synthetic NSDA-compatible fixture — not an official NSDA publication"
+                if result.get("synthetic")
+                else str(result.get("provider", "NSDA-compatible provider"))
+            )
+            lines = [
+                f"[{provenance}]",
+                str(topic["resolution"]),
+                f"Event: {topic['event']}",
+                f"Effective: {topic['effective_from']} through {topic['effective_to']}",
+            ]
+            if topic.get("source_ref"):
+                lines.append(f"Source: {topic['source_ref']}")
+            if result.get("disclaimer"):
+                lines.append(f"Note: {result['disclaimer']}")
+            return "\n".join(lines)
         if action == "generate_drill":
             lines = [*result["instructions"]]
             for card in result["card_refs"]:
