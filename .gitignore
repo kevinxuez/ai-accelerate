@@ -7,12 +7,27 @@ __pycache__/
 .venv/
 .casefile_pending/
 .calendar_pending/
+.casefile_sessions/
+.casefile_uploads/
 casefile/chroma_db/*
 !casefile/chroma_db/.gitkeep
 casefile/data/tool_calls.jsonl
 casefile/data/security_events.jsonl
 casefile/data/idempotency.json
 casefile/data/calendar_events.json
+# Generated evidence indexes and runtime state. Curated eval datasets and
+# ingestion ground-truth fixtures remain trackable.
+casefile/data/cards_labeled.json
+casefile/data/progress.json
+casefile/data/rules_chunks.json
+casefile/evals/eval_results*.json
+casefile/evals/retrieval_eval_results*.json
+casefile/evals/security_eval_results*.json
+casefile/evals/generated_candidates*.json
+retrieval_results*.json
+security_eval_results*.json
 token.json
 credentials.json
 background/*
+
+crackathon/*
