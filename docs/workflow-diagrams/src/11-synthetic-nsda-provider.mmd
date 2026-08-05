@@ -1,0 +1,37 @@
+---
+title: 11 · Synthetic NSDA provider
+---
+flowchart TD
+    A(["CaseFile consumer or<br/>external test client"]) --> B{"Entry surface"}
+    B -- Mock REST API --> C["GET /mock/nsda/v1<br/>resource"]
+    B -- Provider adapter --> D{"NSDA_BASE_URL<br/>configured?"}
+    D -- no --> E["Read validated bundled<br/>mock dataset"]
+    D -- yes --> F["Call compatible HTTPS provider<br/>with timeout and optional bearer token"]
+    C --> G["Validate query parameters"]
+    G --> E
+    F --> H["Validate response envelope"]
+    H --> I{"Requested resource"}
+    E --> I
+    I --> J["Metadata"]
+    I --> K["Current topic by<br/>event and date"]
+    I --> L["Search synthetic<br/>rule fixtures"]
+    I --> M["Filter tournaments"]
+    I --> N["Look up synthetic<br/>member eligibility"]
+    J --> O["Return versioned<br/>response envelope"]
+    K --> O
+    L --> P["Keep separate from authoritative<br/>search_rules index"]
+    P --> O
+    M --> O
+    N --> O
+    O --> Q(["Response includes mock, synthetic,<br/>dataset version, and disclaimer"])
+
+    classDef entry fill:#102A43,color:#FFFFFF,stroke:#102A43,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#563B00,stroke:#C98A13,stroke-width:2px;
+    classDef provider fill:#F0EAFE,color:#3E236A,stroke:#8B66C6,stroke-width:2px;
+    classDef guard fill:#FDEBEC,color:#7D1F29,stroke:#C94B57,stroke-width:2px;
+    classDef terminal fill:#E8F7EE,color:#164E2C,stroke:#3D9B63,stroke-width:2px;
+    class A entry;
+    class B,D,I decision;
+    class F,H provider;
+    class P guard;
+    class Q terminal;

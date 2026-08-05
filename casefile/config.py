@@ -36,14 +36,26 @@ class Settings:
     rules_dir: Path = _env_path("CASEFILE_RULES_DIR", PACKAGE_ROOT / "rules")
     model: str = os.getenv("CASEFILE_MODEL", "claude-sonnet-4-6")
     anthropic_api_key: str | None = os.getenv("ANTHROPIC_API_KEY")
+    anthropic_base_url: str = os.getenv(
+        "ANTHROPIC_BASE_URL", "https://api.anthropic.com"
+    )
     min_relevance: float = float(os.getenv("CASEFILE_MIN_RELEVANCE", "0.08"))
     mock_calendar: bool = _env_bool("MOCK_CALENDAR", True)
     google_credentials: Path = _env_path(
         "GOOGLE_CALENDAR_CREDENTIALS", REPO_ROOT / "credentials.json"
     )
     google_token: Path = _env_path("GOOGLE_CALENDAR_TOKEN", REPO_ROOT / "token.json")
+    nsda_base_url: str | None = os.getenv("NSDA_BASE_URL") or None
+    nsda_api_key: str | None = os.getenv("NSDA_API_KEY") or None
+    nsda_timeout_seconds: float = float(os.getenv("NSDA_TIMEOUT_SECONDS", "5"))
+    nsda_mock_data: Path = _env_path(
+        "NSDA_MOCK_DATA", PACKAGE_ROOT / "providers" / "nsda_mock.json"
+    )
     allowed_ingest_roots: tuple[Path, ...] = _env_roots(
         "CASEFILE_INGEST_ROOTS", (REPO_ROOT / "background",)
+    )
+    max_upload_bytes: int = int(
+        os.getenv("CASEFILE_MAX_UPLOAD_BYTES", str(10 * 1024 * 1024))
     )
     requests_per_minute: int = int(os.getenv("CASEFILE_REQUESTS_PER_MINUTE", "60"))
 
@@ -68,6 +80,14 @@ class Settings:
         return self.data_dir / ".calendar_pending"
 
     @property
+    def uploads_dir(self) -> Path:
+        return self.data_dir / ".casefile_uploads"
+
+    @property
+    def sessions_dir(self) -> Path:
+        return self.data_dir / ".casefile_sessions"
+
+    @property
     def security_audit_path(self) -> Path:
         return self.data_dir / "security_events.jsonl"
 
@@ -80,6 +100,8 @@ class Settings:
         self.chroma_dir.mkdir(parents=True, exist_ok=True)
         self.pending_dir.mkdir(parents=True, exist_ok=True)
         self.calendar_pending_dir.mkdir(parents=True, exist_ok=True)
+        self.uploads_dir.mkdir(parents=True, exist_ok=True)
+        self.sessions_dir.mkdir(parents=True, exist_ok=True)
 
 
 def get_settings() -> Settings:

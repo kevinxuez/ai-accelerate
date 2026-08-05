@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CaseFile agent workflows</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #eef2f7; color: #172033; }
+    body {
+      width: 3200px;
+      padding: 72px 80px 88px;
+      font-family: Inter, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      min-height: 190px;
+      padding: 48px 56px;
+      border-radius: 32px;
+      background: #102a43;
+      color: white;
+      box-shadow: 0 14px 36px rgba(15, 35, 57, .14);
+    }
+    h1 { margin: 0 0 10px; font-size: 64px; letter-spacing: -.02em; }
+    header p { margin: 0; font-size: 28px; color: #cad8e7; }
+    .legend { display: flex; gap: 26px; font-size: 24px; white-space: nowrap; }
+    .legend span { display: inline-flex; align-items: center; gap: 10px; }
+    .dot { width: 22px; height: 22px; border-radius: 7px; display: inline-block; }
+    main {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px;
+      margin-top: 36px;
+    }
+    figure {
+      height: 1080px;
+      margin: 0;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border: 2px solid #d9e1eb;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 35, 57, .08);
+    }
+    figure img { width: 100%; height: 100%; object-fit: contain; }
+    figure:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CaseFile agent workflows</h1>
+      <p>Current-state orchestration, ingestion, tools, and write paths</p>
+    </div>
+    <div class="legend" aria-label="Color legend">
+      <span><i class="dot" style="background:#fff3d6;border:2px solid #c98a13"></i>Decision</span>
+      <span><i class="dot" style="background:#f0eafe;border:2px solid #8b66c6"></i>Model / write</span>
+      <span><i class="dot" style="background:#fdebec;border:2px solid #c94b57"></i>Blocked</span>
+      <span><i class="dot" style="background:#e8f7ee;border:2px solid #3d9b63"></i>Result</span>
+    </div>
+  </header>
+  <main>
+    <figure><img src="png/01-shared-request-lifecycle.png" alt="Shared request lifecycle"></figure>
+    <figure><img src="png/02-find-evidence-and-format-argument.png" alt="Find evidence and format an argument"></figure>
+    <figure><img src="png/03-explain-a-rule.png" alt="Explain a rule"></figure>
+    <figure><img src="png/04-generate-a-drill.png" alt="Generate a drill"></figure>
+    <figure><img src="png/05-simulated-coach.png" alt="Simulated coach"></figure>
+    <figure><img src="png/06-check-progress.png" alt="Check progress"></figure>
+    <figure><img src="png/07-attach-and-ingest-evidence.png" alt="Attach and ingest evidence"></figure>
+    <figure><img src="png/08-schedule-a-session.png" alt="Schedule a session"></figure>
+    <figure><img src="png/09-compound-requests-and-replanning.png" alt="Compound requests and replanning"></figure>
+    <figure><img src="png/10-external-mcp-workflow.png" alt="External MCP workflow"></figure>
+    <figure><img src="png/11-synthetic-nsda-provider.png" alt="Synthetic NSDA provider"></figure>
+  </main>
+</body>
+</html>

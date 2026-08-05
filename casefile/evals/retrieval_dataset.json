@@ -1,0 +1,150 @@
+{
+  "name": "casefile-synthetic-retrieval-v1",
+  "description": "Synthetic multi-record retrieval benchmark with resolution, side, and near-topic hard negatives.",
+  "cards": [
+    {
+      "id": "card-crypto-pro-protection",
+      "header": "FTC '26",
+      "tag": "Cryptocurrency accounts lack government backing and payments cannot be reversed.",
+      "cite_full": "Federal Trade Commission, 2026, Synthetic Consumer Guidance.",
+      "body": "Cryptocurrency accounts are not backed by a government. Cryptocurrency payments are typically not reversible, unlike protected bank and card payments.",
+      "resolution": "2026-09-CRYPTO",
+      "side": "pro",
+      "topic_tags": ["government backing", "irreversible payments", "consumer protection"],
+      "embedding_text": "FTC '26\nCryptocurrency accounts not backed by government payments not reversible consumer protection"
+    },
+    {
+      "id": "card-crypto-pro-certainty",
+      "header": "Policy Center '26",
+      "tag": "Clear cryptocurrency regulation gives consumers and businesses legal certainty.",
+      "cite_full": "Policy Center, 2026, Synthetic Regulatory Report.",
+      "body": "Clear rules for cryptocurrency exchanges improve legal certainty, disclosure, and consumer protection.",
+      "resolution": "2026-09-CRYPTO",
+      "side": "pro",
+      "topic_tags": ["regulatory certainty", "disclosure", "consumer protection"],
+      "embedding_text": "Policy Center '26\nclear cryptocurrency regulation legal certainty disclosure consumer protection"
+    },
+    {
+      "id": "card-crypto-con-privacy",
+      "header": "Privacy Lab '26",
+      "tag": "Cryptocurrency regulation can expose private financial activity.",
+      "cite_full": "Privacy Lab, 2026, Synthetic Privacy Study.",
+      "body": "Broad cryptocurrency reporting mandates create privacy and surveillance costs for ordinary users.",
+      "resolution": "2026-09-CRYPTO",
+      "side": "con",
+      "topic_tags": ["privacy", "surveillance", "regulation"],
+      "embedding_text": "Privacy Lab '26\ncryptocurrency regulation privacy surveillance financial activity"
+    },
+    {
+      "id": "card-old-pro-protection",
+      "header": "Archive '24",
+      "tag": "Digital accounts need government-backed consumer protection.",
+      "cite_full": "Archive Institute, 2024, Synthetic Archived Report.",
+      "body": "Government backing and reversible payments protect consumers using digital accounts.",
+      "resolution": "2024-01-DIGITAL",
+      "side": "pro",
+      "topic_tags": ["government backing", "reversible payments", "consumer protection"],
+      "embedding_text": "Archive '24\ndigital accounts government backing reversible payments consumer protection"
+    },
+    {
+      "id": "card-climate-pro-certainty",
+      "header": "Climate Council '26",
+      "tag": "Stable permitting rules give clean-energy projects regulatory certainty.",
+      "cite_full": "Climate Council, 2026, Synthetic Permitting Review.",
+      "body": "Predictable clean-energy permitting rules reduce delay and improve regulatory certainty.",
+      "resolution": "2026-01-CLIMATE",
+      "side": "pro",
+      "topic_tags": ["permitting", "regulatory certainty", "clean energy"],
+      "embedding_text": "Climate Council '26\nclean energy permitting regulatory certainty predictable rules"
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule-evidence-integrity",
+      "section_number": "7.2",
+      "section_title": "Evidence Integrity",
+      "text": "Quoted evidence must remain attached to its citation and may not be altered to change the author's meaning.",
+      "document": "synthetic_rules.md"
+    },
+    {
+      "id": "rule-source-disclosure",
+      "section_number": "7.3",
+      "section_title": "Source Disclosure",
+      "text": "A debater must provide the author, publication, date, and full source when an opponent requests a citation.",
+      "document": "synthetic_rules.md"
+    },
+    {
+      "id": "rule-speech-time",
+      "section_number": "8.1",
+      "section_title": "Speech Time",
+      "text": "The summary and final focus speeches use the time limits specified for Public Forum rounds.",
+      "document": "synthetic_rules.md"
+    }
+  ],
+  "queries": [
+    {
+      "id": "cards-government-backing",
+      "corpus": "cards",
+      "query": "Which evidence says crypto accounts are not government backed and payments cannot be reversed?",
+      "expected_ids": ["card-crypto-pro-protection"],
+      "resolution": "2026-09-CRYPTO",
+      "side": "pro"
+    },
+    {
+      "id": "cards-regulatory-certainty",
+      "corpus": "cards",
+      "query": "Find evidence about legal and regulatory certainty for cryptocurrency businesses.",
+      "expected_ids": ["card-crypto-pro-certainty"],
+      "resolution": "2026-09-CRYPTO",
+      "side": "pro"
+    },
+    {
+      "id": "cards-con-privacy",
+      "corpus": "cards",
+      "query": "What Con evidence discusses privacy and financial surveillance?",
+      "expected_ids": ["card-crypto-con-privacy"],
+      "resolution": "2026-09-CRYPTO",
+      "side": "con"
+    },
+    {
+      "id": "cards-resolution-filter",
+      "corpus": "cards",
+      "query": "Evidence about predictable clean energy permitting rules.",
+      "expected_ids": ["card-climate-pro-certainty"],
+      "resolution": "2026-01-CLIMATE",
+      "side": "pro"
+    },
+    {
+      "id": "cards-empty-hard-negative",
+      "corpus": "cards",
+      "query": "Evidence about lunar agriculture soil yields.",
+      "expected_ids": [],
+      "resolution": "2026-09-CRYPTO",
+      "side": "pro"
+    },
+    {
+      "id": "rules-evidence-integrity",
+      "corpus": "rules",
+      "query": "Can quoted evidence be altered or separated from its citation?",
+      "expected_ids": ["rule-evidence-integrity"]
+    },
+    {
+      "id": "rules-source-disclosure",
+      "corpus": "rules",
+      "query": "What author publication and date information must be disclosed?",
+      "expected_ids": ["rule-source-disclosure"]
+    },
+    {
+      "id": "rules-speech-time",
+      "corpus": "rules",
+      "query": "Which rule covers summary and final focus speech time limits?",
+      "expected_ids": ["rule-speech-time"]
+    },
+    {
+      "id": "rules-empty-hard-negative",
+      "corpus": "rules",
+      "query": "What is the tournament parking reimbursement rule?",
+      "expected_ids": []
+    }
+  ]
+}

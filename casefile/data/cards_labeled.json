@@ -1,2 +1,2262 @@
-[]
-
+[
+  {
+    "id": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "header": "",
+    "tag": "",
+    "cite_full": "Massad, Timothy. “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together. ",
+    "author": "Massad",
+    "author_type": "person",
+    "year": 2019,
+    "date_raw": "",
+    "source": "” Harvard Kennedy School",
+    "url": "https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "crypto regulation",
+      "SEC",
+      "CFTC",
+      "investor protection",
+      "regulatory gap",
+      "Congress"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_body_same_paragraph",
+      "no_body",
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      109
+    ],
+    "embedding_text": "",
+    "returned_document": "Massad, Timothy. “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "01bda23113a16955d212907e7a8811fcf2cc9d22036103c31ecb2c6e3039b966",
+    "header": "Outrider '18",
+    "tag": "",
+    "cite_full": "Outrider, \"Smugglers, Thieves, and Terrorists | Outrider\", 2018, https://outrider.org/nuclear-weapons/articles/smugglers-thieves-and-terrorists/",
+    "author": "Outrider",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://outrider.org/nuclear-weapons/articles/smugglers-thieves-and-terrorists/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "This is not a far-off scenario. Today, nuclear technology is used all over the world. But not every nuclear facility has proper security. Each year, more than 100 thefts and incidents involving radioactive materials are reported. Some are minor, but others are troubling. Criminals were recently caught trying to sell highly enriched, bomb-grade nuclear materials in Moldova and Georgia. Armed intruders broke into a nuclear site in South Africa. A hacker tried to sabotage a power reactor in Lithuania. And this is just the tip of the iceberg. What does nuclear terrorism look like? So far, we have not seen a terrorist group pull off a nuclear or radiological attack—but there are several ways it could happen. They could steal a bomb, build one, attack a nuclear facility, or make a “dirty bomb” from stolen radioactive material. Obtaining a nuclear weapon from a country’s stockpile is hard to do—but not impossible. To date, no nuclear bomb has been known to have been stolen, and most are held in highly secure military sites. A terrorist group could also try to build a nuclear bomb using stolen highly-enriched uranium or plutonium. In one worrisome incident in 2001, the former head of Pakistan’s Khushab Plutonium Reactor met with Osama bin Laden to discuss how al-Qaeda might obtain a nuclear bomb.",
+    "read_spans": [
+      [
+        139,
+        387
+      ],
+      [
+        710,
+        832
+      ],
+      [
+        1139,
+        1309
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        141,
+        386
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "nuclear terrorism",
+      "radioactive material theft",
+      "dirty bomb",
+      "nuclear security",
+      "smuggling",
+      "radiological attack"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_header"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      101,
+      102,
+      103
+    ],
+    "embedding_text": "Outrider '18\nach year, more than 100 thefts and incidents involving radioactive materials are reported. Some are minor, but others are troubling. Criminals were recently caught trying to sell highly enriched, bomb-grade nuclear materials in Moldova and Georgia. n. They could steal a bomb, build one, attack a nuclear facility, or make a “dirty bomb” from stolen radioactive material. . In one worrisome incident in 2001, the former head of Pakistan’s Khushab Plutonium Reactor met with Osama bin Laden to discuss how al-Qaeda might obtain a nuclear bomb.\nh year, more than 100 thefts and incidents involving radioactive materials are reported. Some are minor, but others are troubling. Criminals were recently caught trying to sell highly enriched, bomb-grade nuclear materials in Moldova and Georgia",
+    "returned_document": "Outrider, \"Smugglers, Thieves, and Terrorists | Outrider\", 2018, https://outrider.org/nuclear-weapons/articles/smugglers-thieves-and-terrorists/\nOutrider '18\nThis is not a far-off scenario. Today, nuclear technology is used all over the world. But not every nuclear facility has proper security. Each year, more than 100 thefts and incidents involving radioactive materials are reported. Some are minor, but others are troubling. Criminals were recently caught trying to sell highly enriched, bomb-grade nuclear materials in Moldova and Georgia. Armed intruders broke into a nuclear site in South Africa. A hacker tried to sabotage a power reactor in Lithuania. And this is just the tip of the iceberg. What does nuclear terrorism look like? So far, we have not seen a terrorist group pull off a nuclear or radiological attack—but there are several ways it could happen. They could steal a bomb, build one, attack a nuclear facility, or make a “dirty bomb” from stolen radioactive material. Obtaining a nuclear weapon from a country’s stockpile is hard to do—but not impossible. To date, no nuclear bomb has been known to have been stolen, and most are held in highly secure military sites. A terrorist group could also try to build a nuclear bomb using stolen highly-enriched uranium or plutonium. In one worrisome incident in 2001, the former head of Pakistan’s Khushab Plutonium Reactor met with Osama bin Laden to discuss how al-Qaeda might obtain a nuclear bomb.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "01d6d77ebfecdae21e1af9e0b7102c5f8755e6da6e9d9001995d9a2026c144d9",
+    "header": "Soni 21",
+    "tag": "",
+    "cite_full": "https://www.financialexpress.com/market/rip-cryptocurrencies-number-of-dead-coins-up-35-over-last-year-tally-nears-2000-mark/2226169/",
+    "author": "Soni 21",
+    "author_type": "person",
+    "year": 2000,
+    "date_raw": "",
+    "source": "financialexpress.com",
+    "url": "https://www.financialexpress.com/market/rip-cryptocurrencies-number-of-dead-coins-up-35-over-last-year-tally-nears-2000-mark/2226169/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The number of dead cryptocurrencies or crypto coins, which had minimal to zero benefits to anyone, has grown 35 per cent over last year to 1,949 at the time of filing this report, according to the data from Coinopsy.com that tracks dead cryptos. Around February last year, the number of total dead coins stood at over 1,440.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "dead coins",
+      "crypto failure",
+      "market instability",
+      "digital currency"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      118,
+      119,
+      120
+    ],
+    "embedding_text": "Soni 21\nThe number of dead cryptocurrencies or crypto coins, which had minimal to zero benefits to anyone, has grown 35 per cent over last year to 1,949 at the time of filing this report, according to the data from Coinopsy.com that tracks dead cryptos. Around February last year, the number of total dead coins stood at over 1,440.",
+    "returned_document": "https://www.financialexpress.com/market/rip-cryptocurrencies-number-of-dead-coins-up-35-over-last-year-tally-nears-2000-mark/2226169/\nSoni 21\nThe number of dead cryptocurrencies or crypto coins, which had minimal to zero benefits to anyone, has grown 35 per cent over last year to 1,949 at the time of filing this report, according to the data from Coinopsy.com that tracks dead cryptos. Around February last year, the number of total dead coins stood at over 1,440.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "069f97b667264a27496772c70ec2db6fcd1fb0f32bb439c48c6b1ddf9e8b6b60",
+    "header": "Lai '21",
+    "tag": "",
+    "cite_full": "lennex Lai, \"With Proper Regs, Crypto Could Be Crime-Fighter | PYMNTS.com\", 2021, https://www.pymnts.com/cryptocurrency/2021/with-proper-regs-crypto-could-be-crime-fighter/",
+    "author": "lennex Lai",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.pymnts.com/cryptocurrency/2021/with-proper-regs-crypto-could-be-crime-fighter/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The Regulatory Welcome Mat Lennix Lai, director of financial markets at OKEx, a Hong Kong-based cryptocurrency exchange, told PYMNTS in an interview that he actually welcomes U.S. regulation of crypto because he says it will likely take a very balanced approach and others will be encouraged to follow its lead. “It doesn’t need to be too strict, but a bare minimum of regulation, things like Know Your Customer [KYC], Anti-Money Laundering [AML] rules and verification, is something that crypto really needs,” he said. Joining the conversation was Garient Evans, senior vice president of identity solutions at Trulioo, who said he also welcomes regulation to crypto. According to him, the vast majority of companies in the cryptocurrency space, including most exchanges, want to see a more transparent and stable ecosystem develop. He likened the situation in crypto now to what happened in the late 2000s in the U.S., when FinTechs first emerged following the Great Recession.",
+    "read_spans": [
+      [
+        312,
+        518
+      ],
+      [
+        668,
+        772
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        312,
+        471
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "KYC/AML",
+      "crypto crime prevention",
+      "financial markets",
+      "regulatory compliance",
+      "crypto exchanges"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_marking",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      32,
+      33,
+      34
+    ],
+    "embedding_text": "Lai '21\n“It doesn’t need to be too strict, but a bare minimum of regulation, things like Know Your Customer [KYC], Anti-Money Laundering [AML] rules and verification, is something that crypto really needs,” he said According to him, the vast majority of companies in the cryptocurrency space, including most exchanges,\n“It doesn’t need to be too strict, but a bare minimum of regulation, things like Know Your Customer [KYC], Anti-Money Laundering [AML] rules and verification,",
+    "returned_document": "lennex Lai, \"With Proper Regs, Crypto Could Be Crime-Fighter | PYMNTS.com\", 2021, https://www.pymnts.com/cryptocurrency/2021/with-proper-regs-crypto-could-be-crime-fighter/\nLai '21\nThe Regulatory Welcome Mat Lennix Lai, director of financial markets at OKEx, a Hong Kong-based cryptocurrency exchange, told PYMNTS in an interview that he actually welcomes U.S. regulation of crypto because he says it will likely take a very balanced approach and others will be encouraged to follow its lead. “It doesn’t need to be too strict, but a bare minimum of regulation, things like Know Your Customer [KYC], Anti-Money Laundering [AML] rules and verification, is something that crypto really needs,” he said. Joining the conversation was Garient Evans, senior vice president of identity solutions at Trulioo, who said he also welcomes regulation to crypto. According to him, the vast majority of companies in the cryptocurrency space, including most exchanges, want to see a more transparent and stable ecosystem develop. He likened the situation in crypto now to what happened in the late 2000s in the U.S., when FinTechs first emerged following the Great Recession.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "177edb672eb9c4ce86951d64d52489a989009a6313cd2ad7734775d226f4be32",
+    "header": "Meltzer ‘20",
+    "tag": "",
+    "cite_full": "Meltzer, Joshua and Neena Shenai. “Restoring US trust in globalization.” Brookings Institution. 2 September 2020. \nhttps://www.brookings.edu/opinions/restoring-us-trust-inglobalization/ ",
+    "author": "Meltzer",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "brookings.edu",
+    "url": "https://www.brookings.edu/opinions/restoring-us-trust-inglobalization/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "For others, the pandemic underscores the need for cooperation to address a host of unprecedented global challenges. It has brought into focus the vacuum left in the absence of U.S. leadership, and the critical need for the United States to play the role of reviving an international order, one that balances opportunities with assurance that gains are distributed fairly.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "globalization",
+      "US leadership",
+      "international order",
+      "cooperation",
+      "pandemic",
+      "multilateralism"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      39,
+      40,
+      41,
+      42
+    ],
+    "embedding_text": "Meltzer ‘20\nFor others, the pandemic underscores the need for cooperation to address a host of unprecedented global challenges. It has brought into focus the vacuum left in the absence of U.S. leadership, and the critical need for the United States to play the role of reviving an international order, one that balances opportunities with assurance that gains are distributed fairly.",
+    "returned_document": "Meltzer, Joshua and Neena Shenai. “Restoring US trust in globalization.” Brookings Institution. 2 September 2020. \nhttps://www.brookings.edu/opinions/restoring-us-trust-inglobalization/ \nMeltzer ‘20\nFor others, the pandemic underscores the need for cooperation to address a host of unprecedented global challenges. It has brought into focus the vacuum left in the absence of U.S. leadership, and the critical need for the United States to play the role of reviving an international order, one that balances opportunities with assurance that gains are distributed fairly.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "1a8f82a000d27a5387eb4c3167d08a49eb28aa6c26de3ce36866099e8bd4ae7d",
+    "header": "Brett '21",
+    "tag": "",
+    "cite_full": "Jason Brett, \"Congress Has Introduced 18 Bills On Crypto And Blockchain In 2021\", 2021, https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/",
+    "author": "Jason Brett",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The bill would create statutory definitions for digital assets and digital asset securities and provide the Securities and Exchange Commission (SEC) with authority over digital asset securities and the Commodity Futures Trading Commission (CFTC) with authority over digital assets. Additionally, the bill would provide legal certainty as to the regulatory status for the top 90% of the digital asset market (by market capitalization and trading volume) through a joint SEC/CFTC rulemaking, and require digital asset transactions that are not recorded on the publicly distributed ledger to be reported to a registered Digital Asset Trade Repository within 24 hours to minimize the potential for fraud and promote transparency.",
+    "read_spans": [
+      [
+        0,
+        487
+      ],
+      [
+        490,
+        725
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "crypto regulation",
+      "SEC",
+      "CFTC",
+      "digital assets",
+      "blockchain legislation",
+      "regulatory clarity"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "duplicate_source",
+      "no_marking",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      126,
+      127,
+      128
+    ],
+    "embedding_text": "Brett '21\nThe bill would create statutory definitions for digital assets and digital asset securities and provide the Securities and Exchange Commission (SEC) with authority over digital asset securities and the Commodity Futures Trading Commission (CFTC) with authority over digital assets. Additionally, the bill would provide legal certainty as to the regulatory status for the top 90% of the digital asset market (by market capitalization and trading volume) through a joint SEC/CFTC rulemakin and require digital asset transactions that are not recorded on the publicly distributed ledger to be reported to a registered Digital Asset Trade Repository within 24 hours to minimize the potential for fraud and promote transparency.",
+    "returned_document": "Jason Brett, \"Congress Has Introduced 18 Bills On Crypto And Blockchain In 2021\", 2021, https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/\nBrett '21\nThe bill would create statutory definitions for digital assets and digital asset securities and provide the Securities and Exchange Commission (SEC) with authority over digital asset securities and the Commodity Futures Trading Commission (CFTC) with authority over digital assets. Additionally, the bill would provide legal certainty as to the regulatory status for the top 90% of the digital asset market (by market capitalization and trading volume) through a joint SEC/CFTC rulemaking, and require digital asset transactions that are not recorded on the publicly distributed ledger to be reported to a registered Digital Asset Trade Repository within 24 hours to minimize the potential for fraud and promote transparency.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "1a9cd662f93a2ba48d0c5db66ead16028e1617d6e699efe33538266574c2e8db",
+    "header": "Ciccolo ‘20",
+    "tag": "",
+    "cite_full": " Ciccolo, Joe. “Regulators Are Telling the Cryptocurrency Industry to Prioritize Consumer Protection. Here's How.” BitAML, 2 Mar. 2020, \nhttps://bitaml.com/2020/03/02/consumer-protection-in-cryptocurrency/.",
+    "author": "Ciccolo",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "” BitAML",
+    "url": "https://bitaml.com/2020/03/02/consumer-protection-in-cryptocurrency/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " But recent signals from state regulators point to a wider trend that cryptocurrency business owners shouldn’t ignore, because they speak to how cryptocurrencies will be regulated in the coming years. Currently, many state regulators maintain a “no action” or “no opinion” stance on certain cryptocurrency businesses. This means that they do not enforce specific regulations in their jurisdiction above and beyond what is required at the federal level of all cryptocurrency businesses classified as money services businesses/money transmitters. ",
+    "read_spans": [
+      [
+        199,
+        402
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        199,
+        402
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "consumer protection",
+      "state regulators",
+      "money transmitters",
+      "compliance"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_header",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      11,
+      12,
+      13,
+      14
+    ],
+    "embedding_text": "Ciccolo ‘20\n. Currently, many state regulators maintain a “no action” or “no opinion” stance on certain cryptocurrency businesses. This means that they do not enforce specific regulations in their jurisdiction above\n. Currently, many state regulators maintain a “no action” or “no opinion” stance on certain cryptocurrency businesses. This means that they do not enforce specific regulations in their jurisdiction above",
+    "returned_document": " Ciccolo, Joe. “Regulators Are Telling the Cryptocurrency Industry to Prioritize Consumer Protection. Here's How.” BitAML, 2 Mar. 2020, \nhttps://bitaml.com/2020/03/02/consumer-protection-in-cryptocurrency/.\nCiccolo ‘20\n But recent signals from state regulators point to a wider trend that cryptocurrency business owners shouldn’t ignore, because they speak to how cryptocurrencies will be regulated in the coming years. Currently, many state regulators maintain a “no action” or “no opinion” stance on certain cryptocurrency businesses. This means that they do not enforce specific regulations in their jurisdiction above and beyond what is required at the federal level of all cryptocurrency businesses classified as money services businesses/money transmitters. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "2148fd2f502a74551c76f92ebf85e05f945c2f7a705c738194157b39ef30af28",
+    "header": "Allcot '21",
+    "tag": "",
+    "cite_full": "Dawn Allcot, \"14% of Americans Own Crypto Right Now – Here’s Who’s Actually Doing It Right\", 2021, https://www.yahoo.com/now/study-reveals-crypto-biggest-investors-132102315.html",
+    "author": "Dawn Allcot",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.yahoo.com/now/study-reveals-crypto-biggest-investors-132102315.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "owever, as the number of crypto investors is set to double this year, according to the report, that profile could change. Today, more than 21.2 million adults, or about 14% of the U.S population, own cryptocurrency such as Bitcoin or Ethereum. Gemini’s research revealed that about 13% of those polled shared intentions to purchase digital assets within the next 12 months.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency ownership",
+      "Bitcoin",
+      "Ethereum",
+      "US adoption",
+      "investor demographics",
+      "Gemini research"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "body_truncated",
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      111,
+      112,
+      113
+    ],
+    "embedding_text": "Allcot '21\nowever, as the number of crypto investors is set to double this year, according to the report, that profile could change. Today, more than 21.2 million adults, or about 14% of the U.S population, own cryptocurrency such as Bitcoin or Ethereum. Gemini’s research revealed that about 13% of those polled shared intentions to purchase digital assets within the next 12 months.",
+    "returned_document": "Dawn Allcot, \"14% of Americans Own Crypto Right Now – Here’s Who’s Actually Doing It Right\", 2021, https://www.yahoo.com/now/study-reveals-crypto-biggest-investors-132102315.html\nAllcot '21\nowever, as the number of crypto investors is set to double this year, according to the report, that profile could change. Today, more than 21.2 million adults, or about 14% of the U.S population, own cryptocurrency such as Bitcoin or Ethereum. Gemini’s research revealed that about 13% of those polled shared intentions to purchase digital assets within the next 12 months.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "21906a340935ba63c86175a2d50285709d15db90342e7e8da4a4360d534ef9cc",
+    "header": "Tierney ‘18",
+    "tag": "",
+    "cite_full": "Michael Tierney 18, George & Mary Hylton Professor of International Relations; Director Global Research Institute (GRI), ",
+    "author": "Michael Tierney 18",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "",
+    "url": "",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "“#TerroristFinancing: An Examination of Terrorism Financing via the Internet,” International Journal of Cyber Warfare and Terrorism, vol. 8, no. 1, 01/2018, pp. 1–11 2. TERRORIST FINANCING AND THE INTERNET \nAs mentioned, terrorists’ use of the internet has become a major concern for security officials across the world in recent years. Like many other users, terrorists have found that the internet is an invaluable tool to share information quickly, in order to disseminate ideas and link up with likeminded individuals (Jacobson, 2010; Okolie-Osemene & Okoh, 2015). In this manner, terrorists use the internet for a variety of purposes, including recruitment, propaganda, and financing. As scholars have also noted, the internet is an attractive option for extremists due to the security and anonymity it provides(Jacobson, 2010). Yet while there have been a growing number of studies completed on the ways in which terrorist organizations use the internet to recruit and indoctrinate others, there has been relatively little focus on the methods by which terrorists finance themselves through online activities. Some researchers have attempted to fill gaps in this area by broadly studying internet aspects of terrorism financing. However, research on this particular aspect of terrorism financing still appears to be lacking, with little focus on new methods of terrorist financing via the internet or a marrying of strategies to combat online financing trends available to practitioners in the field. For instance, Sean Paul Ashley (2012) assessed the mobile banking phenomenon, which is prevalent in regions such as the Middle East and Africa, and provides extremists with the ability to easily connect to the internet and remit funds around the world. The decentralization of this kind of banking, due to the fact that brick-and-mortar facilities are not needed to conduct transactions, has allowed terrorist financiersto more efficiently move funds while avoiding detection from authorities. Other researchers,such as MichaelJacobson (2010), have studied the waysin which terrorists engage in cyber-crime to raise and move funds. For example, Jacobson (2010) found that online credit card fraud was a fairly major source of terrorist financing. By stealing a victim’s private credit information, terrorists are able to co-opt needed funds and provide supportto themselves or their counterparts. Yet as James Okolie-Osemene and Rosemary Ifeanyi Okoh (2015) note, the internet is mostly used to augment and assist activities which occur in the physical world. In this way, it would appear that the internet is far more useful as a means to move funds globally in support of terrorism, rather than simply as a method to raise funds. ",
+    "read_spans": [
+      [
+        1999,
+        2186
+      ],
+      [
+        2197,
+        2403
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "terrorist financing",
+      "internet",
+      "cybercrime",
+      "anonymity",
+      "extremism",
+      "online fundraising"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_headline",
+      "no_marking",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      49,
+      50,
+      51,
+      52
+    ],
+    "embedding_text": "Tierney ‘18\n. Other researchers,such as MichaelJacobson (2010), have studied the waysin which terrorists engage in cyber-crime to raise and move funds. For example, Jacobson (2010) found that online   fraud was a fairly major source of terrorist financing. By stealing a victim’s private credit information, terrorists are able to co-opt needed funds and provide supportto themselves or their counterparts.",
+    "returned_document": "Michael Tierney 18, George & Mary Hylton Professor of International Relations; Director Global Research Institute (GRI), \nTierney ‘18\n“#TerroristFinancing: An Examination of Terrorism Financing via the Internet,” International Journal of Cyber Warfare and Terrorism, vol. 8, no. 1, 01/2018, pp. 1–11 2. TERRORIST FINANCING AND THE INTERNET \nAs mentioned, terrorists’ use of the internet has become a major concern for security officials across the world in recent years. Like many other users, terrorists have found that the internet is an invaluable tool to share information quickly, in order to disseminate ideas and link up with likeminded individuals (Jacobson, 2010; Okolie-Osemene & Okoh, 2015). In this manner, terrorists use the internet for a variety of purposes, including recruitment, propaganda, and financing. As scholars have also noted, the internet is an attractive option for extremists due to the security and anonymity it provides(Jacobson, 2010). Yet while there have been a growing number of studies completed on the ways in which terrorist organizations use the internet to recruit and indoctrinate others, there has been relatively little focus on the methods by which terrorists finance themselves through online activities. Some researchers have attempted to fill gaps in this area by broadly studying internet aspects of terrorism financing. However, research on this particular aspect of terrorism financing still appears to be lacking, with little focus on new methods of terrorist financing via the internet or a marrying of strategies to combat online financing trends available to practitioners in the field. For instance, Sean Paul Ashley (2012) assessed the mobile banking phenomenon, which is prevalent in regions such as the Middle East and Africa, and provides extremists with the ability to easily connect to the internet and remit funds around the world. The decentralization of this kind of banking, due to the fact that brick-and-mortar facilities are not needed to conduct transactions, has allowed terrorist financiersto more efficiently move funds while avoiding detection from authorities. Other researchers,such as MichaelJacobson (2010), have studied the waysin which terrorists engage in cyber-crime to raise and move funds. For example, Jacobson (2010) found that online credit card fraud was a fairly major source of terrorist financing. By stealing a victim’s private credit information, terrorists are able to co-opt needed funds and provide supportto themselves or their counterparts. Yet as James Okolie-Osemene and Rosemary Ifeanyi Okoh (2015) note, the internet is mostly used to augment and assist activities which occur in the physical world. In this way, it would appear that the internet is far more useful as a means to move funds globally in support of terrorism, rather than simply as a method to raise funds. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "23f8f109905637f59d2bd1af913cf95b1b71922283409519b1ad5a15f383bfea",
+    "header": "Starr '15",
+    "tag": "",
+    "cite_full": "Steven Starr, \"Steven Starr: Nuclear War: An Unrecognized Mass Extinction Event Waiting to Happen | Dynamics of Possible Nuclear Extinction Symposium, 02-28-15\", 2015, https://ratical.org/radiation/NuclearExtinction/StevenStarr022815.html",
+    "author": "Steven Starr",
+    "author_type": "person",
+    "year": 2015,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://ratical.org/radiation/NuclearExtinction/StevenStarr022815.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "A war fought with 21st century strategic nuclear weapons would be more than just a great catastrophe in human history. If we allow it to happen, such a war would be a mass extinction event that ends human history. There is a profound difference between extinction and “an unprecedented disaster,” or even “the end of civilization,” because even after such an immense catastrophe, human life would go on.",
+    "read_spans": [
+      [
+        0,
+        403
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        0,
+        403
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "nuclear war",
+      "extinction",
+      "mass extinction",
+      "strategic weapons",
+      "existential risk"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_header"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      22,
+      23,
+      24
+    ],
+    "embedding_text": "Starr '15\nA war fought with 21st century strategic nuclear weapons would be more than just a great catastrophe in human history. If we allow it to happen, such a war would be a mass extinction event that ends human history. There is a profound difference between extinction and “an unprecedented disaster,” or even “the end of civilization,” because even after such an immense catastrophe, human life would go on.\nA war fought with 21st century strategic nuclear weapons would be more than just a great catastrophe in human history. If we allow it to happen, such a war would be a mass extinction event that ends human history. There is a profound difference between extinction and “an unprecedented disaster,” or even “the end of civilization,” because even after such an immense catastrophe, human life would go on.",
+    "returned_document": "Steven Starr, \"Steven Starr: Nuclear War: An Unrecognized Mass Extinction Event Waiting to Happen | Dynamics of Possible Nuclear Extinction Symposium, 02-28-15\", 2015, https://ratical.org/radiation/NuclearExtinction/StevenStarr022815.html\nStarr '15\nA war fought with 21st century strategic nuclear weapons would be more than just a great catastrophe in human history. If we allow it to happen, such a war would be a mass extinction event that ends human history. There is a profound difference between extinction and “an unprecedented disaster,” or even “the end of civilization,” because even after such an immense catastrophe, human life would go on.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "30b85e221747ae6db57cdbe629b586402c9b5440b4fadd94f625d2b7c1855522",
+    "header": "Heath '18 - mil drug abuse",
+    "tag": "",
+    "cite_full": "Nick Heath, \"How blockchain could save lives by getting medicine where it's needed - TechRepublic\", 2018, https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/",
+    "author": "Nick Heath",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost,\" he said, speaking to TechRepublic at the London Blockchain Week summit. SEE: Quick glossary: Blockchain (Tech Pro Research) \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "read_spans": [
+      [
+        0,
+        170
+      ],
+      [
+        296,
+        470
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        296,
+        470
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "blockchain",
+      "counterfeit drugs",
+      "pharmaceutical supply chain",
+      "public health",
+      "drug safety"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      91,
+      92,
+      93
+    ],
+    "embedding_text": "Heath '18 - mil drug abuse\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost, \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"\n\"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "returned_document": "Nick Heath, \"How blockchain could save lives by getting medicine where it's needed - TechRepublic\", 2018, https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/\nHeath '18 - mil drug abuse\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost,\" he said, speaking to TechRepublic at the London Blockchain Week summit. SEE: Quick glossary: Blockchain (Tech Pro Research) \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "4086ced421e00073359e45f671d1198c8eaa5ff59d11d5c9f199db68d20cd6e4",
+    "header": "Matthew '21",
+    "tag": "",
+    "cite_full": "Chris Matthews, \"U.S. is 'behind the curve' on crypto regulations, says SEC Commissioner Peirce - MarketWatch\", 2021, https://www.marketwatch.com/story/u-s-is-behind-the-curve-on-crypto-regulations-says-sec-commissioner-peirce-11617824160",
+    "author": "Chris Matthews",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.marketwatch.com/story/u-s-is-behind-the-curve-on-crypto-regulations-says-sec-commissioner-peirce-11617824160",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "A top financial regulator warned that the U.S. is falling behind other countries in constructing a rational regulatory framework for the blockchain and cryptocurrency industries, and that this failure threatens to deprive the U.S. economy of the benefits of new innovations. “I think we’re certainly falling behind the curve,” said Hester Peirce, one of what will soon be five commissioners at the Securities and Exchange Commission, during an interview at MarketWatch’s Investing in Crypto virtual event series Wednesday. “We’ve seen other countries take a more productive approach to regulating crypto. Our approach has been to say no and tell people wait…we need to build a framework that is appropriate for this industry.” Read more: Blockchain firm LBRY tries to rally sector against SEC; critics allege a ‘cryptocurrency suppression program’ Cryptocurrencies and blockchain-related financial services companies are regulated by a number of federal and state agencies, including the SEC, the Commodity Futures Trading Commission, the U.S. Treasury Department and Federal Reserve, among others, and the industry has long complained that this complicated structure makes it difficult to understand the rules of the road.",
+    "read_spans": [
+      [
+        41,
+        275
+      ],
+      [
+        523,
+        657
+      ],
+      [
+        848,
+        1223
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        41,
+        275
+      ],
+      [
+        848,
+        1223
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "crypto regulation",
+      "SEC",
+      "regulatory framework",
+      "blockchain",
+      "US falling behind",
+      "Hester Peirce"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      29,
+      30,
+      31
+    ],
+    "embedding_text": "Matthew '21\nU.S. is falling behind other countries in constructing a rational regulatory framework for the blockchain and cryptocurrency industries, and that this failure threatens to deprive the U.S. economy of the benefits of new innovations.  “We’ve seen other countries take a more productive approach to regulating crypto. Our approach has been to say no and tell people wait Cryptocurrencies and blockchain-related financial services companies are regulated by a number of federal and state agencies, including the SEC, the Commodity Futures Trading Commission, the U.S. Treasury Department and Federal Reserve, among others, and the industry has long complained that this complicated structure makes it difficult to understand the rules of the road.\nU.S. is falling behind other countries in constructing a rational regulatory framework for the blockchain and cryptocurrency industries, and that this failure threatens to deprive the U.S. economy of the benefits of new innovations.  Cryptocurrencies and blockchain-related financial services companies are regulated by a number of federal and state agencies, including the SEC, the Commodity Futures Trading Commission, the U.S. Treasury Department and Federal Reserve, among others, and the industry has long complained that this complicated structure makes it difficult to understand the rules of the road.",
+    "returned_document": "Chris Matthews, \"U.S. is 'behind the curve' on crypto regulations, says SEC Commissioner Peirce - MarketWatch\", 2021, https://www.marketwatch.com/story/u-s-is-behind-the-curve-on-crypto-regulations-says-sec-commissioner-peirce-11617824160\nMatthew '21\nA top financial regulator warned that the U.S. is falling behind other countries in constructing a rational regulatory framework for the blockchain and cryptocurrency industries, and that this failure threatens to deprive the U.S. economy of the benefits of new innovations. “I think we’re certainly falling behind the curve,” said Hester Peirce, one of what will soon be five commissioners at the Securities and Exchange Commission, during an interview at MarketWatch’s Investing in Crypto virtual event series Wednesday. “We’ve seen other countries take a more productive approach to regulating crypto. Our approach has been to say no and tell people wait…we need to build a framework that is appropriate for this industry.” Read more: Blockchain firm LBRY tries to rally sector against SEC; critics allege a ‘cryptocurrency suppression program’ Cryptocurrencies and blockchain-related financial services companies are regulated by a number of federal and state agencies, including the SEC, the Commodity Futures Trading Commission, the U.S. Treasury Department and Federal Reserve, among others, and the industry has long complained that this complicated structure makes it difficult to understand the rules of the road.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "462c0ea336c7e19b4658adc25494c4d3cfb401bd3e0865d9615dca7154e8062e",
+    "header": "",
+    "tag": "",
+    "cite_full": "Federal Trade Commission.“What to Know about Cryptocurrency and Scams.” FTC.gov: Consumer Information, 26 July 2021, https://www.consumer.ftc.gov/articles/what-know-about-cryptocurrency-andscams.",
+    "author": "Federal Trade Commission",
+    "author_type": "organization",
+    "year": 2021,
+    "date_raw": "",
+    "source": "” FTC.gov: Consumer Information",
+    "url": "https://www.consumer.ftc.gov/articles/what-know-about-cryptocurrency-andscams",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "There are important differences between cryptocurrency and traditional currency. Cryptocurrency accounts are not backed by a government. Cryptocurrency accounts are not insured by a government like U.S. dollars deposited into a bank account. If you store cryptocurrency with a third-party company, and the company goes out of business or is hacked, the government has no obligation to step in and help get your money back. Cryptocurrency values change constantly. The value of a cryptocurrency can vary rapidly, even changing by the hour. It depends on many factors, including supply and demand. An investment that’s worth thousands of dollars today might be worth only hundreds tomorrow. And, if the value goes down, there’s no guarantee it will go up again. Cryptocurrency payments do not come with legal protections. Credit cards and debit cards have legal protections if something goes wrong. For example, if you need to dispute a purchase, your credit card company has a process to help you get your money back. Cryptocurrencies typically do not. Cryptocurrency payments typically are not reversible",
+    "read_spans": [
+      [
+        79,
+        240
+      ],
+      [
+        349,
+        421
+      ],
+      [
+        760,
+        818
+      ],
+      [
+        896,
+        1104
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        81,
+        240
+      ],
+      [
+        1015,
+        1104
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "consumer protection",
+      "financial risk",
+      "regulation",
+      "scams",
+      "FTC"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      7,
+      9
+    ],
+    "embedding_text": ". Cryptocurrency accounts are not backed by a government. Cryptocurrency accounts are not insured by a government like U.S. dollars deposited into a bank account the government has no obligation to step in and help get your money back Cryptocurrency payments do not come with legal protections  For example, if you need to dispute a purchase, your credit card company has a process to help you get your money back. Cryptocurrencies typically do not. Cryptocurrency payments typically are not reversible\nCryptocurrency accounts are not backed by a government. Cryptocurrency accounts are not insured by a government like U.S. dollars deposited into a bank account . Cryptocurrencies typically do not. Cryptocurrency payments typically are not reversible",
+    "returned_document": "Federal Trade Commission.“What to Know about Cryptocurrency and Scams.” FTC.gov: Consumer Information, 26 July 2021, https://www.consumer.ftc.gov/articles/what-know-about-cryptocurrency-andscams.\nThere are important differences between cryptocurrency and traditional currency. Cryptocurrency accounts are not backed by a government. Cryptocurrency accounts are not insured by a government like U.S. dollars deposited into a bank account. If you store cryptocurrency with a third-party company, and the company goes out of business or is hacked, the government has no obligation to step in and help get your money back. Cryptocurrency values change constantly. The value of a cryptocurrency can vary rapidly, even changing by the hour. It depends on many factors, including supply and demand. An investment that’s worth thousands of dollars today might be worth only hundreds tomorrow. And, if the value goes down, there’s no guarantee it will go up again. Cryptocurrency payments do not come with legal protections. Credit cards and debit cards have legal protections if something goes wrong. For example, if you need to dispute a purchase, your credit card company has a process to help you get your money back. Cryptocurrencies typically do not. Cryptocurrency payments typically are not reversible",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "4db976d8c3c9298b56b4ade83c70653384ad56529723be453d658ed4cc83782f",
+    "header": "Lisa ‘21",
+    "tag": "",
+    "cite_full": "https://www.yahoo.com/now/7-biggest-bitcoin-crashes-history-180038282.html",
+    "author": "Lisa",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "yahoo.com",
+    "url": "https://www.yahoo.com/now/7-biggest-bitcoin-crashes-history-180038282.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "unknown",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "bitcoin",
+      "cryptocurrency",
+      "market crashes"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_is_bare_url",
+      "do_not_ingest",
+      "no_body",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      115,
+      116
+    ],
+    "embedding_text": "Lisa ‘21",
+    "returned_document": "https://www.yahoo.com/now/7-biggest-bitcoin-crashes-history-180038282.html\nLisa ‘21",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "4ec487f259c6f48af4eb214d3d797ac7dab8000ef6e5d06a3021727aaad4d879",
+    "header": "Adesina ‘21",
+    "tag": "",
+    "cite_full": "Crypto cyclone hits investors, over $300 billion wiped off as Bitcoin loses $5k - Nairametrics",
+    "author": "Crypto cyclone hits investors",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "",
+    "url": "",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "On Tuesday, bitcoin dropped by thousands of dollars in a matter of hours, along with the price of many altcoins including ethereum, down more than 10%. Due to record selling pressure, over $300 billion worth of crypto was lost.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "bitcoin",
+      "market volatility",
+      "financial loss",
+      "altcoins",
+      "crypto crash"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_headline",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      169,
+      170,
+      171
+    ],
+    "embedding_text": "Adesina ‘21\nOn Tuesday, bitcoin dropped by thousands of dollars in a matter of hours, along with the price of many altcoins including ethereum, down more than 10%. Due to record selling pressure, over $300 billion worth of crypto was lost.",
+    "returned_document": "Crypto cyclone hits investors, over $300 billion wiped off as Bitcoin loses $5k - Nairametrics\nAdesina ‘21\nOn Tuesday, bitcoin dropped by thousands of dollars in a matter of hours, along with the price of many altcoins including ethereum, down more than 10%. Due to record selling pressure, over $300 billion worth of crypto was lost.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "551f3b8a7da9a003184d5b9108f97303dfabc0b9c80908640f1458d3c52d089d",
+    "header": "Ore ‘20 - Cartels",
+    "tag": "",
+    "cite_full": "Latin American cartels use cryptocurrency to launder money Oré, Diego. “Latin American crime cartels turn to cryptocurrencies for money laundering.” Reuters. 8 December 2020. https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD ",
+    "author": "Latin American cartels use cryptocurrency to launder money Oré",
+    "author_type": "organization",
+    "year": 2020,
+    "date_raw": "",
+    "source": "reuters.com",
+    "url": "https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "In April 2019, Mexican police arrested suspected human trafficker Ignacio Santoyo in a plush area of the Caribbean resort of Playa del Carmen after linking him to a prostitution racket extending across Latin America. Yet it was not the 2,000 women Santoyo is alleged to have blackmailed and sexually exploited that ultimately led to his capture, but the bitcoin he is suspected of using to help launder the proceeds of his operations, officials said. The cryptocurrency is emerging as a new front in Latin America’s struggle against gangs battling for control of vast criminal markets for sex, drugs, guns and people, according to law enforcement authorities. “There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,” said Santiago Nieto, head of the Mexican finance ministry’s financial intelligence unit (UIF). Neither Santoyo, who is in custody, nor lawyers representing him could be reached for comment, and they have not commented publicly on the case in the past. The Mexican attorney general’s office declined to comment while the case remained open. Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users. The law requires all registered cryptocurrency trading platforms to report transfers above 56,000 pesos ($2,830). It was passed in 2018 but it took many months to implement the system, which is still a work in progress. Bitcoin’s use to launder money is particularly increasing among drug gangs such as the Jalisco New Generation Cartel (CJNG) and the Sinaloa Cartel of captured kingpin Joaquin “El Chapo” Guzman, U.S. and Mexican authorities say. Mexican President Andres Manuel Lopez Obrador has faced record levels of gang-fueled violence during his first two years in office, and the prospect of cartels hiding their profits in lightlyregulated spaces is a major concern. The sums involved in the few cases uncovered are typically thousands or tens of thousands of dollars. They represent a drop in the ocean compared with organized crime’s hard cash laundry - estimated at $25 billion a year in Mexico alone, according to the government and financial-intelligence firms. Yet larger sums have begun to crop up across the region over the last three years, with a team of international police breaking up three Colombian drug gangs laundering millions of dollars via cryptocurrencies, authorities say. In Mexico, the hope is that the new rules will help snare big fish. The only thing tougher than smuggling drugs across borders is getting the profits back to cartels, officials say. Cash is heavy, and transporting it exposes traffickers to high risk. Putting it into banking systems geared to detect dirty money is perilous, too. UIF chief Nieto said criminals typically split their illicit cash into small amounts and deposited them in various bank accounts, a technique known as “smurfing”. The threshold for banking transactions that raise red flags is $7,500. They then use those accounts to buy a series of small amounts of bitcoin online, he added, obscuring the origin of the money and allowing them to pay associates elsewhere in the world. In Santoyo’s case, authorities who had been pursuing him for months said they finally tracked him down after he bought enough bitcoin to trigger an alert under the new law. Moreover, when making his transactions via a registered platform, Santoyo left personal details based in Jalisco; they must correspond to residents of Jalisco,” said Alvarez. “Volabit is a digital platform; we have users from all over the country. In fact, most of the reports are not from users who live in Jalisco. If our offices were in Mexico City they would say that 98% of the reports come from a company registered in Mexico City,” he added. In a sign of the lengths organized crime is going to avoid moving hard cash, U.S. officials have told Reuters that cartels are also turning to Chinese “money brokers” who use burner phones and Chinese banking apps to move funds. A drop in seizures of hard currency, from $741 million in 2011 to $234 million in 2018, suggests newer technologies including cryptocurrency laundering are gaining ground, according to a U.S. Drug Enforcement Agency (DEA) report published in January this year. Most of the money came from Colombian and Mexican cartels, it said. The DEA told Reuters the use of digital currencies by such cartels - or Transnational Criminal Organizations (TCOs)- was an “emerging and increasing trend to launder illicit proceeds”. “Both Mexican and Colombian TCOs are increasing their use of virtual currency because of the anonymity and speed of transactions,” said spokesman Michael Miller. “It is believed the use of virtual currency will only increase in the future.” ",
+    "read_spans": [
+      [
+        660,
+        809
+      ],
+      [
+        1672,
+        1902
+      ],
+      [
+        2726,
+        3407
+      ],
+      [
+        4257,
+        4518
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        1673,
+        1901
+      ],
+      [
+        3222,
+        3407
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "money laundering",
+      "cartels",
+      "Latin America",
+      "drug trafficking",
+      "financial crime"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      74,
+      75,
+      76
+    ],
+    "embedding_text": "Ore ‘20 - Cartels\n“There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,”  . Bitcoin’s use to launder money is particularly increasing among drug gangs such as the Jalisco New Generation Cartel (CJNG) and the Sinaloa Cartel of captured kingpin Joaquin “El Chapo” Guzman, U.S. and Mexican authorities say.  The only thing tougher than smuggling drugs across borders is getting the profits back to cartels, officials say. Cash is heavy, and transporting it exposes traffickers to high risk. Putting it into banking systems geared to detect dirty money is perilous, too. UIF chief Nieto said criminals typically split their illicit cash into small amounts and deposited them in various bank accounts, a technique known as “smurfing”. The threshold for banking transactions that raise red flags is $7,500. They then use those accounts to buy a series of small amounts of bitcoin online, he added, obscuring the origin of the money and allowing them to pay associates elsewhere in the world.   A drop in seizures of hard currency, from $741 million in 2011 to $234 million in 2018, suggests newer technologies including cryptocurrency laundering are gaining ground, according to a U.S. Drug Enforcement Agency (DEA) report published in January this year.\nBitcoin’s use to launder money is particularly increasing among drug gangs such as the Jalisco New Generation Cartel (CJNG) and the Sinaloa Cartel of captured kingpin Joaquin “El Chapo” Guzman, U.S. and Mexican authorities say. They then use those accounts to buy a series of small amounts of bitcoin online, he added, obscuring the origin of the money and allowing them to pay associates elsewhere in the world.",
+    "returned_document": "Latin American cartels use cryptocurrency to launder money Oré, Diego. “Latin American crime cartels turn to cryptocurrencies for money laundering.” Reuters. 8 December 2020. https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD \nOre ‘20 - Cartels\nIn April 2019, Mexican police arrested suspected human trafficker Ignacio Santoyo in a plush area of the Caribbean resort of Playa del Carmen after linking him to a prostitution racket extending across Latin America. Yet it was not the 2,000 women Santoyo is alleged to have blackmailed and sexually exploited that ultimately led to his capture, but the bitcoin he is suspected of using to help launder the proceeds of his operations, officials said. The cryptocurrency is emerging as a new front in Latin America’s struggle against gangs battling for control of vast criminal markets for sex, drugs, guns and people, according to law enforcement authorities. “There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,” said Santiago Nieto, head of the Mexican finance ministry’s financial intelligence unit (UIF). Neither Santoyo, who is in custody, nor lawyers representing him could be reached for comment, and they have not commented publicly on the case in the past. The Mexican attorney general’s office declined to comment while the case remained open. Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users. The law requires all registered cryptocurrency trading platforms to report transfers above 56,000 pesos ($2,830). It was passed in 2018 but it took many months to implement the system, which is still a work in progress. Bitcoin’s use to launder money is particularly increasing among drug gangs such as the Jalisco New Generation Cartel (CJNG) and the Sinaloa Cartel of captured kingpin Joaquin “El Chapo” Guzman, U.S. and Mexican authorities say. Mexican President Andres Manuel Lopez Obrador has faced record levels of gang-fueled violence during his first two years in office, and the prospect of cartels hiding their profits in lightlyregulated spaces is a major concern. The sums involved in the few cases uncovered are typically thousands or tens of thousands of dollars. They represent a drop in the ocean compared with organized crime’s hard cash laundry - estimated at $25 billion a year in Mexico alone, according to the government and financial-intelligence firms. Yet larger sums have begun to crop up across the region over the last three years, with a team of international police breaking up three Colombian drug gangs laundering millions of dollars via cryptocurrencies, authorities say. In Mexico, the hope is that the new rules will help snare big fish. The only thing tougher than smuggling drugs across borders is getting the profits back to cartels, officials say. Cash is heavy, and transporting it exposes traffickers to high risk. Putting it into banking systems geared to detect dirty money is perilous, too. UIF chief Nieto said criminals typically split their illicit cash into small amounts and deposited them in various bank accounts, a technique known as “smurfing”. The threshold for banking transactions that raise red flags is $7,500. They then use those accounts to buy a series of small amounts of bitcoin online, he added, obscuring the origin of the money and allowing them to pay associates elsewhere in the world. In Santoyo’s case, authorities who had been pursuing him for months said they finally tracked him down after he bought enough bitcoin to trigger an alert under the new law. Moreover, when making his transactions via a registered platform, Santoyo left personal details based in Jalisco; they must correspond to residents of Jalisco,” said Alvarez. “Volabit is a digital platform; we have users from all over the country. In fact, most of the reports are not from users who live in Jalisco. If our offices were in Mexico City they would say that 98% of the reports come from a company registered in Mexico City,” he added. In a sign of the lengths organized crime is going to avoid moving hard cash, U.S. officials have told Reuters that cartels are also turning to Chinese “money brokers” who use burner phones and Chinese banking apps to move funds. A drop in seizures of hard currency, from $741 million in 2011 to $234 million in 2018, suggests newer technologies including cryptocurrency laundering are gaining ground, according to a U.S. Drug Enforcement Agency (DEA) report published in January this year. Most of the money came from Colombian and Mexican cartels, it said. The DEA told Reuters the use of digital currencies by such cartels - or Transnational Criminal Organizations (TCOs)- was an “emerging and increasing trend to launder illicit proceeds”. “Both Mexican and Colombian TCOs are increasing their use of virtual currency because of the anonymity and speed of transactions,” said spokesman Michael Miller. “It is believed the use of virtual currency will only increase in the future.” ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "61b02d5680945ec15c30a7fff2725480b9e2407f3fd68d63ab6ecf4d156b2162",
+    "header": "Fordham '21",
+    "tag": "",
+    "cite_full": "Fordham, \"Taming the Crypto-Bear: Why Cryptocurrencies Will Cause the Next Recession and How to Soften the Blow\", 2021, https://news.law.fordham.edu/jcfl/2021/03/26/taming-the-crypto-bear-why-cryptocurrencies-will-cause-the-next-recession-and-how-to-soften-the-blow/",
+    "author": "Fordham",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://news.law.fordham.edu/jcfl/2021/03/26/taming-the-crypto-bear-why-cryptocurrencies-will-cause-the-next-recession-and-how-to-soften-the-blow/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The market for cryptocurrencies is neither transparent nor confidence-inducing for most people as users and holders are wary of the technology and its valuation. Additionally, financial institutions purchase volatile and unsafe coins and rehypothecate them even though they recognize that the valuation is speculative and unbacked.[39] This creates highly volatile valuations that could plummet at any minute and cause a bank run that would lead to another devastating recession or depression. Meanwhile, current regulations attempting to increase transparency and promote stability in cryptocurrencies are either ineffective or inconsistently enforced.[40]\nHistorically, recessions have pushed millions of people into poverty. Alexander 10 finds that The United\nNations has estimated that the worldwide recession has pushed 100 million more people below the\npoverty line\nAlexander 2010 (Douglas Alexander is a Visiting Professor at King &#39;s College, a Senior",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "recession",
+      "financial regulation",
+      "market volatility",
+      "bank run",
+      "poverty"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_body_same_paragraph",
+      "do_not_ingest",
+      "html_entity",
+      "no_marking",
+      "pdf_paste_fragmented",
+      "text_corrupt"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      142,
+      143,
+      144,
+      146,
+      147,
+      148,
+      150
+    ],
+    "embedding_text": "Fordham '21\nThe market for cryptocurrencies is neither transparent nor confidence-inducing for most people as users and holders are wary of the technology and its valuation. Additionally, financial institutions purchase volatile and unsafe coins and rehypothecate them even though they recognize that the valuation is speculative and unbacked.[39] This creates highly volatile valuations that could plummet at any minute and cause a bank run that would lead to another devastating recession or depression. Meanwhile, current regulations attempting to increase transparency and promote stability in cryptocurrencies are either ineffective or inconsistently enforced.[40]\nHistorically, recessions have pushed millions of people into poverty. Alexander 10 finds that The United\nNations has estimated that the worldwide recession has pushed 100 million more people below the\npoverty line\nAlexander 2010 (Douglas Alexander is a Visiting Professor at King &#39;s College, a Senior",
+    "returned_document": "Fordham, \"Taming the Crypto-Bear: Why Cryptocurrencies Will Cause the Next Recession and How to Soften the Blow\", 2021, https://news.law.fordham.edu/jcfl/2021/03/26/taming-the-crypto-bear-why-cryptocurrencies-will-cause-the-next-recession-and-how-to-soften-the-blow/\nFordham '21\nThe market for cryptocurrencies is neither transparent nor confidence-inducing for most people as users and holders are wary of the technology and its valuation. Additionally, financial institutions purchase volatile and unsafe coins and rehypothecate them even though they recognize that the valuation is speculative and unbacked.[39] This creates highly volatile valuations that could plummet at any minute and cause a bank run that would lead to another devastating recession or depression. Meanwhile, current regulations attempting to increase transparency and promote stability in cryptocurrencies are either ineffective or inconsistently enforced.[40]\nHistorically, recessions have pushed millions of people into poverty. Alexander 10 finds that The United\nNations has estimated that the worldwide recession has pushed 100 million more people below the\npoverty line\nAlexander 2010 (Douglas Alexander is a Visiting Professor at King &#39;s College, a Senior",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "631d46a7638ee28e4fd2922cf230067a7c97b1928baf23028564abe42e7b7be8",
+    "header": "Kessering ‘18",
+    "tag": "",
+    "cite_full": "“Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research.” Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research | Business Wire, 10 Oct. 2018, \nhttps://www.businesswire.com/news/home/20181010005694/en/Ninety-SevenPercent-97-of-Criminal-Bitcoin-Flows-into-Unregulated-CryptocurrencyExchanges-According-to-New-Research. ",
+    "author": "“Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research",
+    "author_type": "organization",
+    "year": 2018,
+    "date_raw": "",
+    "source": "” Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research | Business Wire",
+    "url": "https://www.businesswire.com/news/home/20181010005694/en/Ninety-SevenPercent-97-of-Criminal-Bitcoin-Flows-into-Unregulated-CryptocurrencyExchanges-According-to-New-Research",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Efforts to enact and enforce strong cryptocurrency Anti-Money Laundering (AML) regulations are drastically reducing criminal activity on digital currency exchanges, according to new research released today in the CipherTrace 2018 Q3 Cryptocurrency Anti-Money Laundering Report. The study revealed that 97 percent of direct bitcoin payments from criminals went to exchanges in countries with weak anti-money laundering laws.",
+    "read_spans": [
+      [
+        50,
+        163
+      ],
+      [
+        287,
+        423
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        51,
+        163
+      ],
+      [
+        297,
+        340
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "anti-money laundering",
+      "bitcoin",
+      "criminal activity",
+      "exchanges",
+      "AML enforcement"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      59,
+      60,
+      62,
+      64
+    ],
+    "embedding_text": "Kessering ‘18\nAnti-Money Laundering (AML) regulations are drastically reducing criminal activity on digital currency exchanges  revealed that 97 percent of direct bitcoin payments from criminals went to exchanges in countries with weak anti-money laundering laws.\nAnti-Money Laundering (AML) regulations are drastically reducing criminal activity on digital currency exchanges that 97 percent of direct bitcoin payments",
+    "returned_document": "“Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research.” Ninety-Seven Percent (97%) of Criminal Bitcoin Flows into Unregulated Cryptocurrency Exchanges According to New Research | Business Wire, 10 Oct. 2018, \nhttps://www.businesswire.com/news/home/20181010005694/en/Ninety-SevenPercent-97-of-Criminal-Bitcoin-Flows-into-Unregulated-CryptocurrencyExchanges-According-to-New-Research. \nKessering ‘18\nEfforts to enact and enforce strong cryptocurrency Anti-Money Laundering (AML) regulations are drastically reducing criminal activity on digital currency exchanges, according to new research released today in the CipherTrace 2018 Q3 Cryptocurrency Anti-Money Laundering Report. The study revealed that 97 percent of direct bitcoin payments from criminals went to exchanges in countries with weak anti-money laundering laws.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "633722d9af44661d828cf389b3377a9faa6d730047d60b7d414f2e6a55c5f3b4",
+    "header": "",
+    "tag": "",
+    "cite_full": "27 th 2010, https://onlinelibrary.wiley.com/doi/full/10.1111/j.1758-5899.2009.00018.x.",
+    "author": "27 th 2010",
+    "author_type": "person",
+    "year": 2010,
+    "date_raw": "",
+    "source": "onlinelibrary.wiley.com",
+    "url": "https://onlinelibrary.wiley.com/doi/full/10.1111/j.1758-5899.2009.00018.x",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "DOA: October 7 th 2021) TG\nBecause 80 per cent of remittances to developing countries come from high-income countries, this\nsource of income is vulnerable to economic crises – and indeed is expected to have fallen by between\n$25 billion and $66 billion over 2009 (Cali and Dell’Erba, 2009). This collapse in economic activity – from\ninvestment to trade and remittances – has turned the financial crisis into a social crisis. For the poorest\npeople in the least developed countries, this comes shortly after the rise in food prices in 2008 that is estimated to have pushed between 130\nand 155 million people into poverty (World Bank, 2008). The United Nations has estimated that the worldwide\nrecession has pushed 100 million more people below the poverty line (UN, 2009). That could set back progress\ntowards meeting the first of the Millennium Development Goals – to halve extreme poverty – by up to three years (Alexander, 2008).",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "remittances",
+      "developing countries",
+      "economic crisis",
+      "poverty",
+      "financial crisis",
+      "Millennium Development Goals"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "do_not_ingest",
+      "no_header",
+      "no_marking",
+      "pdf_paste_fragmented",
+      "text_corrupt"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162
+    ],
+    "embedding_text": "DOA: October 7 th 2021) TG\nBecause 80 per cent of remittances to developing countries come from high-income countries, this\nsource of income is vulnerable to economic crises – and indeed is expected to have fallen by between\n$25 billion and $66 billion over 2009 (Cali and Dell’Erba, 2009). This collapse in economic activity – from\ninvestment to trade and remittances – has turned the financial crisis into a social crisis. For the poorest\npeople in the least developed countries, this comes shortly after the rise in food prices in 2008 that is estimated to have pushed between 130\nand 155 million people into poverty (World Bank, 2008). The United Nations has estimated that the worldwide\nrecession has pushed 100 million more people below the poverty line (UN, 2009). That could set back progress\ntowards meeting the first of the Millennium Development Goals – to halve extreme poverty – by up to three years (Alexander, 2008).",
+    "returned_document": "27 th 2010, https://onlinelibrary.wiley.com/doi/full/10.1111/j.1758-5899.2009.00018.x.\nDOA: October 7 th 2021) TG\nBecause 80 per cent of remittances to developing countries come from high-income countries, this\nsource of income is vulnerable to economic crises – and indeed is expected to have fallen by between\n$25 billion and $66 billion over 2009 (Cali and Dell’Erba, 2009). This collapse in economic activity – from\ninvestment to trade and remittances – has turned the financial crisis into a social crisis. For the poorest\npeople in the least developed countries, this comes shortly after the rise in food prices in 2008 that is estimated to have pushed between 130\nand 155 million people into poverty (World Bank, 2008). The United Nations has estimated that the worldwide\nrecession has pushed 100 million more people below the poverty line (UN, 2009). That could set back progress\ntowards meeting the first of the Millennium Development Goals – to halve extreme poverty – by up to three years (Alexander, 2008).",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "66de11bfdbef79ab24e6b5b01fa746dc95dc6460935becb6d31b9eadabd0e08c",
+    "header": "Dreyfuss '20",
+    "tag": "",
+    "cite_full": "Gertrude Chavez-Dreyfuss, \"Cryptocurrency crime losses more than double to $4.5 billion in 2019, report finds | Reuters\", 2020, https://www.reuters.com/article/us-crypto-currencies-crime/cryptocurrency-crime-losses-more-than-double-to-4-5-billion-in-2019-report-finds-idUSKBN2051VT",
+    "author": "Gertrude Chavez-Dreyfuss",
+    "author_type": "person",
+    "year": 2019,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.reuters.com/article/us-crypto-currencies-crime/cryptocurrency-crime-losses-more-than-double-to-4-5-billion-in-2019-report-finds-idUSKBN2051VT",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "NEW YORK (Reuters) - Losses from cryptocurrency crime surged to $4.52 billion last year, as insider theft soared even as hacking losses declined, according to a report from blockchain forensics company CipherTrace seen by Reuters. Last year’s losses were up nearly 160% from 2018’s total of $1.74 billion. Blockchain, which first emerged as the system powering bitcoin, is a shared database maintained by a network of computers. Cryptocurrency user and investor losses due to fraud and misappropriation in 2019 increased by more than five times, while hacks and thefts fell by 66%, the report showed.",
+    "read_spans": [
+      [
+        20,
+        87
+      ],
+      [
+        236,
+        305
+      ],
+      [
+        469,
+        485
+      ],
+      [
+        502,
+        544
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        20,
+        87
+      ],
+      [
+        236,
+        305
+      ],
+      [
+        469,
+        485
+      ],
+      [
+        502,
+        544
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "crime",
+      "blockchain",
+      "fraud",
+      "hacking",
+      "financial losses"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "fully_marked",
+      "no_header"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      35,
+      36,
+      37
+    ],
+    "embedding_text": "Dreyfuss '20\nLosses from cryptocurrency crime surged to $4.52 billion last year year’s losses were up nearly 160% from 2018’s total of $1.74 billion. due to fraud and  in 2019 increased by more than five times\nLosses from cryptocurrency crime surged to $4.52 billion last year year’s losses were up nearly 160% from 2018’s total of $1.74 billion. due to fraud and  in 2019 increased by more than five times",
+    "returned_document": "Gertrude Chavez-Dreyfuss, \"Cryptocurrency crime losses more than double to $4.5 billion in 2019, report finds | Reuters\", 2020, https://www.reuters.com/article/us-crypto-currencies-crime/cryptocurrency-crime-losses-more-than-double-to-4-5-billion-in-2019-report-finds-idUSKBN2051VT\nDreyfuss '20\nNEW YORK (Reuters) - Losses from cryptocurrency crime surged to $4.52 billion last year, as insider theft soared even as hacking losses declined, according to a report from blockchain forensics company CipherTrace seen by Reuters. Last year’s losses were up nearly 160% from 2018’s total of $1.74 billion. Blockchain, which first emerged as the system powering bitcoin, is a shared database maintained by a network of computers. Cryptocurrency user and investor losses due to fraud and misappropriation in 2019 increased by more than five times, while hacks and thefts fell by 66%, the report showed.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "841b8d6b25446d61cc4e76083d167bbab0e5c6310930fbd4c078026ecc973f13",
+    "header": "",
+    "tag": "",
+    "cite_full": "Fellow at Harvard Kennedy School, and a Visiting Professor at New York University. “The",
+    "author": "Fellow at Harvard Kennedy School",
+    "author_type": "organization",
+    "year": null,
+    "date_raw": "",
+    "source": "",
+    "url": "",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Impact of the Economic Crisis on the World’s Poorest Countries”, Global Policy, January",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "unknown",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "economic crisis",
+      "poverty",
+      "global policy",
+      "developing countries"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_body_same_paragraph",
+      "cite_is_bare_headline",
+      "do_not_ingest",
+      "no_body",
+      "no_header",
+      "no_marking",
+      "pdf_paste_fragmented",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      151,
+      152
+    ],
+    "embedding_text": "Impact of the Economic Crisis on the World’s Poorest Countries”, Global Policy, January",
+    "returned_document": "Fellow at Harvard Kennedy School, and a Visiting Professor at New York University. “The\nImpact of the Economic Crisis on the World’s Poorest Countries”, Global Policy, January",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "89801d405bfc896d50dfe29eed6445cfe300a76d34905f750404d5005ac68b77",
+    "header": "",
+    "tag": "",
+    "cite_full": "Smith, Sean Stein. “Crypto Regulation Needs Clarity, but Rushing It Is a Bad Idea.” Forbes, Forbes Magazine, 3 Aug. 2021, https://www.forbes.com/sites/seansteinsmith/2021/08/03/crypto-regulationneeds-clarity-but-rushing-it-is-a-bad-idea/?sh=24923ed67629. ",
+    "author": "Smith",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "” Forbes",
+    "url": "https://www.forbes.com/sites/seansteinsmith/2021/08/03/crypto-regulationneeds-clarity-but-rushing-it-is-a-bad-idea/?sh=24923ed67629",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "No matter what sector is being analyzed, an underlying truth of business is that business dreads uncertainty, and that is exactly what the blockchain and crypto sectors have been operating with since inception. Despite this uncertainty, however, the ecosystem has continuously developed and grown in an array of new directions, but resolving some of the tax and reporting ambiguity around crypto would go a long way to increasing business confidence.",
+    "read_spans": [
+      [
+        110,
+        211
+      ],
+      [
+        328,
+        450
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "crypto regulation",
+      "blockchain",
+      "tax policy",
+      "regulatory clarity",
+      "business uncertainty",
+      "cryptocurrency"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      106,
+      107
+    ],
+    "embedding_text": "and that is exactly what the blockchain and crypto sectors have been operating with since inception.  but resolving some of the tax and reporting ambiguity around crypto would go a long way to increasing business confidence.",
+    "returned_document": "Smith, Sean Stein. “Crypto Regulation Needs Clarity, but Rushing It Is a Bad Idea.” Forbes, Forbes Magazine, 3 Aug. 2021, https://www.forbes.com/sites/seansteinsmith/2021/08/03/crypto-regulationneeds-clarity-but-rushing-it-is-a-bad-idea/?sh=24923ed67629. \nNo matter what sector is being analyzed, an underlying truth of business is that business dreads uncertainty, and that is exactly what the blockchain and crypto sectors have been operating with since inception. Despite this uncertainty, however, the ecosystem has continuously developed and grown in an array of new directions, but resolving some of the tax and reporting ambiguity around crypto would go a long way to increasing business confidence.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "95730664ab492b0e7868588e55d42ef8afc906deb406f940d70b31d492757a22",
+    "header": "Eva 21",
+    "tag": "",
+    "cite_full": "Szalay, Eva. “Bitcoin: Too Good to Miss or a Bubble Ready to Burst?” Financial Times, 30 Apr. 2021, https://www.ft.com/content/be796d33-a5e7-4753-98a8- b586f1680d58.",
+    "author": "Szalay",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "” Financial Times",
+    "url": "https://www.ft.com/content/be796d33-a5e7-4753-98a8-",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " So is bitcoin just a big Ponzi scheme or a genuine investment opportunity? Should retail investors give in to the temptation to pile in? FT Money has spoken to finance professionals inside and outside the cryptomarket and found that opinion remains sharply divided. The recent stellar performance has turned some bears into bulls. But hardcore naysayers warn that a bubble that has grown bigger is still a bubble. Even ardent crypto fans are reluctant to wager their life savings on an asset associated with hair-raising levels of volatility. Even among these enthusiasts, many limit their investments to 1-2 per cent of their portfolio. ",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "bitcoin",
+      "cryptocurrency",
+      "investment risk",
+      "volatility",
+      "bubble",
+      "retail investors"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      130,
+      131,
+      132
+    ],
+    "embedding_text": "Eva 21\n So is bitcoin just a big Ponzi scheme or a genuine investment opportunity? Should retail investors give in to the temptation to pile in? FT Money has spoken to finance professionals inside and outside the cryptomarket and found that opinion remains sharply divided. The recent stellar performance has turned some bears into bulls. But hardcore naysayers warn that a bubble that has grown bigger is still a bubble. Even ardent crypto fans are reluctant to wager their life savings on an asset associated with hair-raising levels of volatility. Even among these enthusiasts, many limit their investments to 1-2 per cent of their portfolio. ",
+    "returned_document": "Szalay, Eva. “Bitcoin: Too Good to Miss or a Bubble Ready to Burst?” Financial Times, 30 Apr. 2021, https://www.ft.com/content/be796d33-a5e7-4753-98a8- b586f1680d58.\nEva 21\n So is bitcoin just a big Ponzi scheme or a genuine investment opportunity? Should retail investors give in to the temptation to pile in? FT Money has spoken to finance professionals inside and outside the cryptomarket and found that opinion remains sharply divided. The recent stellar performance has turned some bears into bulls. But hardcore naysayers warn that a bubble that has grown bigger is still a bubble. Even ardent crypto fans are reluctant to wager their life savings on an asset associated with hair-raising levels of volatility. Even among these enthusiasts, many limit their investments to 1-2 per cent of their portfolio. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "962efd6ca8733f3f30e4b6a3b6603321c34c65e132d84b2f381d2db67dfd3a52",
+    "header": "Wegberg ‘18",
+    "tag": "",
+    "cite_full": "van Wegberg, R., Oerlemans, J.-J. and van Deventer, O. (2018), \"Bitcoin money laundering: mixed results? An explorative study on money laundering of cybercrime proceeds using bitcoin\", Journal of Financial Crime, Vol. 25 No. 2, pp. 419-435.\n https://doi.org/10.1108/JFC-11-2016-0067 ",
+    "author": "van Wegberg",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://doi.org/10.1108/JFC-11-2016-0067",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "In both types of cybercrime, bitcoin can be seen as an enabler of the digital criminal enterprise. The main instigators of their popularity among cybercriminals is that they are straightforward to use, relatively anonymous, and their use is unimpeded by borders or legislation (Shcherbak, 2013; Bryans, 2014). Steadily, bitcoin has proven itself to be a vital part of the criminal enterprises. For instance, ransomware victims are pressed to exchange the ransom from fiat currency to bitcoin and transfer this amount to a specific bitcoin address that is provided by the criminals. On underground markets, large amounts of goods and services – like drugs, weapons and DDoS-attacks – are bought and sold using bitcoin as method of payment. In online underground markets, bitcoins are therefore to be seen as the preferred currency of criminals (Motoyama et al., 2011; Sood et al., 2013; Moore and Rid, 2016). And recently, criminals start to embrace bitcoin as a partner in their cash-out strategy and launder money aided by bitcoin (Möser et al., 2013).",
+    "read_spans": [
+      [
+        99,
+        276
+      ],
+      [
+        582,
+        737
+      ],
+      [
+        908,
+        1053
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "bitcoin",
+      "money laundering",
+      "cybercrime",
+      "cryptocurrency anonymity",
+      "ransomware",
+      "underground markets"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      66,
+      67,
+      69,
+      71
+    ],
+    "embedding_text": "Wegberg ‘18\nThe main instigators of their popularity among cybercriminals is that they are straightforward to use, relatively anonymous, and their use is unimpeded by borders or legislation On underground markets, large amounts of goods and services – like drugs, weapons and DDoS-attacks – are bought and sold using bitcoin as method of payment And recently, criminals start to embrace bitcoin as a partner in their cash-out strategy and launder money aided by bitcoin (Möser et al., 2013).",
+    "returned_document": "van Wegberg, R., Oerlemans, J.-J. and van Deventer, O. (2018), \"Bitcoin money laundering: mixed results? An explorative study on money laundering of cybercrime proceeds using bitcoin\", Journal of Financial Crime, Vol. 25 No. 2, pp. 419-435.\n https://doi.org/10.1108/JFC-11-2016-0067 \nWegberg ‘18\nIn both types of cybercrime, bitcoin can be seen as an enabler of the digital criminal enterprise. The main instigators of their popularity among cybercriminals is that they are straightforward to use, relatively anonymous, and their use is unimpeded by borders or legislation (Shcherbak, 2013; Bryans, 2014). Steadily, bitcoin has proven itself to be a vital part of the criminal enterprises. For instance, ransomware victims are pressed to exchange the ransom from fiat currency to bitcoin and transfer this amount to a specific bitcoin address that is provided by the criminals. On underground markets, large amounts of goods and services – like drugs, weapons and DDoS-attacks – are bought and sold using bitcoin as method of payment. In online underground markets, bitcoins are therefore to be seen as the preferred currency of criminals (Motoyama et al., 2011; Sood et al., 2013; Moore and Rid, 2016). And recently, criminals start to embrace bitcoin as a partner in their cash-out strategy and launder money aided by bitcoin (Möser et al., 2013).",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "9eeedae6ead440b83a12cbfb3f4c862e51df8507a3f2eeb4ec5bff9758b19699",
+    "header": "Massad ‘19",
+    "tag": "",
+    "cite_full": "Massad, Timothy.\n “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together",
+    "author": "Massad",
+    "author_type": "person",
+    "year": 2019,
+    "date_raw": "",
+    "source": "” Harvard Kennedy School",
+    "url": "https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together",
+    "read_spans": [
+      [
+        345,
+        612
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "crypto regulation",
+      "SEC",
+      "CFTC",
+      "investor protection",
+      "regulatory gap",
+      "fraud"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_body_same_paragraph",
+      "duplicate_source",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      134,
+      135,
+      136
+    ],
+    "embedding_text": "Massad ‘19\n. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system.",
+    "returned_document": "Massad, Timothy.\n “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together\nMassad ‘19\n “It's Time to Strengthen the Regulation of Crypto-Assets.” Harvard Kennedy School, 2019. https://www.hks.harvard.edu/centers/mrcbg/publications/awp/awp112. There is a gap in the regulation of crypto-assets that Congress needs to fix. The gap is contributing to fraud and weak investor protection in the distribution and trading of crypto-assets. Better regulation will benefit crypto investors, further the development of new technologies, curtail the use of crypto-assets used for illicit payments, and reduce the risk of cyber attacks, which can result in collateral damage elsewhere in our financial system. Crypto-assets cut across current jurisdictional boundaries and thus fall into gaps between regulatory authorities. While each of the Securities and Exchange Commission (SEC) and the Commodity Futures Trading Commission (CFTC) has some authority over crypto-assets, neither has sufficient jurisdiction, nor do they together",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "a935584d2ef886f21f12c51c08957f91233e1bb230255d869e43e34281d4b362",
+    "header": "Edmondson '21",
+    "tag": "",
+    "cite_full": "Edmondson, \"Can Bitcoin Regulations Make Cryptocurrency Safer?\", Mon Nov 15 2021, https://www.thebalance.com/can-bitcoin-regulation-make-cryptocurrency-safer-4173836",
+    "author": "Edmondson",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "Nov 15 2021",
+    "source": "\"",
+    "url": "https://www.thebalance.com/can-bitcoin-regulation-make-cryptocurrency-safer-4173836",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "But over the long term, regulations if done properly, may have the potential to stabilize the market and reduce some amount of risk for cryptocurrency investors. Will Bitcoin Regulation Make the Market Safer? Bitcoin regulation has the potential to make the market much safer. It will still likely be a risky investment, but with protections for investors, it’s less likely that the market will be able to face as much outside manipulation. Overall, this is a good thing for people who want to invest in cryptocurrency. Safer markets mean more public confidences, which often means prices go up over time.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "bitcoin regulation",
+      "cryptocurrency safety",
+      "market stability",
+      "investor protection",
+      "market manipulation",
+      "public confidence"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_header",
+      "no_marking",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      138,
+      139,
+      140
+    ],
+    "embedding_text": "Edmondson '21\nBut over the long term, regulations if done properly, may have the potential to stabilize the market and reduce some amount of risk for cryptocurrency investors. Will Bitcoin Regulation Make the Market Safer? Bitcoin regulation has the potential to make the market much safer. It will still likely be a risky investment, but with protections for investors, it’s less likely that the market will be able to face as much outside manipulation. Overall, this is a good thing for people who want to invest in cryptocurrency. Safer markets mean more public confidences, which often means prices go up over time.",
+    "returned_document": "Edmondson, \"Can Bitcoin Regulations Make Cryptocurrency Safer?\", Mon Nov 15 2021, https://www.thebalance.com/can-bitcoin-regulation-make-cryptocurrency-safer-4173836\nEdmondson '21\nBut over the long term, regulations if done properly, may have the potential to stabilize the market and reduce some amount of risk for cryptocurrency investors. Will Bitcoin Regulation Make the Market Safer? Bitcoin regulation has the potential to make the market much safer. It will still likely be a risky investment, but with protections for investors, it’s less likely that the market will be able to face as much outside manipulation. Overall, this is a good thing for people who want to invest in cryptocurrency. Safer markets mean more public confidences, which often means prices go up over time.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "b001f0dae181008e1083446a9e5bdd4843170e1ee62be47e5240dcbdbb06e95e",
+    "header": "Wike ‘17",
+    "tag": "",
+    "cite_full": "Wike, Richard, Jacob Poushter, Laura Silver, and Caldwell Bishop. “Globally, more name US than China as World’s Leading Economic Power.” Pew Research Center. 13 July 2017. https://www.pewresearch.org/global/2017/07/13/more-name-u-s-than-china-as-worldsleading-economic-power/ ",
+    "author": "Wike",
+    "author_type": "person",
+    "year": 2017,
+    "date_raw": "",
+    "source": "pewresearch.org",
+    "url": "https://www.pewresearch.org/global/2017/07/13/more-name-u-s-than-china-as-worldsleading-economic-power/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The past decade has witnessed significant changes in the global economy as many nations around the world have struggled with the Great Recession and its aftereffects. While the United States and other relatively wealthy Western nations have slowly bounced back from the crisis, economic growth rates have been low compared with those of China, India and other emerging economies. Still, the prevailing view among publics around the world is that the U.S. is the top global economic power. Across 38 nations polled by Pew Research Center, a median of 42% say the U.S. is the world’s leading economy, while 32% name China. Across all of the countries surveyed in Latin America, as well as most in Asia and sub-Saharan Africa, publics tend to believe the U.S. is the top economy. And by a 51%-35% margin, Americans name their own country rather than China. But in seven of the 10 European Union nations in the study, China is considered the leading economic power (it is tied with the U.S. for the top spot in Italy). A plurality in Russia also holds this view. ",
+    "read_spans": [
+      [
+        380,
+        597
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "US economic power",
+      "China",
+      "global perception",
+      "Pew Research",
+      "economic leadership",
+      "public opinion"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      45,
+      46,
+      47
+    ],
+    "embedding_text": "Wike ‘17\nStill, the prevailing view among publics around the world is that the U.S. is the top global economic power. Across 38 nations polled by Pew Research Center, a median of 42% say the U.S. is the world’s leading economy",
+    "returned_document": "Wike, Richard, Jacob Poushter, Laura Silver, and Caldwell Bishop. “Globally, more name US than China as World’s Leading Economic Power.” Pew Research Center. 13 July 2017. https://www.pewresearch.org/global/2017/07/13/more-name-u-s-than-china-as-worldsleading-economic-power/ \nWike ‘17\nThe past decade has witnessed significant changes in the global economy as many nations around the world have struggled with the Great Recession and its aftereffects. While the United States and other relatively wealthy Western nations have slowly bounced back from the crisis, economic growth rates have been low compared with those of China, India and other emerging economies. Still, the prevailing view among publics around the world is that the U.S. is the top global economic power. Across 38 nations polled by Pew Research Center, a median of 42% say the U.S. is the world’s leading economy, while 32% name China. Across all of the countries surveyed in Latin America, as well as most in Asia and sub-Saharan Africa, publics tend to believe the U.S. is the top economy. And by a 51%-35% margin, Americans name their own country rather than China. But in seven of the 10 European Union nations in the study, China is considered the leading economic power (it is tied with the U.S. for the top spot in Italy). A plurality in Russia also holds this view. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "b138756734efec0960e1ce0104624d8236212805f98ad4dfc5e7da31d45f23e3",
+    "header": "Meijer '20",
+    "tag": "",
+    "cite_full": "Meijer, \"Remaining challenges of blockchain adoption and possible solutions\", 2020, https://www.finextra.com/blogposting/18496/remaining-challenges-of-blockchain-adoption-and-possible-solutions",
+    "author": "Meijer",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.finextra.com/blogposting/18496/remaining-challenges-of-blockchain-adoption-and-possible-solutions",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Most of the blockchain technology follow bitcoins infrastructure and use Proof of Proof-of-work (PoW) as consensus mechanism for validating transactions. These protocols require users to solve complex mathematical puzzles, and require tremendous computing power to verify and process transactions and to secure the network.",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "blockchain",
+      "proof-of-work",
+      "energy consumption",
+      "consensus mechanism",
+      "computing power",
+      "cryptocurrency"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "no_header",
+      "no_marking",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      165,
+      166,
+      167
+    ],
+    "embedding_text": "Meijer '20\nMost of the blockchain technology follow bitcoins infrastructure and use Proof of Proof-of-work (PoW) as consensus mechanism for validating transactions. These protocols require users to solve complex mathematical puzzles, and require tremendous computing power to verify and process transactions and to secure the network.",
+    "returned_document": "Meijer, \"Remaining challenges of blockchain adoption and possible solutions\", 2020, https://www.finextra.com/blogposting/18496/remaining-challenges-of-blockchain-adoption-and-possible-solutions\nMeijer '20\nMost of the blockchain technology follow bitcoins infrastructure and use Proof of Proof-of-work (PoW) as consensus mechanism for validating transactions. These protocols require users to solve complex mathematical puzzles, and require tremendous computing power to verify and process transactions and to secure the network.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "cc3aed547805c939765597e659fca866e5b46b943623397c87fd16deec2f2da6",
+    "header": "Hayes 18 (Nuclear War)",
+    "tag": "",
+    "cite_full": "Dr. Peter J. Hayes 18, Executive Director of the Nautilus Institute for Security and Sustainability, Ph.D. in Energy and Resources from the University of California-Berkeley, Professor of International Relations at RMIT University, “Non-State Terrorism and Inadvertent Nuclear War”, \nNAPSNet Special Reports, 1/18/2018, https://nautilus.org/napsnet/napsnetspecial-reports/non-state-terrorism-and-inadvertent-nuclear-war/ 83 ",
+    "author": "Dr",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "1/18/2018",
+    "source": "”",
+    "url": "https://nautilus.org/napsnet/napsnetspecial-reports/non-state-terrorism-and-inadvertent-nuclear-war/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The critical issue is how a nuclear terrorist attack may “catalyze” inter-state nuclear war, specially the NC3 systems that inform and partly determine how leaders respond to nuclear threat. Current conditions in Northeast Asia suggest that multiple precursory conditions for nuclear terrorism already exist or exist in nascent form. In Japan, for example, low-level, individual, terroristic violence with nuclear materials, against nuclear facilities, is real. In all countries of the region, the risk of diversion of nuclear material is real, although the risk is likely higher due to volume and laxity of security in some countries of the region than in others. In all countries, the risk of an insider “sleeper” threat is real in security and nuclear agencies, and such insiders already operated in actual terrorist organizations. Insider corruption is also observable in nuclear fuel cycle agencies in all countries of the region. The threat of extortion to induce insider cooperation is also real in all countries. The possibility of a cult attempting to build and buy nuclear weapons is real and has already occurred in the region.[15] Cyber-terrorism against nuclear reactors is real and such attacks have already taken place in South Korea (although it remains difficult to attribute the source of the attacks with certainty). The stand-off ballistic and drone threat to nuclear weapons and fuel cycle facilities is real in the region, including from non-state actors, some of whom have already adopted and used such technology almost instantly from when it becomes accessible (for example, drones).[16] Two other broad risk factors are also present in the region. The social and political conditions for extreme ethnic and xenophobic nationalism are emerging in China, Korea, Japan, and Russia. Although there has been no risk of attack on or loss of control over nuclear weapons since their removal from Japan in 1972 and from South Korea in 1991, this risk continues to exist in North Korea, China, and Russia, and to the extent that they are deployed on aircraft and ships of these and other nuclear weapons states (including submarines) deployed in the region’s high seas, also outside their territorial borders. The most conducive circumstance for catalysis to occur due to a nuclear terrorist attack might involve the following nexi of timing and conditions: 1. Low-level, tactical, or random individual terrorist attacksfor whatever reasons, even assassination of national leaders, up to and including dirty radiological bomb attacks, that overlap with inter-state crisis dynamics in ways that affect state decisions to threaten with or to use nuclear weapons. This might be undertaken by an opportunist nuclear terrorist entity in search of rapid and high political impact. 2. Attacks on major national or international events in each country to maximize terror and to de-legitimate national leaders and whole governments. In Japan, for example, more than ten heads of state and senior ministerial international meetings are held each year. For the strategic nuclear terrorist, patiently acquiring higher level nuclear threat capabilities for such attacks and then staging them to maximum effect could accrue strategic gains. 3. Attacks or threatened attacks, including deception and disguised attacks, will have maximum leverage when nuclear-armed states are near or on the brink of war or during a national crisis (such as Fukushima), when intelligence agencies, national leaders, facility operators, surveillance and policing agencies, and first responders are already maximally committed and over-extended. At this point, we note an important caveat to the original concept of catalytic nuclear war as it might pertain to nuclear terrorist threats or attacks. Although an attack might be disguised so that it is attributed to a nuclear-armed state, or a ruse might be undertaken to threaten such attacks by deception, in reality a catalytic strike by a nuclear weapons state in conditions of mutual vulnerability to nuclear retaliation for such a strike from other nuclear armed states would be highly irrational. Accordingly, the effect of nuclear terrorism involving a nuclear detonation or major radiological release may not of itself be catalytic of nuclear war—at least not intentionally–because it will not lead directly to the destruction of a targeted nuclear-armed state. Rather, it may be catalytic of non-nuclear war between states, especially if the non-state actor turns out to be aligned with or sponsored by a state (in many Japanese minds, the natural candidate for the perpetrator of such an attack is the pro-North Korean General Association of Korean Residents, often called Chosen Soren, which represents many of the otherwise stateless Koreans who were born and live in Japan) and a further sequence of coincident eventsis necessary to drive escalation to the point of nuclear first use by a state. Also, the catalyst—the non-state actor–is almost assured of discovery and destruction either during the attack itself (if it takes the form of a nuclear suicide attack then self-immolation is assured) or as a result of a search-and-destroy campaign from the targeted state (unless the targeted government is annihilated by the initial terrorist nuclear attack). It follows that the effects of a non-state nuclear attack may be characterized better as a trigger effect, bringing about a cascade of nuclear use decisions within NC3 systems that shift each state increasingly away from nuclear non-use and increasingly towards nuclear use by releasing negative controls and enhancing positive controls in multiple action-reaction escalation spirals (depending on how many nuclear armed states are party to an inter-state conflict that is already underway at the time of the nonstate nuclear attack); and/or by inducing concatenating nuclear attacks across geographically proximate nuclear weapons forces of states already caught in the crossfire of nuclear threat or attacks of their own making before a nuclear terrorist attack.[1",
+    "read_spans": [
+      [
+        0,
+        93
+      ],
+      [
+        238,
+        335
+      ],
+      [
+        342,
+        461
+      ],
+      [
+        1046,
+        1137
+      ],
+      [
+        4134,
+        4553
+      ],
+      [
+        4939,
+        5302
+      ],
+      [
+        5355,
+        5471
+      ],
+      [
+        5472,
+        6070
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        4131,
+        4552
+      ],
+      [
+        5355,
+        5608
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "nuclear terrorism",
+      "catalytic nuclear war",
+      "Northeast Asia",
+      "NC3 systems",
+      "escalation",
+      "non-state actors"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "do_not_ingest",
+      "fully_marked",
+      "pdf_paste_fragmented"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      16,
+      17,
+      18,
+      20
+    ],
+    "embedding_text": "Hayes 18 (Nuclear War)\nThe critical issue is how a nuclear terrorist attack may “catalyze” inter-state nuclear war,  at multiple precursory conditions for nuclear terrorism already exist or exist in nascent form. I , for example, low-level, individual, terroristic violence with nuclear materials, against nuclear facilities, is real.  attempting to build and buy nuclear weapons is real and has already occurred in the region . Accordingly, the effect of nuclear terrorism involving a nuclear detonation or major radiological release may not of itself be catalytic of nuclear war—at least not intentionally–because it will not lead directly to the destruction of a targeted nuclear-armed state. Rather, it may be catalytic of non-nuclear war between states, especially if the non-state actor turns out to be aligned with or sponsored by a state  e. Also, the catalyst—the non-state actor–is almost assured of discovery and destruction either during the attack itself (if it takes the form of a nuclear suicide attack then self-immolation is assured) or as a result of a search-and-destroy campaign from the targeted state (unless the targeted government is annihilated by the initial terrorist nuclear attack) attack may be characterized better as a trigger effect, bringing about a cascade of nuclear use decisions within NC3 systems that shift each state increasingly away from nuclear non-use and increasingly towards nuclear use by releasing negative controls and enhancing positive controls in multiple action-reaction escalation spirals (depending on how many nuclear armed states are party to an inter-state conflict that is already underway at the time of the nonstate nuclear attack); and/or by inducing concatenating nuclear attacks across geographically proximate nuclear weapons forces of states already caught in the crossfire of nuclear threat or attacks of their own making before a nuclear terrorist attack.[1\nnal. Accordingly, the effect of nuclear terrorism involving a nuclear detonation or major radiological release may not of itself be catalytic of nuclear war—at least not intentionally–because it will not lead directly to the destruction of a targeted nuclear-armed state. Rather, it may be catalytic of non-nuclear war between states, especially if the non-state actor turns out to be aligned with or sponsored by a state attack may be characterized better as a trigger effect, bringing about a cascade of nuclear use decisions within NC3 systems that shift each state increasingly away from nuclear non-use and increasingly towards nuclear use by releasing negative controls",
+    "returned_document": "Dr. Peter J. Hayes 18, Executive Director of the Nautilus Institute for Security and Sustainability, Ph.D. in Energy and Resources from the University of California-Berkeley, Professor of International Relations at RMIT University, “Non-State Terrorism and Inadvertent Nuclear War”, \nNAPSNet Special Reports, 1/18/2018, https://nautilus.org/napsnet/napsnetspecial-reports/non-state-terrorism-and-inadvertent-nuclear-war/ 83 \nHayes 18 (Nuclear War)\nThe critical issue is how a nuclear terrorist attack may “catalyze” inter-state nuclear war, specially the NC3 systems that inform and partly determine how leaders respond to nuclear threat. Current conditions in Northeast Asia suggest that multiple precursory conditions for nuclear terrorism already exist or exist in nascent form. In Japan, for example, low-level, individual, terroristic violence with nuclear materials, against nuclear facilities, is real. In all countries of the region, the risk of diversion of nuclear material is real, although the risk is likely higher due to volume and laxity of security in some countries of the region than in others. In all countries, the risk of an insider “sleeper” threat is real in security and nuclear agencies, and such insiders already operated in actual terrorist organizations. Insider corruption is also observable in nuclear fuel cycle agencies in all countries of the region. The threat of extortion to induce insider cooperation is also real in all countries. The possibility of a cult attempting to build and buy nuclear weapons is real and has already occurred in the region.[15] Cyber-terrorism against nuclear reactors is real and such attacks have already taken place in South Korea (although it remains difficult to attribute the source of the attacks with certainty). The stand-off ballistic and drone threat to nuclear weapons and fuel cycle facilities is real in the region, including from non-state actors, some of whom have already adopted and used such technology almost instantly from when it becomes accessible (for example, drones).[16] Two other broad risk factors are also present in the region. The social and political conditions for extreme ethnic and xenophobic nationalism are emerging in China, Korea, Japan, and Russia. Although there has been no risk of attack on or loss of control over nuclear weapons since their removal from Japan in 1972 and from South Korea in 1991, this risk continues to exist in North Korea, China, and Russia, and to the extent that they are deployed on aircraft and ships of these and other nuclear weapons states (including submarines) deployed in the region’s high seas, also outside their territorial borders. The most conducive circumstance for catalysis to occur due to a nuclear terrorist attack might involve the following nexi of timing and conditions: 1. Low-level, tactical, or random individual terrorist attacksfor whatever reasons, even assassination of national leaders, up to and including dirty radiological bomb attacks, that overlap with inter-state crisis dynamics in ways that affect state decisions to threaten with or to use nuclear weapons. This might be undertaken by an opportunist nuclear terrorist entity in search of rapid and high political impact. 2. Attacks on major national or international events in each country to maximize terror and to de-legitimate national leaders and whole governments. In Japan, for example, more than ten heads of state and senior ministerial international meetings are held each year. For the strategic nuclear terrorist, patiently acquiring higher level nuclear threat capabilities for such attacks and then staging them to maximum effect could accrue strategic gains. 3. Attacks or threatened attacks, including deception and disguised attacks, will have maximum leverage when nuclear-armed states are near or on the brink of war or during a national crisis (such as Fukushima), when intelligence agencies, national leaders, facility operators, surveillance and policing agencies, and first responders are already maximally committed and over-extended. At this point, we note an important caveat to the original concept of catalytic nuclear war as it might pertain to nuclear terrorist threats or attacks. Although an attack might be disguised so that it is attributed to a nuclear-armed state, or a ruse might be undertaken to threaten such attacks by deception, in reality a catalytic strike by a nuclear weapons state in conditions of mutual vulnerability to nuclear retaliation for such a strike from other nuclear armed states would be highly irrational. Accordingly, the effect of nuclear terrorism involving a nuclear detonation or major radiological release may not of itself be catalytic of nuclear war—at least not intentionally–because it will not lead directly to the destruction of a targeted nuclear-armed state. Rather, it may be catalytic of non-nuclear war between states, especially if the non-state actor turns out to be aligned with or sponsored by a state (in many Japanese minds, the natural candidate for the perpetrator of such an attack is the pro-North Korean General Association of Korean Residents, often called Chosen Soren, which represents many of the otherwise stateless Koreans who were born and live in Japan) and a further sequence of coincident eventsis necessary to drive escalation to the point of nuclear first use by a state. Also, the catalyst—the non-state actor–is almost assured of discovery and destruction either during the attack itself (if it takes the form of a nuclear suicide attack then self-immolation is assured) or as a result of a search-and-destroy campaign from the targeted state (unless the targeted government is annihilated by the initial terrorist nuclear attack). It follows that the effects of a non-state nuclear attack may be characterized better as a trigger effect, bringing about a cascade of nuclear use decisions within NC3 systems that shift each state increasingly away from nuclear non-use and increasingly towards nuclear use by releasing negative controls and enhancing positive controls in multiple action-reaction escalation spirals (depending on how many nuclear armed states are party to an inter-state conflict that is already underway at the time of the nonstate nuclear attack); and/or by inducing concatenating nuclear attacks across geographically proximate nuclear weapons forces of states already caught in the crossfire of nuclear threat or attacks of their own making before a nuclear terrorist attack.[1",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "d6528dbe590d839bab575a4eebd0f16d2067113ac08ee97f993b6d7464a99e0f",
+    "header": "Ore’20 - Success",
+    "tag": "",
+    "cite_full": "Oré, Diego. “Latin American crime cartels turn to cryptocurrencies for money laundering.” Reuters. 8 December 2020. https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD",
+    "author": "Oré",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "reuters.com",
+    "url": "https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " In April 2019, Mexican police arrested suspected human trafficker Ignacio Santoyo in a plush area of the Caribbean resort of Playa del Carmen after linking him to a prostitution racket extending across Latin America. Yet it was not the 2,000 women Santoyo is alleged to have blackmailed and sexually exploited that ultimately led to his capture, but the bitcoin he is suspected of using to help launder the proceeds of his operations, officials said. The cryptocurrency is emerging as a new front in Latin America’s struggle against gangs battling for control of vast criminal markets for sex, drugs, guns and people, according to law enforcement authorities. “There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,” said Santiago Nieto, head of the Mexican finance ministry’s financial intelligence unit (UIF). Neither Santoyo, who is in custody, nor lawyers representing him could be reached for comment, and they have not commented publicly on the case in the past. The Mexican attorney general’s office declined to comment while the case remained open. Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users. ",
+    "read_spans": [
+      [
+        347,
+        434
+      ],
+      [
+        1150,
+        1455
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        1150,
+        1455
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "money laundering",
+      "Latin America",
+      "law enforcement",
+      "human trafficking",
+      "regulation"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "duplicate_source",
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      83,
+      84,
+      85
+    ],
+    "embedding_text": "Ore’20 - Success\nbut the bitcoin he is suspected of using to help launder the proceeds of his operations Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users.\nSantoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users.",
+    "returned_document": "Oré, Diego. “Latin American crime cartels turn to cryptocurrencies for money laundering.” Reuters. 8 December 2020. https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD\nOre’20 - Success\n In April 2019, Mexican police arrested suspected human trafficker Ignacio Santoyo in a plush area of the Caribbean resort of Playa del Carmen after linking him to a prostitution racket extending across Latin America. Yet it was not the 2,000 women Santoyo is alleged to have blackmailed and sexually exploited that ultimately led to his capture, but the bitcoin he is suspected of using to help launder the proceeds of his operations, officials said. The cryptocurrency is emerging as a new front in Latin America’s struggle against gangs battling for control of vast criminal markets for sex, drugs, guns and people, according to law enforcement authorities. “There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,” said Santiago Nieto, head of the Mexican finance ministry’s financial intelligence unit (UIF). Neither Santoyo, who is in custody, nor lawyers representing him could be reached for comment, and they have not commented publicly on the case in the past. The Mexican attorney general’s office declined to comment while the case remained open. Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "da108a53d94a4b8ff8cd9d72ef511de1615a37e7a0424c93e318ed39b48ec9a4",
+    "header": "Tran ‘21",
+    "tag": "",
+    "cite_full": "Hung Tran. “Regulation: The Solution to Bitcoin's Risks and Unrealized Benefits.” Atlantic Council, 1 July 2021, https://www.atlanticcouncil.org/blogs/newatlanticist/regulation-the-solution-to-bitcoins-risks-and-unrealized-benefits/. ",
+    "author": "Hung Tran",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "” Atlantic Council",
+    "url": "https://www.atlanticcouncil.org/blogs/newatlanticist/regulation-the-solution-to-bitcoins-risks-and-unrealized-benefits/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "For bad actors, however, Bitcoin offers a dark medium to engage in illegal activities including money laundering, financing terrorism, collecting ransoms in hacks or cyberattacks, and buying or selling banned substances or other objects. Though transactions leave a digital footprint that can be traced, especially through exchanges and other services converting Bitcoin to central bank-issued currencies and vice versa, the anonymity of Bitcoin makes tracing transactions more difficult\\",
+    "read_spans": [
+      [
+        0,
+        238
+      ],
+      [
+        420,
+        488
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        25,
+        235
+      ],
+      [
+        421,
+        488
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "bitcoin regulation",
+      "money laundering",
+      "terrorism financing",
+      "cryptocurrency anonymity",
+      "illegal activities",
+      "ransomware"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_header"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      96,
+      97,
+      98
+    ],
+    "embedding_text": "Tran ‘21\nFor bad actors, however, Bitcoin offers a dark medium to engage in illegal activities including money laundering, financing terrorism, collecting ransoms in hacks or cyberattacks, and buying or selling banned substances or other objects.   the anonymity of Bitcoin makes tracing transactions more difficult\\\nBitcoin offers a dark medium to engage in illegal activities including money laundering, financing terrorism, collecting ransoms in hacks or cyberattacks, and buying or selling banned substances or other object the anonymity of Bitcoin makes tracing transactions more difficult\\",
+    "returned_document": "Hung Tran. “Regulation: The Solution to Bitcoin's Risks and Unrealized Benefits.” Atlantic Council, 1 July 2021, https://www.atlanticcouncil.org/blogs/newatlanticist/regulation-the-solution-to-bitcoins-risks-and-unrealized-benefits/. \nTran ‘21\nFor bad actors, however, Bitcoin offers a dark medium to engage in illegal activities including money laundering, financing terrorism, collecting ransoms in hacks or cyberattacks, and buying or selling banned substances or other objects. Though transactions leave a digital footprint that can be traced, especially through exchanges and other services converting Bitcoin to central bank-issued currencies and vice versa, the anonymity of Bitcoin makes tracing transactions more difficult\\",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "dc58f096dcd45c7a142ae9447dd43ae7222ff8192660f8c049043a852e7f5995",
+    "header": "Baumgartner ‘21",
+    "tag": "",
+    "cite_full": "Baumgartner, Jesse and David Radley. “The Drug Overdose Toll in 2020 and Near-Term Actions for Addressing It.” The Commonwealth Fund. 16 August 2021. https://www.commonwealthfund.org/blog/2021/drug-overdose-toll-2020-and-near-termactions-addressing-it ",
+    "author": "Baumgartner",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "commonwealthfund.org",
+    "url": "https://www.commonwealthfund.org/blog/2021/drug-overdose-toll-2020-and-near-termactions-addressing-it",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The emergence of COVID-19 in early 2020 raised fears that already-rising drug overdose deaths could surge even further amid social isolation, economic stress, and disrupted access to treatment facilities and providers. Prior research showed that overdose deaths immediately spiked to previously unseen levels after the pandemic hit in March 2020 and stayed elevated through the summer. Provisional data (see Data and Methods) from the Centers for Disease Control and Prevention (CDC) now provide a more comprehensive look at the full overdose toll in 2020. Recently released data by the CDC show that drug overdose deaths reached a record high of 93,331 in 2020. While these estimates are not final, this is more than 20,000 deaths above the previous high in 2019 and the largest single-year percentage increase on record since 1999. Since 2015 the percentage of all U.S. deaths attributed to overdoses has grown from 1.9 percent to 2.8 percent, even as COVID-19 increased total deaths by more than 300,000 in 2020. Deaths related to synthetic opioids played a large role in these explosive increases. Prepandemic research documented the rapid and deadly growth of fentanyl within the drug supply, including in combination with drugs like cocaine and methamphetamine. Researchers have pointed to elevated drug use and higher-risk usage — such as cutting or mixing drugs from an unreliable supply and using in isolation — as potential factors in the pandemic’s deadly surge. The new CDC data show that deaths at least partially attributable to synthetic opioids likely increased by around 20,000 (54%) in 2020, while deaths involving cocaine (21%) and other psychostimulants like methamphetamine (46%) also rose dramatically. In 2015, synthetic opioids were involved in only 18 percent of all overdose deaths; in 2020, it appears to be more than 60 percent. We also used the CDC’s provisional data to estimate monthly overdose deaths throughout 2020. While overdose deaths trended down after reaching record highs in May, monthly deaths likely remained elevated above 7,000 through the end of the year. Before 2020, U.S. monthly overdose deaths had never been higher than 6,300.",
+    "read_spans": [
+      [
+        557,
+        1101
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        664,
+        833
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "drug overdose deaths",
+      "COVID-19",
+      "fentanyl",
+      "opioids",
+      "public health",
+      "CDC data"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      87,
+      88,
+      90
+    ],
+    "embedding_text": "Baumgartner ‘21\nRecently released data by the CDC show that drug overdose deaths reached a record high of 93,331 in 2020. While these estimates are not final, this is more than 20,000 deaths above the previous high in 2019 and the largest single-year percentage increase on record since 1999. Since 2015 the percentage of all U.S. deaths attributed to overdoses has grown from 1.9 percent to 2.8 percent, even as COVID-19 increased total deaths by more than 300,000 in 2020. Deaths related to synthetic opioids played a large role in these explosive increases.\nhile these estimates are not final, this is more than 20,000 deaths above the previous high in 2019 and the largest single-year percentage increase on record since 1999.",
+    "returned_document": "Baumgartner, Jesse and David Radley. “The Drug Overdose Toll in 2020 and Near-Term Actions for Addressing It.” The Commonwealth Fund. 16 August 2021. https://www.commonwealthfund.org/blog/2021/drug-overdose-toll-2020-and-near-termactions-addressing-it \nBaumgartner ‘21\nThe emergence of COVID-19 in early 2020 raised fears that already-rising drug overdose deaths could surge even further amid social isolation, economic stress, and disrupted access to treatment facilities and providers. Prior research showed that overdose deaths immediately spiked to previously unseen levels after the pandemic hit in March 2020 and stayed elevated through the summer. Provisional data (see Data and Methods) from the Centers for Disease Control and Prevention (CDC) now provide a more comprehensive look at the full overdose toll in 2020. Recently released data by the CDC show that drug overdose deaths reached a record high of 93,331 in 2020. While these estimates are not final, this is more than 20,000 deaths above the previous high in 2019 and the largest single-year percentage increase on record since 1999. Since 2015 the percentage of all U.S. deaths attributed to overdoses has grown from 1.9 percent to 2.8 percent, even as COVID-19 increased total deaths by more than 300,000 in 2020. Deaths related to synthetic opioids played a large role in these explosive increases. Prepandemic research documented the rapid and deadly growth of fentanyl within the drug supply, including in combination with drugs like cocaine and methamphetamine. Researchers have pointed to elevated drug use and higher-risk usage — such as cutting or mixing drugs from an unreliable supply and using in isolation — as potential factors in the pandemic’s deadly surge. The new CDC data show that deaths at least partially attributable to synthetic opioids likely increased by around 20,000 (54%) in 2020, while deaths involving cocaine (21%) and other psychostimulants like methamphetamine (46%) also rose dramatically. In 2015, synthetic opioids were involved in only 18 percent of all overdose deaths; in 2020, it appears to be more than 60 percent. We also used the CDC’s provisional data to estimate monthly overdose deaths throughout 2020. While overdose deaths trended down after reaching record highs in May, monthly deaths likely remained elevated above 7,000 through the end of the year. Before 2020, U.S. monthly overdose deaths had never been higher than 6,300.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "e264544388c6b187a42e59e0640df9335d634ed3197b058ae992e4028b395e7a",
+    "header": "Reuters ‘21",
+    "tag": "",
+    "cite_full": " “Unregulated Spread of Cryptocurrencies a Concern, Says Italian Regulator.” Reuters, Thomson Reuters, 14 June 2021, \nhttps://www.reuters.com/business/unregulated-spread-cryptocurrencies-concern-says-italian-regulator-2021-06-14/#:~:text=Savona%20said%20there%20were%20some,is%20worrying%2C\"%2",
+    "author": "“Unregulated Spread of Cryptocurrencies a Concern",
+    "author_type": "organization",
+    "year": 2021,
+    "date_raw": "",
+    "source": "” Reuters",
+    "url": "https://www.reuters.com/business/unregulated-spread-cryptocurrencies-concern-says-italian-regulator-2021-06-14/#:~:text=Savona%20said%20there%20were%20some,is%20worrying%2C\"%2",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " Savona said there were some 4,000-5,000 cryptocurrencies in circulation without any form of real regulation. \"If we add to this Consob's recent own experience in closing down in Italy hundreds of websites illegally gathering savings, the picture that emerges is worrying,\" Savona said. He warned that the currencies could be a shield for criminal activity such as tax evasion, money laundering, funding terrorism and kidnapping.",
+    "read_spans": [
+      [
+        29,
+        109
+      ],
+      [
+        301,
+        429
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        28,
+        73
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "financial crime",
+      "money laundering",
+      "terrorism financing",
+      "tax evasion",
+      "Italian regulator"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      54,
+      55,
+      56,
+      57
+    ],
+    "embedding_text": "Reuters ‘21\n4,000-5,000 cryptocurrencies in circulation without any form of real regulation.  the currencies could be a shield for criminal activity such as tax evasion, money laundering, funding terrorism and kidnapping.\n4,000-5,000 cryptocurrencies in circulation",
+    "returned_document": " “Unregulated Spread of Cryptocurrencies a Concern, Says Italian Regulator.” Reuters, Thomson Reuters, 14 June 2021, \nhttps://www.reuters.com/business/unregulated-spread-cryptocurrencies-concern-says-italian-regulator-2021-06-14/#:~:text=Savona%20said%20there%20were%20some,is%20worrying%2C\"%2\nReuters ‘21\n Savona said there were some 4,000-5,000 cryptocurrencies in circulation without any form of real regulation. \"If we add to this Consob's recent own experience in closing down in Italy hundreds of websites illegally gathering savings, the picture that emerges is worrying,\" Savona said. He warned that the currencies could be a shield for criminal activity such as tax evasion, money laundering, funding terrorism and kidnapping.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "eecaa841f214af90268674b34a895bff972e602dad261eabbb057770b0278879",
+    "header": "Magnates '21",
+    "tag": "",
+    "cite_full": "Finance Magnates, \"Blockchain Regulation Certainty Will Bring In Institutions Certainly | Finance Magnates\", Thu Dec 09 2021, https://www.financemagnates.com/thought-leadership/blockchain-regulation-certainty-will-bring-in-institutions-certainly/",
+    "author": "Finance Magnates",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "Dec 09 2021",
+    "source": "\"",
+    "url": "https://www.financemagnates.com/thought-leadership/blockchain-regulation-certainty-will-bring-in-institutions-certainly/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Throughout the opinion piece, the SEC Commissioner outlines her outlook on DeFi. She highlights that although DeFi has immense benefits, the DeFi community must come together to address the ongoing concerns with pseudonymity and transparency while complying with SEC guidelines. Crenshaw further clarifies that the lack of transparency within DeFi has enabled a two-tier market wherein insiders and professional investors are reaping outsized returns. Per the opinion piece, DeFi projects should maintain an open communication channel with the SEC to find potential solutions to ensure that both pseudonymity and compliance can go hand-in-hand. The need to implement a well-thought regulatory framework for the DeFi sector is at an all-time high, especially given the continuous flow of institutional investors into the ecosystem. Lack of regulations in DeFi is no longer a problem for the SEC or other regulatory bodies but for the DeFi sector itself. As of date, institutions are increasingly becoming hesitant to enter the DeFi ecosystem due to unclear regulations. Luckily, there’s a consortium of new and old projects, some working directly with traditional institutions to ensure better collaboration alongside others that offer services that make it easier for institutions to enter DeFi.",
+    "read_spans": [
+      [
+        275,
+        452
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "paraphrased",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "DeFi regulation",
+      "SEC",
+      "institutional investors",
+      "blockchain",
+      "compliance",
+      "transparency"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_marking",
+      "paraphrase_no_source"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      4,
+      5,
+      6
+    ],
+    "embedding_text": "Magnates '21\nes. Crenshaw further clarifies that the lack of transparency within DeFi has enabled a two-tier market wherein insiders and professional investors are reaping outsized returns.",
+    "returned_document": "Finance Magnates, \"Blockchain Regulation Certainty Will Bring In Institutions Certainly | Finance Magnates\", Thu Dec 09 2021, https://www.financemagnates.com/thought-leadership/blockchain-regulation-certainty-will-bring-in-institutions-certainly/\nMagnates '21\nThroughout the opinion piece, the SEC Commissioner outlines her outlook on DeFi. She highlights that although DeFi has immense benefits, the DeFi community must come together to address the ongoing concerns with pseudonymity and transparency while complying with SEC guidelines. Crenshaw further clarifies that the lack of transparency within DeFi has enabled a two-tier market wherein insiders and professional investors are reaping outsized returns. Per the opinion piece, DeFi projects should maintain an open communication channel with the SEC to find potential solutions to ensure that both pseudonymity and compliance can go hand-in-hand. The need to implement a well-thought regulatory framework for the DeFi sector is at an all-time high, especially given the continuous flow of institutional investors into the ecosystem. Lack of regulations in DeFi is no longer a problem for the SEC or other regulatory bodies but for the DeFi sector itself. As of date, institutions are increasingly becoming hesitant to enter the DeFi ecosystem due to unclear regulations. Luckily, there’s a consortium of new and old projects, some working directly with traditional institutions to ensure better collaboration alongside others that offer services that make it easier for institutions to enter DeFi.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "efcbe00c4bb089896145400d2f5f36afbdf8f876c823c410c5199984a401b6f4",
+    "header": "",
+    "tag": "",
+    "cite_full": "https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/",
+    "author": "",
+    "author_type": "unknown",
+    "year": 2021,
+    "date_raw": "",
+    "source": "forbes.com",
+    "url": "https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Case Cards",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "unknown",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "blockchain",
+      "congress",
+      "legislation"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_is_bare_url",
+      "no_body",
+      "no_header",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      0,
+      3
+    ],
+    "embedding_text": "Case Cards",
+    "returned_document": "https://www.forbes.com/sites/jasonbrett/2021/08/22/congress-has-introduced-18-new-bills-on-crypto-and-blockchain-in-2021/\nCase Cards",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "f2dfc63d9507ad93525952f6ff77eda434a9571743e402181f4b59fcf543d084",
+    "header": "Milano ‘19",
+    "tag": "",
+    "cite_full": "Cryptocurrencies as a Means of Funding Terrorism - Homeland Security Digital Library (hsdl.org)",
+    "author": "Cryptocurrencies as a Means of Funding Terrorism - Homeland Security Digital Library (hsdl",
+    "author_type": "organization",
+    "year": 2019,
+    "date_raw": "",
+    "source": "",
+    "url": "",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "unknown",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "terrorism financing",
+      "homeland security"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_is_bare_headline",
+      "no_body",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      26,
+      28
+    ],
+    "embedding_text": "Milano ‘19",
+    "returned_document": "Cryptocurrencies as a Means of Funding Terrorism - Homeland Security Digital Library (hsdl.org)\nMilano ‘19",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "fcd03bbb0f80dc861763a763c048a802387f395a2baed42bd13bbf54f91bc7b3",
+    "header": "Foley ‘18",
+    "tag": "",
+    "cite_full": "Illegal activity is often financed through cryptocurrency Foley, Sean, Jonathan Karlsen, and Tālis J. Puntninš. “Sex, drugs, and bitcoin: How much illegal activity is financed through cryptocurrencies?” University of Oxford. 19 February 2018. https://www.law.ox.ac.uk/business-law-blog/blog/2018/02/sex-drugs-and-bitcoin-howmuch-illegal-activity-financed-through ",
+    "author": "Illegal activity is often financed through cryptocurrency Foley",
+    "author_type": "organization",
+    "year": 2018,
+    "date_raw": "",
+    "source": "law.ox.ac.uk",
+    "url": "https://www.law.ox.ac.uk/business-law-blog/blog/2018/02/sex-drugs-and-bitcoin-howmuch-illegal-activity-financed-through",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Cryptocurrencies have grown rapidly in price, popularity, and mainstream adoption. The total market capitalization of bitcoin alone exceeds $250 billion as at January 2018, with a further $400 billion in over 1,000 other cryptocurrencies. The numerous online cryptocurrency exchanges and markets have daily dollar volume of around $50 billion. Over 170 'cryptofunds' have emerged (hedge funds that invest solely in cryptocurrencies), attracting around $2.3 billion in assets under management. What was once a fringe asset is quickly maturing. The rapid growth in cryptocurrencies and the anonymity that they provide users has created considerable regulatory challenges, including the use of cryptocurrencies in illegal trade (drugs, hacks and thefts, illegal pornography, even murder-for-hire), potential to fund terrorism, launder money, and avoid capital controls. There is little doubt that by providing a digital and anonymous payment mechanism, cryptocurrencies such as bitcoin have facilitated the growth of 'darknet' online marketplaces in which illegal goods and services are traded. The recent FBI seizure of over $4 million of bitcoin from one such marketplace, the 'Silk Road', provides some idea of the scale of the problem faced by regulators. In a recent research paper (available here), we quantify the amount of illegal activity that involves the largest cryptocurrency, bitcoin. As a starting point, we exploit several recent seizures of bitcoin by law enforcement agencies (including the US FBI's seizure of the Silk Road marketplace) to construct a sample of known illegal activity. We also identify the bitcoin addresses of major illegal darknet marketplaces. The public nature of the blockchain allows us to work backwards from the law enforcement agency bitcoin seizures and the darknet marketplaces through the network of transactions to identify those bitcoin users that were involved in buying and selling illegal goods and services online. We then apply two econometric methods to the sample of known illegal activity to estimate the full scale of illegal activity. The first exploits the trade networks of users to identify two distinct 'communities' in the data-the legal and illegal communities. The second exploits certain characteristics that distinguish between legal and illegal bitcoin users, for example, the extent to which individual bitcoin users take actions to conceal their identity and trading records, which is a predictor of involvement in illegal activity. We find that illegal activity accounts for a substantial proportion of the users and trading activity in bitcoin. For example, approximately one-quarter of all users (25%) and close to one-half of bitcoin transactions (44%) are associated with illegal activity.",
+    "read_spans": [
+      [
+        907,
+        1256
+      ],
+      [
+        2502,
+        2763
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        1090,
+        1187
+      ],
+      [
+        2629,
+        2763
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency",
+      "illegal activity",
+      "bitcoin",
+      "darknet",
+      "regulation",
+      "anonymity"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "cite_is_bare_url",
+      "no_header",
+      "tag_merged_into_cite"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      78,
+      79,
+      81
+    ],
+    "embedding_text": "Foley ‘18\na digital and anonymous payment mechanism, cryptocurrencies such as bitcoin have facilitated the growth of 'darknet' online marketplaces in which illegal goods and services are traded. The recent FBI seizure of over $4 million of bitcoin from one such marketplace, the 'Silk Road', provides some idea of the scale of the problem faced by regulators. We find that illegal activity accounts for a substantial proportion of the users and trading activity in bitcoin. For example, approximately one-quarter of all users (25%) and close to one-half of bitcoin transactions (44%) are associated with illegal activity.\n. The recent FBI seizure of over $4 million of bitcoin from one such marketplace, the 'Silk Road' approximately one-quarter of all users (25%) and close to one-half of bitcoin transactions (44%) are associated with illegal activity.",
+    "returned_document": "Illegal activity is often financed through cryptocurrency Foley, Sean, Jonathan Karlsen, and Tālis J. Puntninš. “Sex, drugs, and bitcoin: How much illegal activity is financed through cryptocurrencies?” University of Oxford. 19 February 2018. https://www.law.ox.ac.uk/business-law-blog/blog/2018/02/sex-drugs-and-bitcoin-howmuch-illegal-activity-financed-through \nFoley ‘18\nCryptocurrencies have grown rapidly in price, popularity, and mainstream adoption. The total market capitalization of bitcoin alone exceeds $250 billion as at January 2018, with a further $400 billion in over 1,000 other cryptocurrencies. The numerous online cryptocurrency exchanges and markets have daily dollar volume of around $50 billion. Over 170 'cryptofunds' have emerged (hedge funds that invest solely in cryptocurrencies), attracting around $2.3 billion in assets under management. What was once a fringe asset is quickly maturing. The rapid growth in cryptocurrencies and the anonymity that they provide users has created considerable regulatory challenges, including the use of cryptocurrencies in illegal trade (drugs, hacks and thefts, illegal pornography, even murder-for-hire), potential to fund terrorism, launder money, and avoid capital controls. There is little doubt that by providing a digital and anonymous payment mechanism, cryptocurrencies such as bitcoin have facilitated the growth of 'darknet' online marketplaces in which illegal goods and services are traded. The recent FBI seizure of over $4 million of bitcoin from one such marketplace, the 'Silk Road', provides some idea of the scale of the problem faced by regulators. In a recent research paper (available here), we quantify the amount of illegal activity that involves the largest cryptocurrency, bitcoin. As a starting point, we exploit several recent seizures of bitcoin by law enforcement agencies (including the US FBI's seizure of the Silk Road marketplace) to construct a sample of known illegal activity. We also identify the bitcoin addresses of major illegal darknet marketplaces. The public nature of the blockchain allows us to work backwards from the law enforcement agency bitcoin seizures and the darknet marketplaces through the network of transactions to identify those bitcoin users that were involved in buying and selling illegal goods and services online. We then apply two econometric methods to the sample of known illegal activity to estimate the full scale of illegal activity. The first exploits the trade networks of users to identify two distinct 'communities' in the data-the legal and illegal communities. The second exploits certain characteristics that distinguish between legal and illegal bitcoin users, for example, the extent to which individual bitcoin users take actions to conceal their identity and trading records, which is a predictor of involvement in illegal activity. We find that illegal activity accounts for a substantial proportion of the users and trading activity in bitcoin. For example, approximately one-quarter of all users (25%) and close to one-half of bitcoin transactions (44%) are associated with illegal activity.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "fd88661d0519e9c4f8638053cb8c40dd9b6570dc3ef15d0cc9d574974a91ba90",
+    "header": "Morrison '21",
+    "tag": "",
+    "cite_full": "Morrison, \"Coinbase, the largest crypto exchange in the US, faces a potential SEC investigation - Vox\", 2021, https://www.vox.com/recode/22663312/coinbase-sec-cryptocurrency-bitcoin",
+    "author": "Morrison",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.vox.com/recode/22663312/coinbase-sec-cryptocurrency-bitcoin",
+    "date_accessed": "",
+    "cutter": "",
+    "body": ". The relative newness and rapid expansion of the cryptocurrency industry have put it in a regulatory gray area. The Internal Revenue Service (IRS) classifies crypto as property. The Commodity Futures Trading Commission (CFTC) considers crypto to be a commodity.And the SEC has said that digital assets “may be securities, depending on the facts and circumstances.” A security is a financial asset that can be traded, like stocks and bonds, and which is governed by several laws designed to prevent fraud and protect investors.",
+    "read_spans": [
+      [
+        274,
+        282
+      ],
+      [
+        466,
+        478
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "underline",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "SEC",
+      "regulatory gray area",
+      "IRS",
+      "CFTC",
+      "digital assets"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "body_truncated",
+      "cite_is_bare_url",
+      "no_marking"
+    ],
+    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_paragraphs": [
+      122,
+      123,
+      124
+    ],
+    "embedding_text": "Morrison '21\nhas said several laws",
+    "returned_document": "Morrison, \"Coinbase, the largest crypto exchange in the US, faces a potential SEC investigation - Vox\", 2021, https://www.vox.com/recode/22663312/coinbase-sec-cryptocurrency-bitcoin\nMorrison '21\n. The relative newness and rapid expansion of the cryptocurrency industry have put it in a regulatory gray area. The Internal Revenue Service (IRS) classifies crypto as property. The Commodity Futures Trading Commission (CFTC) considers crypto to be a commodity.And the SEC has said that digital assets “may be securities, depending on the facts and circumstances.” A security is a financial asset that can be traded, like stocks and bonds, and which is governed by several laws designed to prevent fraud and protect investors.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  }
+]

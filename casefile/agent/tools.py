@@ -273,7 +273,7 @@ class CaseFileTools:
         use_model: bool = True,
         idempotency_key: str | None = None,
     ) -> dict[str, Any] | str:
-        if context.role != "coach" or "ingest_cards" not in available_tools(context.role):
+        if "ingest_cards" not in available_tools(context.role):
             return self._denied(context, "ingest evidence cards", "ingest_cards")
         try:
             args = IngestArgs(
@@ -291,8 +291,9 @@ class CaseFileTools:
             prior = self._idempotent_result("ingest_confirm", args.idempotency_key)
             if prior is not None:
                 return prior
-            self._validate_pending_ingest_path(args.confirmation_token)
+            source_path = self._validate_pending_ingest_path(args.confirmation_token)
             result = self.ingestion.confirm(args.confirmation_token)
+            self._remove_staged_upload(source_path)
             self._save_idempotent_result(
                 "ingest_confirm", args.idempotency_key, result
             )
@@ -511,17 +512,30 @@ class CaseFileTools:
             raise FileNotFoundError(f"Ingest file was not found: {path}")
         if path.suffix.lower() != ".docx":
             raise ValueError("Only .docx ingestion is supported")
-        if not any(path.is_relative_to(root) for root in self.settings.allowed_ingest_roots):
-            roots = ", ".join(str(root) for root in self.settings.allowed_ingest_roots)
-            raise ValueError(f"Ingest path is outside configured roots: {roots}")
+        roots = (*self.settings.allowed_ingest_roots, self.settings.uploads_dir.resolve())
+        if not any(path.is_relative_to(root) for root in roots):
+            allowed = ", ".join(str(root) for root in roots)
+            raise ValueError(f"Ingest path is outside configured roots: {allowed}")
         return path
 
-    def _validate_pending_ingest_path(self, token: str) -> None:
+    def _validate_pending_ingest_path(self, token: str) -> Path:
         pending = self.settings.pending_dir / f"{token}.json"
         if not pending.exists():
             raise FileNotFoundError("Confirmation token was not found or was already used")
         value = json.loads(pending.read_text(encoding="utf-8"))
-        self._resolve_ingest_path(str(value.get("source_file", "")))
+        return self._resolve_ingest_path(str(value.get("source_file", "")))
+
+    def _remove_staged_upload(self, path: Path) -> None:
+        uploads = self.settings.uploads_dir.resolve()
+        resolved = path.resolve()
+        if not resolved.is_relative_to(uploads):
+            return
+        resolved.unlink(missing_ok=True)
+        if resolved.parent != uploads:
+            try:
+                resolved.parent.rmdir()
+            except OSError:
+                pass
 
     def _read_idempotency(self) -> dict[str, Any]:
         if not self.settings.idempotency_path.exists():
@@ -622,11 +636,23 @@ class CaseFileTools:
     ) -> list[str]:
         focus = ", ".join(weakness_tags) if weakness_tags else "clear claim-evidence-warrant links"
         evidence = ", ".join(card["header"] or card["id"][:8] for card in card_refs)
+        evidence_line = (
+            f"Evidence set: {evidence}."
+            if evidence
+            else "No matching card is on file; add evidence before running this drill."
+        )
+        if speech_position == "general":
+            return [
+                "Complete a general claim-evidence-warrant drill using only the cited cards listed below.",
+                "For each card, state the claim in 15 seconds, explain its warrant in 30 seconds, and give one comparison to the other side.",
+                f"Focus on {focus}.",
+                evidence_line,
+            ]
         return [
             f"Prepare a timed {speech_position} using only the cited cards listed below.",
             f"Focus on {focus}.",
             "After delivery, identify the claim, cited evidence, and warrant for each extension.",
-            f"Evidence set: {evidence}." if evidence else "No matching card is on file; ask a coach to add evidence before running this drill.",
+            evidence_line,
         ]
 
     def _mock_calendar_event(self, event: dict[str, Any]) -> dict[str, Any]:

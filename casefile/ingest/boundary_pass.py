@@ -6,7 +6,12 @@ import re
 from collections.abc import Callable, Iterable
 from typing import Any
 
-from casefile.llm import AnthropicJSONClient, LLMResponseError, LLMUnavailable
+from casefile.llm import (
+    AnthropicJSONClient,
+    LLMResponseError,
+    LLMUnavailable,
+    build_anthropic_client,
+)
 from casefile.models import CardBoundary, ParagraphRecord
 from casefile.security.schemas import BoundaryOutput
 
@@ -301,8 +306,6 @@ def main() -> None:
     from pathlib import Path
 
     from casefile.config import get_settings
-    from casefile.llm import AnthropicJSONClient
-
     from .serialize_index import detect_convention, paragraph_records
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -312,7 +315,7 @@ def main() -> None:
     path = Path(args.docx).resolve()
     records = paragraph_records(path)
     settings = get_settings()
-    client = AnthropicJSONClient(settings.anthropic_api_key, settings.model)
+    client = build_anthropic_client(settings)
     result, validation, method = run_boundary_pass(
         records, client=client, use_model=not args.no_model
     )

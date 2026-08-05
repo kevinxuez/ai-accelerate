@@ -1,0 +1,40 @@
+---
+title: 02 · Find evidence and format an argument
+---
+flowchart TD
+    A(["Evidence request"]) --> B{"Pro or Con<br/>present?"}
+    B -- no --> C["Ask for side and save<br/>pending task"]
+    B -- yes --> D["Filter index by exact<br/>resolution and side"]
+    D --> E["Rank intact cards<br/>by similarity"]
+    E --> F{"Any cards above<br/>threshold?"}
+    F -- no --> G["Remove request boilerplate<br/>and retry once"]
+    G --> H["Discard retry results without<br/>explicit topic overlap"]
+    H --> I{"Grounded<br/>results?"}
+    F -- yes --> J["Build structured<br/>grounding cards"]
+    I -- no --> K(["Return explicit<br/>no-card answer"])
+    I -- yes --> J
+    J --> L["Full citation, tag, body,<br/>read spans, emphasis spans"]
+    L --> M{"Anthropic configured<br/>and request safe?"}
+    M -- yes --> N["Send bounded marked excerpts<br/>to argument formatter"]
+    N --> O{"Strict schema and<br/>cited headers valid?"}
+    O -- yes --> P["Claim + warrant + impact"]
+    O -- no --> Q["Deterministic<br/>grounded outline"]
+    M -- no --> Q
+    P --> R["Render argument and<br/>every retrieved card"]
+    Q --> R
+    R --> S(["UI marks read and emphasized<br/>source ranges"])
+
+    classDef entry fill:#102A43,color:#FFFFFF,stroke:#102A43,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#563B00,stroke:#C98A13,stroke-width:2px;
+    classDef model fill:#F0EAFE,color:#3E236A,stroke:#8B66C6,stroke-width:2px;
+    classDef fallback fill:#F1F5F9,color:#334155,stroke:#7C8B9D,stroke-width:1.5px;
+    classDef pending fill:#FFF7E8,color:#65440A,stroke:#D69B2D,stroke-width:1.5px;
+    classDef blocked fill:#FDEBEC,color:#7D1F29,stroke:#C94B57,stroke-width:2px;
+    classDef terminal fill:#E8F7EE,color:#164E2C,stroke:#3D9B63,stroke-width:2px;
+    class A entry;
+    class B,F,I,M,O decision;
+    class N,P model;
+    class Q fallback;
+    class C pending;
+    class K blocked;
+    class S terminal;

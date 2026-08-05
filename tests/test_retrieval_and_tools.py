@@ -61,7 +61,7 @@ def test_role_checks_live_inside_tools(isolated_settings):
         student,
         file_path="anything.docx",
         dry_run=False,
-    ) == "[DENIED] role 'student' cannot ingest evidence cards."
+    ) == "[INVALID] a preview confirmation_token is required before writing."
     assert tools.ingest_cards(
         coach,
         file_path="anything.docx",
@@ -86,7 +86,17 @@ def test_agent_clarifies_refuses_and_denies(isolated_settings):
     )
     assert bare["intent"] == "generate_drill"
     assert bare["tool_trace"] == []
-    assert "speech position" in bare["response"]
+    assert "side (Pro or Con)" in bare["response"]
+
+    con_drill = agent.ask(
+        "give me a drill, con",
+        role="student",
+        user_id="alice",
+        resolution="R1",
+    )
+    assert con_drill["intent"] == "generate_drill"
+    assert con_drill["tool_trace"][0]["tool"] == "generate_drill"
+    assert "general claim-evidence-warrant drill" in con_drill["response"]
 
     refusal = agent.ask(
         "write my final focus speech",

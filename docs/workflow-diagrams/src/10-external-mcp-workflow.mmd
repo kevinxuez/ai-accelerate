@@ -1,0 +1,27 @@
+---
+title: 10 · External MCP workflow
+---
+flowchart LR
+    A(["External MCP client"]) --> B["FastMCP<br/>stdio server"]
+    B --> C["Per-user<br/>rate limit"]
+    C --> D{"Discovered<br/>tool"}
+    D --> E["search_cards"]
+    D --> F["search_rules"]
+    D --> G["generate_drill"]
+    D --> H["get_progress"]
+    E --> I["Strict validation, security screening,<br/>and authorization"]
+    F --> I
+    G --> I
+    H --> I
+    I --> J(["Direct structured<br/>tool result"])
+
+    classDef entry fill:#102A43,color:#FFFFFF,stroke:#102A43,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#563B00,stroke:#C98A13,stroke-width:2px;
+    classDef tool fill:#EAF2FF,color:#172033,stroke:#5579B7,stroke-width:1.5px;
+    classDef guard fill:#F2EEFF,color:#45247A,stroke:#8B66C6,stroke-width:2px;
+    classDef terminal fill:#E8F7EE,color:#164E2C,stroke:#3D9B63,stroke-width:2px;
+    class A entry;
+    class D decision;
+    class E,F,G,H tool;
+    class I guard;
+    class J terminal;

@@ -1,0 +1,158 @@
+{
+  "provider": "National Speech & Debate Association",
+  "provider_code": "nsda",
+  "dataset_version": "2026.08-demo.1",
+  "generated_at": "2026-08-04T00:00:00Z",
+  "mock": true,
+  "synthetic": true,
+  "disclaimer": "Synthetic CaseFile integration fixture. It is not an official NSDA API, publication, membership record, tournament listing, or rules corpus.",
+  "topics": [
+    {
+      "id": "pf-2026-07-demo",
+      "event": "Public Forum",
+      "division": "Open",
+      "season": "2026-2027",
+      "release_window": "July/August 2026",
+      "resolution": "Resolved: For integration testing, public school districts should adopt a four-day instructional week.",
+      "effective_from": "2026-07-01",
+      "effective_to": "2026-08-31",
+      "current": true,
+      "source_ref": "mock://nsda/topics/pf-2026-07-demo",
+      "synthetic": true
+    },
+    {
+      "id": "pf-2026-09-demo",
+      "event": "Public Forum",
+      "division": "Open",
+      "season": "2026-2027",
+      "release_window": "September/October 2026",
+      "resolution": "Resolved: For integration testing, municipal governments should substantially expand public broadband networks.",
+      "effective_from": "2026-09-01",
+      "effective_to": "2026-10-31",
+      "current": false,
+      "source_ref": "mock://nsda/topics/pf-2026-09-demo",
+      "synthetic": true
+    },
+    {
+      "id": "ld-2026-07-demo",
+      "event": "Lincoln-Douglas",
+      "division": "Open",
+      "season": "2026-2027",
+      "release_window": "July/August 2026",
+      "resolution": "Resolved: For integration testing, rehabilitation ought to be prioritized over retribution in criminal sentencing.",
+      "effective_from": "2026-07-01",
+      "effective_to": "2026-08-31",
+      "current": true,
+      "source_ref": "mock://nsda/topics/ld-2026-07-demo",
+      "synthetic": true
+    }
+  ],
+  "rules": [
+    {
+      "id": "pf-mock-1.1",
+      "event": "Public Forum",
+      "section_number": "MOCK-1.1",
+      "title": "Synthetic participant eligibility",
+      "text": "In this synthetic dataset, a participant is eligible when the mock membership record is active and lists Public Forum as an eligible event.",
+      "edition": "CaseFile synthetic handbook 2026.08",
+      "effective_date": "2026-07-01",
+      "source_ref": "mock://nsda/rules/pf-mock-1.1",
+      "synthetic": true
+    },
+    {
+      "id": "pf-mock-2.1",
+      "event": "Public Forum",
+      "section_number": "MOCK-2.1",
+      "title": "Synthetic evidence availability",
+      "text": "For mock integration tests, teams identify cited source material used in a round and make the referenced text available to the other team on request.",
+      "edition": "CaseFile synthetic handbook 2026.08",
+      "effective_date": "2026-07-01",
+      "source_ref": "mock://nsda/rules/pf-mock-2.1",
+      "synthetic": true
+    },
+    {
+      "id": "pf-mock-3.1",
+      "event": "Public Forum",
+      "section_number": "MOCK-3.1",
+      "title": "Synthetic tournament check-in",
+      "text": "For mock integration tests, a listed team completes check-in before the synthetic tournament start date to remain active in the test bracket.",
+      "edition": "CaseFile synthetic handbook 2026.08",
+      "effective_date": "2026-07-01",
+      "source_ref": "mock://nsda/rules/pf-mock-3.1",
+      "synthetic": true
+    }
+  ],
+  "tournaments": [
+    {
+      "id": "nsda-mock-ca-001",
+      "name": "Pacific Invitational — Synthetic",
+      "start_date": "2026-09-12",
+      "end_date": "2026-09-13",
+      "timezone": "America/Los_Angeles",
+      "city": "Sacramento",
+      "state": "CA",
+      "events": ["Public Forum", "Lincoln-Douglas"],
+      "status": "registration_open",
+      "registration_ref": "mock://nsda/tournaments/nsda-mock-ca-001",
+      "synthetic": true
+    },
+    {
+      "id": "nsda-mock-il-001",
+      "name": "Midwest Classic — Synthetic",
+      "start_date": "2026-10-03",
+      "end_date": "2026-10-04",
+      "timezone": "America/Chicago",
+      "city": "Springfield",
+      "state": "IL",
+      "events": ["Public Forum"],
+      "status": "registration_open",
+      "registration_ref": "mock://nsda/tournaments/nsda-mock-il-001",
+      "synthetic": true
+    },
+    {
+      "id": "nsda-mock-ny-001",
+      "name": "Atlantic Debate Open — Synthetic",
+      "start_date": "2026-11-14",
+      "end_date": "2026-11-15",
+      "timezone": "America/New_York",
+      "city": "Albany",
+      "state": "NY",
+      "events": ["Public Forum", "Congressional Debate"],
+      "status": "announced",
+      "registration_ref": "mock://nsda/tournaments/nsda-mock-ny-001",
+      "synthetic": true
+    }
+  ],
+  "members": [
+    {
+      "member_id": "student-1",
+      "display_name": "Avery Student — Synthetic",
+      "roles": ["student"],
+      "school": "CaseFile Demonstration School",
+      "state": "CA",
+      "eligible_events": ["Public Forum"],
+      "status": "active",
+      "synthetic": true
+    },
+    {
+      "member_id": "student-2",
+      "display_name": "Jordan Student — Synthetic",
+      "roles": ["student"],
+      "school": "CaseFile Demonstration School",
+      "state": "CA",
+      "eligible_events": ["Public Forum", "Lincoln-Douglas"],
+      "status": "active",
+      "synthetic": true
+    },
+    {
+      "member_id": "coach-1",
+      "display_name": "Morgan Coach — Synthetic",
+      "roles": ["coach"],
+      "school": "CaseFile Demonstration School",
+      "state": "CA",
+      "eligible_events": [],
+      "status": "active",
+      "synthetic": true
+    }
+  ]
+}

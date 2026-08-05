@@ -1,0 +1,18 @@
+---
+title: 06 · Check progress
+---
+flowchart LR
+    A(["Progress request"]) --> B["Resolve requested<br/>student ID"]
+    B --> C{"Ownership check<br/>in tool code"}
+    C -- own record --> D["Read progress.json"]
+    C -- another student's record --> E(["Return structured denial"])
+    D --> F(["Return matching records<br/>or no-record result"])
+
+    classDef entry fill:#102A43,color:#FFFFFF,stroke:#102A43,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#563B00,stroke:#C98A13,stroke-width:2px;
+    classDef terminal fill:#E8F7EE,color:#164E2C,stroke:#3D9B63,stroke-width:2px;
+    classDef blocked fill:#FDEBEC,color:#7D1F29,stroke:#C94B57,stroke-width:2px;
+    class A entry;
+    class C decision;
+    class E blocked;
+    class F terminal;

@@ -16,7 +16,12 @@ from typing import Any
 from pydantic import ValidationError
 
 from casefile.config import Settings, get_settings
-from casefile.llm import AnthropicJSONClient, LLMResponseError, LLMUnavailable
+from casefile.llm import (
+    AnthropicJSONClient,
+    LLMResponseError,
+    LLMUnavailable,
+    build_anthropic_client,
+)
 from casefile.models import CardBoundary, CardRecord, ParagraphRecord
 from casefile.security.audit import SecurityAuditor
 from casefile.security.prompt_guard import inspect_text
@@ -214,9 +219,7 @@ class IngestionPipeline:
     ) -> None:
         self.settings = settings or get_settings()
         self.settings.ensure_runtime_dirs()
-        self.llm = llm or AnthropicJSONClient(
-            self.settings.anthropic_api_key, self.settings.model
-        )
+        self.llm = llm or build_anthropic_client(self.settings)
         self.security_audit = SecurityAuditor(self.settings.security_audit_path)
 
     def preview(

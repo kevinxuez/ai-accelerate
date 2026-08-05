@@ -24,6 +24,7 @@ class ClassifierOutput(StrictModel):
         "retrieve_evidence",
         "explain_rule",
         "generate_drill",
+        "coach_simulation",
         "progress",
         "ingest_cards",
         "schedule_session",
@@ -126,6 +127,21 @@ class DrillArgs(StrictModel):
     speech_position: Annotated[str, StringConstraints(min_length=1, max_length=100)]
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=200)]
     side: Literal["pro", "con"]
+
+
+class CoachTurnOutput(StrictModel):
+    feedback: Annotated[str, StringConstraints(min_length=1, max_length=600)]
+    question: Annotated[str, StringConstraints(min_length=1, max_length=400)]
+    focus: Annotated[str, StringConstraints(min_length=1, max_length=100)]
+
+
+class EvidenceArgumentOutput(StrictModel):
+    claim: Annotated[str, StringConstraints(min_length=1, max_length=500)]
+    warrant: Annotated[str, StringConstraints(min_length=1, max_length=900)]
+    impact: Annotated[str, StringConstraints(min_length=1, max_length=500)]
+    citations_used: list[
+        Annotated[str, StringConstraints(min_length=1, max_length=200)]
+    ] = Field(min_length=1, max_length=5)
 
 
 class ProgressArgs(StrictModel):

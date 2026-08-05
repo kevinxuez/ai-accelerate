@@ -28,3 +28,11 @@ class AgentState(TypedDict, total=False):
     request_id: str
     security_decision: dict[str, Any]
     security_events: list[dict[str, Any]]
+    task_plan: dict[str, Any]
+    task_results: list[dict[str, Any]]
+    plan_cycles: int
+    observations: list[dict[str, Any]]
+    next_step: str
+    grounding_cards: list[dict[str, Any]]
+    evidence_argument: dict[str, Any]
+    coach_turn: dict[str, Any]

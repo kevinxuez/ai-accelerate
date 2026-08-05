@@ -1,0 +1,40 @@
+---
+title: 01 · Shared request lifecycle
+---
+flowchart TD
+    A(["POST /chat"]) --> B{"Pending session?"}
+    B -- yes --> C{"New intent or<br/>stop coaching?"}
+    C -- stop --> Z["Clear session and<br/>end coaching"]
+    C -- changed task --> D["Clear old<br/>pending task"]
+    C -- reply to same task --> E["Append reply to<br/>original request"]
+    B -- no --> F["receive_request"]
+    D --> F
+    E --> F
+    F --> G["screen_request"]
+    G --> H{"Security action"}
+    H -- block --> I["block_prompt_injection"]
+    H -- allow --> J["classify_intent"]
+    J --> K{"Missing or<br/>ambiguous input?"}
+    K -- yes --> L["ask_clarification"]
+    L --> M["Save session-bound<br/>pending task"]
+    K -- no --> N["route_on_intent"]
+    N --> O["Build strict<br/>task DAG"]
+    O --> P["execute_tools"]
+    P --> Q["observe_results"]
+    Q -- one bounded<br/>evidence retry --> P
+    Q -- finish --> R["call_model /<br/>grounded renderer"]
+    R --> S["should_continue"]
+    S --> T(["Return response, traces,<br/>observations, and<br/>structured data"])
+    I --> T
+    M --> T
+
+    classDef entry fill:#102A43,color:#FFFFFF,stroke:#102A43,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#563B00,stroke:#C98A13,stroke-width:2px;
+    classDef guard fill:#FDEBEC,color:#7D1F29,stroke:#C94B57,stroke-width:2px;
+    classDef terminal fill:#E8F7EE,color:#164E2C,stroke:#3D9B63,stroke-width:2px;
+    classDef system fill:#EAF2FF,color:#172033,stroke:#5579B7,stroke-width:1.5px;
+    class A entry;
+    class B,C,H,K decision;
+    class I,Z guard;
+    class T terminal;
+    class D,E,F,G,J,L,M,N,O,P,Q,R,S system;

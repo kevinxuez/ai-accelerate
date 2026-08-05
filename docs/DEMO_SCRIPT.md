@@ -3,14 +3,15 @@
 Target runtime: **5:30**, leaving a 30-second buffer inside the six-minute presentation.
 
 This script reflects the repository as implemented. It does not claim that the missing
-36-card benchmark, an authoritative NSDA rules corpus, or a live Anthropic connection has
-been validated.
+36-card benchmark or an authoritative NSDA rules corpus has been validated. Treat the live
+Anthropic connection as ready only after the per-session preflight below succeeds.
 
 ## Demo promise
 
 The audience should leave understanding three things:
 
-1. CaseFile retrieves card-atomic evidence with the citation attached.
+1. CaseFile retrieves card-atomic evidence with the citation and source markings attached,
+   then formats a bounded grounded argument without replacing the cards.
 2. Coaching feedback becomes a durable, targeted drill.
 3. Authorization and evidence-integrity boundaries are enforced in code.
 
@@ -24,18 +25,16 @@ Run this at least 30 minutes before presenting.
 cd /Users/kevin/Downloads/ai-accelerate
 source .venv/bin/activate
 python -m pip install -e '.[all,dev]'
-export MOCK_CALENDAR=true
-```
-
-Only load `.env` if its exposed credential has been rotated:
-
-```bash
+chmod 600 .env
 set -a
 source .env
 set +a
+export MOCK_CALENDAR=true
 ```
 
-Do not open `.env` or print environment variables while screen sharing.
+The file must define `ANTHROPIC_API_KEY`, the Microsoft Foundry base URL in
+`ANTHROPIC_BASE_URL`, and the deployment name in `CASEFILE_MODEL`. Do not open `.env` or
+print environment variables while screen sharing.
 
 ### 2. Confirm that searchable cards exist
 
@@ -88,14 +87,14 @@ python - <<'PY'
 from casefile.agent.tools import CaseFileTools, ToolContext
 
 tools = CaseFileTools()
-coach = ToolContext("coach", "coach-1", "2026-09-CRYPTO")
+maintenance = ToolContext("coach", "maintenance-1", "2026-09-CRYPTO")
 
 for student_id, assessment in (
     ("student-1", "Needs clearer comparison between government backing and payment protections."),
     ("student-2", "Needs a cleaner summary collapse and more explicit weighing."),
 ):
     result = tools.log_assessment(
-        coach,
+        maintenance,
         student_id=student_id,
         speech_position="summary",
         resolution="2026-09-CRYPTO",
@@ -131,27 +130,35 @@ Expected:
 - `agent_backend` is `langgraph` when the optional dependency is installed.
 - `retrieval_backend` may be `chroma` or `json`; both use the same metadata filters and
   committed card ledger.
+- `model_status` is `configured` for the live Anthropic demo.
+- `calendar_backend` is `mock` for the safe presentation path.
 
-Open `http://127.0.0.1:8000` and set:
+Open `http://127.0.0.1:8000`. Expand **Developer status** and confirm that API, agent,
+retrieval, and model status have resolved, then set:
 
-- Role: `student`
-- User ID: `student-1`
+- Student ID: `student-1`
 - Resolution: `2026-09-CRYPTO`
+
+The left-side presets fill the prompt and context without submitting. Keep the agent trace
+visible during the technical explanation so the session, tool calls, task plan, and any
+observe/replan event are visible. Leave **Show raw response JSON** collapsed until a
+reviewer asks for it.
 
 ### 5. Decide whether the live-AI claim is allowed
 
-CaseFile currently sends live model requests to the public Anthropic endpoint. Use a
-rotated, direct Anthropic credential or finish provider-specific base URL support first.
+CaseFile sends live requests to the configured `ANTHROPIC_BASE_URL`. For the bootcamp
+Microsoft Foundry resource, the client appends `/v1/messages` to the `/anthropic` base URL
+and uses the configured deployment name.
 
 The live-AI gate passes only if this returns valid JSON:
 
 ```bash
 python - <<'PY'
 from casefile.config import get_settings
-from casefile.llm import AnthropicJSONClient
+from casefile.llm import build_anthropic_client
 
 settings = get_settings()
-client = AnthropicJSONClient(settings.anthropic_api_key, settings.model)
+client = build_anthropic_client(settings)
 print(client.complete_json(
     system='Return JSON only in this form: {"status": "string"}.',
     user='Set status to "ready".',
@@ -181,10 +188,10 @@ The RAG, LangGraph, authorization, ingestion, and evaluation paths still run loc
 
 **Say:**
 
-> I built CaseFile for Public Forum debaters and their coaches. It retrieves intact cited
-> evidence for the active resolution, turns durable coaching feedback into targeted drills,
-> and protects progress records with code-level authorization. It uses FastAPI, a LangGraph
-> state graph, filtered retrieval, and auditable tools.
+> I built CaseFile for Public Forum debaters. It retrieves intact cited evidence for the
+> active resolution, creates targeted drills, and runs a clearly labeled simulated coach
+> inside the student's session. It uses FastAPI, a LangGraph state graph, filtered retrieval,
+> and auditable tools.
 
 Transition:
 
@@ -200,7 +207,9 @@ Transition:
 What Pro evidence says cryptocurrency accounts are not backed by a government and payments are not reversible?
 ```
 
-**Expected:** the Federal Trade Commission card, beginning with its intact citation.
+**Expected:** a grounded claim/warrant/impact argument followed by the Federal Trade
+Commission card, beginning with its intact citation and showing its read/yellow-emphasis
+markings. Additional retrieved cards remain visibly separate below it.
 
 **Say while it runs:**
 
@@ -210,25 +219,29 @@ What Pro evidence says cryptocurrency accounts are not backed by a government an
 
 After the result:
 
-> The citation travels with the body by construction. The response renderer receives a
-> card whose returned document starts with `cite_full`; it does not ask a model to recreate
-> the author, year, or source.
+> The citation travels with the body by construction. The optional model formats bounded
+> marked excerpts into claim, warrant, and impact, and its cited headers must match the
+> retrieved cards. It never recreates or replaces the sources: the UI separately renders
+> each full citation, original body, and stored read and emphasis ranges. Offline, the same
+> workflow returns a deterministic grounded outline.
 
 ### 1:45–2:15 — Generate a grounded drill
 
 **Enter:**
 
 ```text
-Give me a summary drill for the Pro side.
+Give me a drill, Con.
 ```
 
-**Expected:** a timed summary drill, recent weakness tags, and cited card references.
+**Expected:** a general claim-evidence-warrant drill for Con, recent weakness tags, and cited
+card references. It should not ask for a speech position.
 
 **Say:**
 
-> This combines the student's most recent coaching record with evidence from the active
-> resolution. CaseFile creates the exercise, but it deliberately does not write the
-> competition speech.
+> The side is required, but speech position is optional. Because I did not name a position,
+> CaseFile selected its general drill instead of asking an unnecessary follow-up. It uses
+> the student's recent progress and evidence from the active resolution, but it deliberately
+> does not write the competition speech.
 
 ### 2:15–2:40 — Demonstrate authorization
 
@@ -260,40 +273,46 @@ Show progress for student-2.
 
 > The first request was an instruction override, so the deterministic guard stopped it
 > before classification or tools. The second is an ordinary unauthorized request. The
-> progress tool checks the caller's role and identity inside its Python function, so even
+> progress tool checks the student identity inside its Python function, so even
 > a detector miss cannot bypass authorization.
 
-### 2:40–3:05 — Same request, authorized coach
+### 2:40–3:05 — Simulated coach in the same session
 
-Change the UI role to `coach` and user ID to `coach-1`, then repeat:
+Click **Practice with coach**, or enter:
 
 ```text
-Show progress for student-2.
+Coach me through a Pro summary speech.
 ```
 
-**Expected:** the seeded student-2 assessment.
+**Expected:** a response labeled **Simulated coach** with one technique-focused question,
+followed by both Morrison '21 and Lai '21 with their full citations, body text, and visible
+read/emphasis markings. Reply with a short argument; CaseFile should continue coaching in
+the same session.
 
 **Say:**
 
-> The same intent and tool now succeed because the caller is a coach. Tool availability is
-> filtered by role, and the tool checks again before reading the record.
+> Coach is an agent behavior here, not another login or persona selector. The simulation
+> can use my own progress and bounded marked excerpts from both on-file practice cards, but
+> it only gives technique feedback and asks questions. I still see both original cards and
+> do the debating. I can type “end coaching” to leave the mode.
 
 ### 3:05–3:25 — Optional ingestion guardrail
 
 Only do this if rehearsal is consistently under time.
 
-**Enter as the coach:**
+**Click Attach DOCX and select the supplied card file. Enter:**
 
 ```text
-Import background/Copy of Pro Cards - Crypto.docx for the Pro side.
+Import and parse the attached DOCX evidence file for the Pro side.
 ```
 
 **Expected:** an eight-unit preview, flags, marking votes, validation, and a confirmation
-token. Do not confirm during the presentation.
+button. The file is staged privately and nothing is indexed yet. Do not confirm during the
+presentation.
 
 **Say:**
 
-> Ingestion is a write path. CaseFile shows the coach exactly what it found and waits for a
+> Ingestion is a write path. CaseFile shows the student exactly what it found and waits for a
 > confirmation token. The model can propose paragraph boundaries, but original evidence
 > text and formatting spans always come from the DOCX XML.
 
@@ -301,23 +320,26 @@ token. Do not confirm during the presentation.
 
 **Screen:** architecture slide.
 
-```text
-Chat UI
-   ↓
-FastAPI
-   ↓
-LangGraph state
-   ├── receive and screen untrusted input
-   ├── classify within a strict schema
-   ├── clarify missing fields
-   ├── route by intent
-   ├── execute authorized tool
-   └── render grounded result
-          ↓
- Cards / Rules / Progress / Calendar
-          ↓
- Redacted security/tool audits and golden evaluations
+```mermaid
+flowchart TD
+    A[Chat UI] --> B[FastAPI]
+    B --> C[Receive and screen untrusted request]
+    C --> D{Allowed?}
+    D -- no --> E[Security block]
+    D -- yes --> F[Classify with strict schema]
+    F --> G{Missing information?}
+    G -- yes --> H[Save bounded clarification session]
+    G -- no --> I[Build and execute authorized task plan]
+    I --> J[Observe result]
+    J -- empty evidence --> K[One safe read-only replan]
+    K --> I
+    J -- finish --> L[Render grounded structured result]
+    L --> M[Cards / Rules / Progress / Calendar]
+    M --> N[Redacted audits and evaluations]
 ```
+
+The detailed visual graph for every implemented workflow is in
+[`AGENT_WORKFLOWS.md`](AGENT_WORKFLOWS.md).
 
 **Say:**
 
@@ -341,8 +363,9 @@ LangGraph state
 > accuracy claim. I added source-identity validation, labeled the supplied copy separately,
 > and the offline boundary pass now scores eight of eight exact boundaries on that file.
 
-> The automated suite currently has 35 passing tests and a 20-case synthetic regression
-> set scoring 5.0 in citation faithfulness, routing and authorization, and evidence
+> The automated suite covers the stateful session and bounded replan paths alongside a
+> 20-case synthetic regression set scoring 5.0 in citation faithfulness, routing and
+> authorization, and evidence
 > integrity. The separate 15-case injection suite detects every curated high-risk case,
 > produces no benign false positives, and causes zero unauthorized calls, protected writes,
 > secret leaks, or evidence-byte changes. These are code-path regression results—not claims
@@ -352,10 +375,11 @@ LangGraph state
 
 **Say:**
 
-> I built CaseFile for Public Forum debaters and their coaches. It helps them find real
-> evidence with intact citations, drill the speech they are weakest at, and keep a progress
-> record that survives the season. The strongest part is that model judgment never replaces
-> the original evidence, and untrusted instructions cannot grant a role or a write tool.
+> I built CaseFile for Public Forum debaters. It helps them find real evidence with intact
+> citations, drill the speech they are weakest at, and practice with a simulated coach that
+> asks questions instead of writing the speech. The strongest part is that model judgment
+> never replaces the original evidence, and untrusted instructions cannot grant access to a
+> protected record or write tool.
 > Next, I would validate the missing 36-card corpus, load the current authoritative NSDA
 > rules, and put real authentication in front of the caller-provided demo roles.
 

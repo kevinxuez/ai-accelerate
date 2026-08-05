@@ -82,17 +82,23 @@ def chunk_rules(path: str | Path) -> list[RuleChunk]:
 
 
 class CaseFileIndex:
-    def __init__(self, settings: Settings | None = None) -> None:
+    def __init__(
+        self,
+        settings: Settings | None = None,
+        *,
+        enable_chroma: bool = True,
+    ) -> None:
         self.settings = settings or get_settings()
         self.settings.ensure_runtime_dirs()
         self._lock = threading.RLock()
         self._client: Any | None = None
-        try:
-            import chromadb  # type: ignore
+        if enable_chroma:
+            try:
+                import chromadb  # type: ignore
 
-            self._client = chromadb.PersistentClient(path=str(self.settings.chroma_dir))
-        except (ImportError, RuntimeError, ValueError):
-            self._client = None
+                self._client = chromadb.PersistentClient(path=str(self.settings.chroma_dir))
+            except (ImportError, RuntimeError, ValueError):
+                self._client = None
 
     @property
     def backend(self) -> str:

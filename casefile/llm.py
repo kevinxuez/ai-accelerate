@@ -11,9 +11,13 @@ import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ValidationError
+
+if TYPE_CHECKING:
+    from casefile.config import Settings
 
 
 class LLMUnavailable(RuntimeError):
@@ -28,11 +32,27 @@ class LLMResponseError(RuntimeError):
 class AnthropicJSONClient:
     api_key: str | None
     model: str = "claude-sonnet-4-6"
+    base_url: str = "https://api.anthropic.com"
     timeout: int = 90
 
     @property
     def available(self) -> bool:
         return bool(self.api_key)
+
+    @property
+    def messages_url(self) -> str:
+        base_url = self.base_url.strip().rstrip("/")
+        parsed = urlsplit(base_url)
+        if (
+            parsed.scheme != "https"
+            or not parsed.netloc
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise LLMUnavailable(
+                "ANTHROPIC_BASE_URL must be an HTTPS base URL without a query or fragment"
+            )
+        return f"{base_url}/v1/messages"
 
     def complete_json(
         self,
@@ -45,7 +65,7 @@ class AnthropicJSONClient:
         if not self.api_key:
             raise LLMUnavailable("ANTHROPIC_API_KEY is not configured")
         request = urllib.request.Request(
-            "https://api.anthropic.com/v1/messages",
+            self.messages_url,
             data=json.dumps(
                 {
                     "model": self.model,
@@ -88,3 +108,12 @@ class AnthropicJSONClient:
                     f"Model JSON failed the {schema.__name__} schema"
                 ) from exc
         return value
+
+
+def build_anthropic_client(settings: Settings) -> AnthropicJSONClient:
+    """Build the shared client so every live path honors the configured base URL."""
+    return AnthropicJSONClient(
+        api_key=settings.anthropic_api_key,
+        model=settings.model,
+        base_url=settings.anthropic_base_url,
+    )

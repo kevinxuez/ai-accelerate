@@ -11,7 +11,7 @@ from typing import Any
 
 from casefile.agent.graph import CaseFileAgent
 from casefile.config import Settings, get_settings
-from casefile.llm import AnthropicJSONClient
+from casefile.llm import build_anthropic_client
 from casefile.retrieval import CaseFileIndex
 
 from .judge import judge
@@ -106,7 +106,7 @@ def run(*, use_llm_judge: bool = False, judge_repeats: int = 3) -> dict[str, Any
         index.rebuild_cards()
         index.rebuild_rules()
         agent = CaseFileAgent(settings)
-        llm = AnthropicJSONClient(get_settings().anthropic_api_key, get_settings().model)
+        llm = build_anthropic_client(get_settings())
         outputs = []
         for case in cases:
             result = agent.ask(
