@@ -1,0 +1,17 @@
+flowchart LR
+    Client["Chat API · browser console · CLI"] --> Screen["Deterministic security screen"]
+    Screen --> Supervisor["Supervisor"]
+
+    Supervisor <-->|"EvidenceRequest · EvidencePacket<br/>RulePacket · TopicPacket<br/>IngestionPreview"| Librarian["Evidence Librarian"]
+    Supervisor <-->|"ArgumentRequest<br/>ArgumentDraft"| Strategist["Argument Strategist"]
+    Supervisor <-->|"CoachingTask · DrillPlan<br/>CoachTurn · ProgressSummary<br/>AssessmentProposal"| Coach["Skills Coach"]
+
+    Supervisor -->|"schedule_session"| Calendar["Explicit calendar provider"]
+    Librarian -->|"registered read/ingestion tools"| Chroma[("Chroma cards + rules")]
+    Librarian --> Ledger[("Versioned evidence ledger")]
+    Librarian --> Topic["Explicit NSDA-compatible provider"]
+    Coach --> Progress[("Progress records")]
+    Supervisor --> Sessions[("Versioned session state")]
+
+    classDef owner fill:#173d42,color:#fff,stroke:#c89b48,stroke-width:2px;
+    class Supervisor,Librarian,Strategist,Coach owner;

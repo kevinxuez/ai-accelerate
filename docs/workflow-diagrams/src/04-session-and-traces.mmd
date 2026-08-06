@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant User
+    participant API
+    participant Store as Versioned session store
+    participant Graph as Four-agent LangGraph
+    participant Model
+    participant Tool as Typed tool registry
+
+    User->>API: message + optional session_id
+    API->>Store: load and validate role/user/resolution binding
+    Store-->>API: CaseFileState or no session
+    API->>Graph: CaseFileState
+    Graph->>Model: typed Supervisor/specialist request
+    Model-->>Graph: validated contract
+    Graph->>Tool: agent-scoped invocation
+    Tool-->>Graph: typed result or CaseFileError
+    Graph->>Store: persist bounded state and artifacts
+    Graph-->>API: completed / needs_input / needs_confirmation / failed
+    API-->>User: envelope with agent, tool, and model traces
+
+    Note over Graph,Tool: Trace sequence numbers preserve execution order.
+    Note over Model: Full prompts/responses appear only when developer exposure is explicitly enabled.

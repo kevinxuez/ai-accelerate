@@ -1,34 +1,23 @@
-# CaseFile workflow charts
+# Four-agent workflow diagrams
 
-This folder contains eleven high-resolution PNG flowcharts derived from the current-state
-CaseFile agent workflow descriptions.
+These Mermaid sources document the production runtime:
 
-## Color key
+1. [`01-four-agent-architecture.mmd`](src/01-four-agent-architecture.mmd) — ownership,
+   delegation, tools, and storage.
+2. [`02-request-and-error-flow.mmd`](src/02-request-and-error-flow.mmd) — the only request path,
+   including clarification, confirmation, completion, and typed failure.
+3. [`03-ingestion-confirmation.mmd`](src/03-ingestion-confirmation.mmd) — lossless DOCX preview,
+   atomic commit, and Chroma rebuild.
+4. [`04-session-and-traces.mmd`](src/04-session-and-traces.mmd) — versioned continuation and
+   observable traces.
 
-- Navy: entry point
-- Blue: system or tool step
-- Gold: decision or confirmation point
-- Purple: model-assisted step, write, or special policy gate
-- Red: denial, rejection, or blocked path
-- Green: returned result or completed terminal state
+Render a source with Mermaid CLI if desired:
 
-The editable Mermaid sources are in `src/`. The shared rendering settings are in
-`mermaid-config.json`.
-
-## Regenerate the PNG set
-
-Run from the repository root with Google Chrome installed:
-
-```sh
-for source_file in docs/workflow-diagrams/src/*.mmd; do
-  image_file="docs/workflow-diagrams/png/$(basename "${source_file%.mmd}").png"
-  PUPPETEER_EXECUTABLE_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \
-    PUPPETEER_SKIP_DOWNLOAD=true \
-    npx -y @mermaid-js/mermaid-cli \
-    -i "$source_file" \
-    -o "$image_file" \
-    -c docs/workflow-diagrams/mermaid-config.json \
-    -b '#F8FAFC' \
-    -s 2
-done
+```bash
+npx --yes @mermaid-js/mermaid-cli \
+  -c docs/workflow-diagrams/mermaid-config.json \
+  -i docs/workflow-diagrams/src/01-four-agent-architecture.mmd \
+  -o four-agent-architecture.svg
 ```
+
+Generated images are intentionally not committed; the Mermaid source is authoritative.

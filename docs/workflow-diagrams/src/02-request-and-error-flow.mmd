@@ -1,0 +1,23 @@
+flowchart TD
+    A["POST /chat or /chat/with-attachment"] --> B["Validate typed request"]
+    B --> C["Screen untrusted user content"]
+    C -->|"blocked or rate limited"| Failure["failed state + typed ErrorDetail"]
+    C -->|"allowed"| D["Supervisor model decision"]
+    D -->|"delegate"| E["One specialist agent"]
+    E --> F["Return typed artifact or handoff request"]
+    F --> D
+    D -->|"missing information"| Input["needs_input + ClarificationRequest"]
+    D -->|"staged write"| Confirm["needs_confirmation + ConfirmationRequest"]
+    D -->|"finish"| Success["completed + typed artifacts"]
+    D -->|"refuse"| Success
+    D -->|"model, tool, validation, provider, or limit error"| Failure
+    E -->|"model, tool, validation, provider, or limit error"| Failure
+
+    Input -->|"same session reply"| C
+    Confirm -->|"same session or explicit integration confirmation"| C
+
+    Success --> Envelope["HTTP 200 success envelope + traces"]
+    Failure --> ErrorEnvelope["Non-200 error envelope + collected traces"]
+
+    classDef failure fill:#f7e2de,color:#6d271f,stroke:#9b3b32,stroke-width:2px;
+    class Failure,ErrorEnvelope failure;

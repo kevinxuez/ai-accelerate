@@ -2,16 +2,18 @@
 
 from casefile.providers.nsda import (
     HTTPNSDAProvider,
-    MockNSDAProvider,
+    FixtureNSDAProvider,
     NSDANotFound,
+    NSDAProviderDisabled,
     NSDAProviderError,
     build_nsda_provider,
 )
 
 __all__ = [
     "HTTPNSDAProvider",
-    "MockNSDAProvider",
+    "FixtureNSDAProvider",
     "NSDANotFound",
+    "NSDAProviderDisabled",
     "NSDAProviderError",
     "build_nsda_provider",
 ]

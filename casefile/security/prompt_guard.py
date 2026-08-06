@@ -22,11 +22,6 @@ TrustLabel = Literal[
 Risk = Literal["low", "medium", "high"]
 Action = Literal["allow", "constrain", "block"]
 
-BLOCKED_RESPONSE = (
-    "[BLOCKED_PROMPT_INJECTION] The request attempted to override trusted "
-    "instructions or access controls."
-)
-
 _HIDDEN = re.compile(r"[\u200b-\u200f\u202a-\u202e\u2060\u2066-\u2069\ufeff]")
 _OVERRIDE = re.compile(
     r"\b(?:ignore|disregard|forget|override|supersede|bypass)\b.{0,80}"
@@ -58,10 +53,9 @@ _SECRET_REQUEST = re.compile(
 )
 _TOOL_COERCION = re.compile(
     r"\b(?:call|invoke|execute|run|trigger|force)\b.{0,60}"
-    r"\b(?:tool|function|ingest_cards|log_assessment|schedule_session|calendar|"
+    r"\b(?:tool|function|stage_ingestion_preview|commit_ingestion|log_assessment|schedule_session|calendar|"
     r"write|delete|upload|import)\b"
-    r"|\buse\b.{0,40}\b(?:tool|function|ingest_cards|log_assessment|schedule_session)\b"
-    r"|\bdry_run\s*=\s*(?:false|0)\b"
+    r"|\buse\b.{0,40}\b(?:tool|function|stage_ingestion_preview|commit_ingestion|log_assessment|schedule_session)\b"
     r"|\bconfirm(?:ation)?\s+token\b.{0,100}\b(?:unissued|fake|never\s+issued|"
     r"without|00000000)\b",
     re.I | re.S,
@@ -89,7 +83,9 @@ _DISCUSSION = re.compile(
     r"give\s+(?:me\s+)?an?\s+example\s+of)\b.{0,120}\bprompt[\s-]*injection\b",
     re.I | re.S,
 )
-_BASE64 = re.compile(r"(?<![A-Za-z0-9+/])(?:[A-Za-z0-9+/]{4}){12,}(?:==|=)?(?![A-Za-z0-9+/])")
+_BASE64 = re.compile(
+    r"(?<![A-Za-z0-9+/])(?:[A-Za-z0-9+/]{4}){12,}(?:==|=)?(?![A-Za-z0-9+/])"
+)
 _HEX = re.compile(r"(?<![A-Fa-f0-9])[A-Fa-f0-9]{96,}(?![A-Fa-f0-9])")
 
 _KEY_VALUE = re.compile(
@@ -216,11 +212,18 @@ def inspect_text(
 
     untrusted_document = trust in {"untrusted_document", "untrusted_retrieval"}
     targeted_override = override and (
-        bool(_DIRECT_TARGET.search(analysis)) or tool or secret or role_spoof or context_tamper
+        bool(_DIRECT_TARGET.search(analysis))
+        or tool
+        or secret
+        or role_spoof
+        or context_tamper
     )
     high = (
         explicit_role_escalation
-        or (role_spoof and (tool or context_tamper or bool(_DIRECT_TARGET.search(analysis))))
+        or (
+            role_spoof
+            and (tool or context_tamper or bool(_DIRECT_TARGET.search(analysis)))
+        )
         or secret
         or secret_material
         or tool
@@ -292,9 +295,10 @@ def redact_secrets(value: Any, *, key: str = "") -> Any:
         return [redact_secrets(item, key=key) for item in value]
     if not isinstance(value, str):
         return value
-    replacement = lambda match: (  # noqa: E731
-        match.group(0)[: match.start(2) - match.start(0)] + "[REDACTED]"
-    )
+
+    def replacement(match: re.Match[str]) -> str:
+        return match.group(0)[: match.start(2) - match.start(0)] + "[REDACTED]"
+
     redacted = _KEY_VALUE.sub(replacement, value)
     redacted = _ENV_CREDENTIAL.sub(
         replacement,

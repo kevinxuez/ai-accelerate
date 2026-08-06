@@ -1,14 +1,18 @@
-"""Runtime configuration with conservative, offline-safe defaults."""
+"""Runtime configuration for the required CaseFile capabilities."""
 
 from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
+from typing import Literal, cast
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_ROOT.parent
+PINNED_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+PINNED_EMBEDDING_DIMENSIONS = 384
 
 
 def _env_path(name: str, default: Path) -> Path:
@@ -39,8 +43,19 @@ class Settings:
     anthropic_base_url: str = os.getenv(
         "ANTHROPIC_BASE_URL", "https://api.anthropic.com"
     )
+    model_timeout_seconds: float = float(
+        os.getenv("CASEFILE_MODEL_TIMEOUT_SECONDS", "90")
+    )
+    expose_model_prompts: bool = _env_bool("CASEFILE_EXPOSE_MODEL_PROMPTS", False)
+    embedding_model_path: Path = _env_path(
+        "CASEFILE_EMBEDDING_MODEL_PATH",
+        PACKAGE_ROOT / "embedding_models" / "all-MiniLM-L6-v2",
+    )
     min_relevance: float = float(os.getenv("CASEFILE_MIN_RELEVANCE", "0.08"))
-    mock_calendar: bool = _env_bool("MOCK_CALENDAR", True)
+    calendar_provider: Literal["disabled", "fixture", "google"] = cast(
+        Literal["disabled", "fixture", "google"],
+        os.getenv("CASEFILE_CALENDAR_PROVIDER", "disabled").strip().lower(),
+    )
     google_credentials: Path = _env_path(
         "GOOGLE_CALENDAR_CREDENTIALS", REPO_ROOT / "credentials.json"
     )
@@ -48,8 +63,12 @@ class Settings:
     nsda_base_url: str | None = os.getenv("NSDA_BASE_URL") or None
     nsda_api_key: str | None = os.getenv("NSDA_API_KEY") or None
     nsda_timeout_seconds: float = float(os.getenv("NSDA_TIMEOUT_SECONDS", "5"))
-    nsda_mock_data: Path = _env_path(
-        "NSDA_MOCK_DATA", PACKAGE_ROOT / "providers" / "nsda_mock.json"
+    nsda_provider: Literal["disabled", "fixture", "http"] = cast(
+        Literal["disabled", "fixture", "http"],
+        os.getenv("CASEFILE_NSDA_PROVIDER", "disabled").strip().lower(),
+    )
+    nsda_fixture_path: Path = _env_path(
+        "CASEFILE_NSDA_FIXTURE_PATH", PACKAGE_ROOT / "providers" / "nsda_fixture.json"
     )
     allowed_ingest_roots: tuple[Path, ...] = _env_roots(
         "CASEFILE_INGEST_ROOTS", (REPO_ROOT / "background",)
@@ -58,6 +77,39 @@ class Settings:
         os.getenv("CASEFILE_MAX_UPLOAD_BYTES", str(10 * 1024 * 1024))
     )
     requests_per_minute: int = int(os.getenv("CASEFILE_REQUESTS_PER_MINUTE", "60"))
+
+    def validate_configuration(self) -> None:
+        if self.calendar_provider not in {"disabled", "fixture", "google"}:
+            raise ValueError(
+                "CASEFILE_CALENDAR_PROVIDER must be disabled, fixture, or google"
+            )
+        if self.nsda_provider not in {"disabled", "fixture", "http"}:
+            raise ValueError(
+                "CASEFILE_NSDA_PROVIDER must be disabled, fixture, or http"
+            )
+        if self.nsda_provider == "http" and not self.nsda_base_url:
+            raise ValueError("NSDA_BASE_URL is required for the HTTP NSDA provider")
+        if self.nsda_provider != "http" and self.nsda_base_url:
+            raise ValueError(
+                "NSDA_BASE_URL is accepted only when CASEFILE_NSDA_PROVIDER=http"
+            )
+        if self.nsda_provider == "fixture" and not self.nsda_fixture_path.is_file():
+            raise ValueError("The configured NSDA fixture file does not exist")
+        if self.calendar_provider == "google" and not self.google_credentials.is_file():
+            raise ValueError("Google Calendar credentials are not configured")
+        if self.calendar_provider == "google":
+            try:
+                for module in (
+                    "google.auth.transport.requests",
+                    "google.oauth2.credentials",
+                    "google_auth_oauthlib.flow",
+                    "googleapiclient.discovery",
+                ):
+                    import_module(module)
+            except ImportError as exc:
+                raise ValueError(
+                    "Google Calendar requires the 'calendar' package extra"
+                ) from exc
 
     @property
     def cards_path(self) -> Path:

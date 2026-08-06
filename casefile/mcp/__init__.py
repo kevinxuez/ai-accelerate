@@ -1,2 +1,1 @@
-"""MCP exposure for the two portable, read-oriented CaseFile capabilities."""
-
+"""Optional stdio exposure for focused CaseFile tools and specialist handoffs."""

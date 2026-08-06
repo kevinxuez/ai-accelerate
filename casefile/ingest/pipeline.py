@@ -1,127 +1,50 @@
-"""End-to-end, confirmation-gated DOCX ingestion pipeline."""
+"""Evidence Librarian-managed, confirmation-gated DOCX ingestion."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
-import os
 import re
-import tempfile
 import uuid
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from pydantic import ValidationError
-
+from casefile.agents.contracts import IngestionCommitResult, IngestionPreview
+from casefile.agents.errors import CaseFileError, ErrorCode
+from casefile.agents.prompt_registry import load_prompt
 from casefile.config import Settings, get_settings
-from casefile.llm import (
-    AnthropicJSONClient,
-    LLMResponseError,
-    LLMUnavailable,
-    build_anthropic_client,
-)
-from casefile.models import CardBoundary, CardRecord, ParagraphRecord
+from casefile.llm import AnthropicJSONClient, build_anthropic_client
 from casefile.security.audit import SecurityAuditor
-from casefile.security.prompt_guard import inspect_text
 
-from .boundary_pass import BARE_URL, run_boundary_pass
+from .boundary_pass import run_boundary_pass
+from .commit import (
+    approve_quarantined_card,
+    commit_ingestion,
+    stage_ingestion,
+)
+from .extract import ExtractedDocument, extract_document
 from .field_pass import label_card, parse_citation
-from .serialize_index import detect_convention, paragraph_records
+from .contracts import CardBoundary, CardRecord, ParagraphRecord
+from .preview import (
+    STAGED_INGESTION_SCHEMA_VERSION,
+    StagedIngestion,
+    preview_summary,
+)
 from .slice_spans import (
     card_convention,
     join_paragraphs,
     span_text,
     spans_for_paragraphs,
 )
-
-
-HTML_ENTITY = re.compile(r"&(?:[A-Za-z][A-Za-z0-9]+|#\d+|#x[0-9A-Fa-f]+);")
-CORRUPTION_FLAGS = {"pdf_paste_fragmented", "text_corrupt", "html_entity"}
-NON_INDEXABLE_FLAGS = CORRUPTION_FLAGS | {"do_not_ingest", "paraphrase_no_source"}
-
-
-@dataclass
-class IngestionPreview:
-    token: str
-    source_file: str
-    source_sha256: str
-    resolution: str
-    resolution_confidence: str
-    marking_convention: str
-    marking_votes: dict[str, int]
-    boundary_method: str
-    field_method: str
-    validation: dict[str, Any]
-    cards: list[dict[str, Any]]
-    document_injection_risk: str = "low"
-    document_injection_signals: list[str] = field(default_factory=list)
-
-    @property
-    def counts(self) -> dict[str, int]:
-        counts = {"ok": 0, "flagged": 0, "incomplete": 0, "not_indexable": 0}
-        for card in self.cards:
-            counts[card["ingest_status"]] += 1
-            if not is_indexable(card):
-                counts["not_indexable"] += 1
-        return counts
-
-    def to_dict(self, include_cards: bool = True) -> dict[str, Any]:
-        value = asdict(self)
-        value["counts"] = self.counts
-        if not include_cards:
-            value.pop("cards", None)
-        return value
-
-    def summary(self) -> str:
-        counts = self.counts
-        lines = [
-            f"Parsed {len(self.cards)} units from {Path(self.source_file).name}.",
-            f"  {counts['ok']} ok, {counts['flagged']} flagged, "
-            f"{counts['incomplete']} incomplete; {counts['not_indexable']} excluded from search",
-            f"  marking convention: {self.marking_convention} votes={self.marking_votes}",
-            f"  boundary pass: {self.boundary_method}; field pass: {self.field_method}",
-        ]
-        flagged = [
-            f"{card['header'] or card['author'] or card['id'][:8]} ({', '.join(card['flags'])})"
-            for card in self.cards
-            if card["flags"]
-        ]
-        if flagged:
-            lines.append("  review: " + "; ".join(flagged))
-        if self.document_injection_risk != "low":
-            lines.append(
-                "  document injection risk: "
-                f"{self.document_injection_risk} "
-                f"({', '.join(self.document_injection_signals)})"
-            )
-        lines.append(
-            f"Resolution: {self.resolution} ({self.resolution_confidence} confidence)."
-        )
-        if not self.validation.get("valid"):
-            lines.append("  BLOCKED: boundary validation failed; confirmation is disabled.")
-        else:
-            lines.append(f"Confirm with token: {self.token}")
-        return "\n".join(lines)
-
-    @classmethod
-    def from_dict(cls, value: dict[str, Any]) -> "IngestionPreview":
-        allowed = {
-            "token", "source_file", "source_sha256", "resolution",
-            "resolution_confidence", "marking_convention", "marking_votes",
-            "boundary_method", "field_method", "validation", "cards",
-            "document_injection_risk", "document_injection_signals",
-        }
-        return cls(**{key: value[key] for key in allowed if key in value})
-
-
-def _sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
+from .validate import (
+    CORRUPTION_FLAGS,
+    boundary_flags,
+    ingest_status,
+    is_indexable,
+    preview_card,
+    source_key,
+)
 
 
 def _card_id(header: str, body: str) -> str:
@@ -129,89 +52,51 @@ def _card_id(header: str, body: str) -> str:
     return hashlib.sha256(f"{header.strip()}\n{normalized}".encode("utf-8")).hexdigest()
 
 
-def _resolution(path: Path, resolution: str | None) -> tuple[str, str]:
-    if resolution and resolution.strip():
-        return resolution.strip(), "high"
-    inferred = re.sub(r"[^A-Za-z0-9]+", "-", path.stem).strip("-").upper()
-    return f"INFERRED-{inferred or 'UNKNOWN'}", "low"
-
-
-def _boundary_flags(
+def _extracted_card(
     boundary: CardBoundary,
-    body: str,
-    cite: str,
-    read_spans: list[list[int]],
-) -> set[str]:
-    flags = set(boundary.flags)
-    if boundary.header is None:
-        flags.add("no_header")
-    if not boundary.body or not body.strip():
-        flags.add("no_body")
-    if BARE_URL.fullmatch(cite.strip()):
-        flags.add("cite_is_bare_url")
-    if not re.search(r"https?://|\b(?:19|20)\d{2}\b", cite, re.I) and len(cite) < 180:
-        flags.add("cite_is_bare_headline")
-    if set(boundary.cite) & set(boundary.body):
-        flags.add("cite_body_same_paragraph")
-    if body and not read_spans:
-        flags.add("no_marking")
-    if body and read_spans == [[0, len(body)]]:
-        flags.add("fully_marked")
-    opening = body.lstrip()[:1]
-    if opening and (opening.islower() or opening in ".,;:)]}"):
-        flags.add("body_truncated")
-    if HTML_ENTITY.search(body):
-        flags.update({"html_entity", "text_corrupt", "do_not_ingest"})
-    if len(boundary.body) >= 3:
-        flags.add("pdf_paste_fragmented")
-        flags.update({"text_corrupt", "do_not_ingest"})
-    if flags & CORRUPTION_FLAGS:
-        flags.add("do_not_ingest")
-    return flags
-
-
-def _status(body: str, flags: set[str]) -> str:
-    if not body.strip() or "no_body" in flags:
-        return "incomplete"
-    return "flagged" if flags else "ok"
-
-
-def _source_key(card: CardRecord) -> str:
-    if card.url:
-        return re.sub(r"[/?#]+$", "", card.url.lower())
-    return re.sub(r"\s+", " ", card.body.lower()).strip()
-
-
-def is_indexable(card: dict[str, Any]) -> bool:
-    return (
-        card.get("ingest_status") != "incomplete"
-        and bool(card.get("body"))
-        and not (set(card.get("flags", [])) & NON_INDEXABLE_FLAGS)
-        and not (
-            card.get("injection_risk") == "high"
-            and not bool(card.get("injection_approved"))
+    *,
+    by_id: dict[int, ParagraphRecord],
+    document: ExtractedDocument,
+) -> dict[str, Any]:
+    header = by_id[boundary.header].text if boundary.header in by_id else ""
+    tag = join_paragraphs(boundary.tag, by_id)
+    citation = join_paragraphs(boundary.cite, by_id)
+    marking = card_convention(
+        boundary.body,
+        by_id,
+        document.marking_convention,
+    )
+    body, read_spans, emphasis_spans = spans_for_paragraphs(
+        boundary.body,
+        by_id,
+        marking,
+    )
+    flags = boundary_flags(boundary, body, citation, read_spans)
+    source_paragraphs = sorted(
+        set(
+            ([] if boundary.header is None else [boundary.header])
+            + boundary.tag
+            + boundary.cite
+            + boundary.body
         )
     )
-
-
-def _atomic_json(path: Path, value: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
-    )
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            json.dump(value, stream, ensure_ascii=False, indent=2)
-            stream.write("\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+    return {
+        "header": header,
+        "tag": tag,
+        "citation": citation,
+        "body": body,
+        "read_spans": read_spans,
+        "emphasis_spans": emphasis_spans,
+        "marking_convention": marking,
+        "flags": flags,
+        "source_paragraphs": source_paragraphs,
+        "citation_fields": parse_citation(citation, header),
+    }
 
 
 class IngestionPipeline:
+    """Orchestrate required model judgments around deterministic integrity steps."""
+
     def __init__(
         self,
         settings: Settings | None = None,
@@ -222,269 +107,208 @@ class IngestionPipeline:
         self.llm = llm or build_anthropic_client(self.settings)
         self.security_audit = SecurityAuditor(self.settings.security_audit_path)
 
+    def inspect(self, docx: str | Path) -> ExtractedDocument:
+        """Inspect, extract, and screen a DOCX without making a model call."""
+
+        return extract_document(
+            docx,
+            max_bytes=self.settings.max_upload_bytes,
+            audit=self.security_audit,
+        )
+
     def preview(
         self,
         docx: str | Path,
         *,
-        resolution: str | None,
-        default_side: str | None = None,
-        use_model: bool = True,
+        resolution: str,
+        default_side: str,
         stage: bool = True,
     ) -> IngestionPreview:
-        path = Path(docx).expanduser().resolve()
-        records = paragraph_records(path)
-        by_id: dict[int, ParagraphRecord] = {record.i: record for record in records}
-        convention, votes = detect_convention(records)
-        document_decision = inspect_text(
-            "\n".join(record.text for record in records),
-            trust="untrusted_document",
-        )
-        model_boundary_allowed = use_model and document_decision.safe_for_model
-        boundary_result, validation, boundary_method = run_boundary_pass(
-            records, client=self.llm, use_model=model_boundary_allowed
-        )
-        if use_model and not document_decision.safe_for_model:
-            boundary_method = "guarded-heuristic"
-            self.security_audit.record(
-                "document_model_processing_constrained",
-                decision=document_decision,
-                raw_text="\n".join(record.text for record in records),
-                details={"source_file": path.name, "stage": "boundary"},
+        document = self.inspect(docx)
+        resolved = resolution.strip()
+        if not resolved or default_side not in {"pro", "con"}:
+            raise CaseFileError(
+                ErrorCode.REQUEST_INVALID,
+                "A resolution and Pro or Con side are required before ingestion.",
+                stage="ingestion.validate_metadata",
+                agent="evidence_librarian",
             )
-        resolved, confidence = _resolution(path, resolution)
-        cards: list[CardRecord] = []
-        field_methods: set[str] = set()
+        boundary_result, _, _ = run_boundary_pass(
+            document.records,
+            client=self.llm,
+        )
+        by_id = {record.i: record for record in document.records}
+        extracted = [
+            _extracted_card(
+                CardBoundary.from_dict(raw),
+                by_id=by_id,
+                document=document,
+            )
+            for raw in boundary_result["cards"]
+        ]
 
-        for raw_boundary in boundary_result.get("cards", []):
-            boundary = CardBoundary.from_dict(raw_boundary)
-            header = by_id[boundary.header].text if boundary.header in by_id else ""
-            tag = join_paragraphs(boundary.tag, by_id)
-            cite = join_paragraphs(boundary.cite, by_id)
-            card_marking = card_convention(boundary.body, by_id, convention)
-            body, read_spans, emphasis_spans = spans_for_paragraphs(
-                boundary.body, by_id, card_marking
+        seen_sources: dict[str, str] = {}
+        for card in extracted:
+            candidate = {**card["citation_fields"], "body": card["body"]}
+            key = source_key(candidate)
+            identity = _card_id(card["header"], card["body"])
+            if key and key in seen_sources and seen_sources[key] != identity:
+                card["flags"].add("duplicate_source")
+            elif key:
+                seen_sources[key] = identity
+
+        cards: list[dict[str, Any]] = []
+        for position, card in enumerate(extracted, start=1):
+            labels = label_card(
+                header=card["header"],
+                tag=card["tag"],
+                citation=card["citation"],
+                body=card["body"],
+                source_filename=document.source_filename,
+                default_side=default_side,
+                validation_flags=sorted(card["flags"]),
+                client=self.llm,
             )
-            flags = _boundary_flags(boundary, body, cite, read_spans)
-            guard_decision = inspect_text(
-                "\n".join(part for part in (header, tag, cite, body) if part),
-                trust="untrusted_document",
-            )
-            model_processing_skipped = use_model and not guard_decision.safe_for_model
-            if guard_decision.risk != "low":
-                flags.add("prompt_injection_suspected")
-                self.security_audit.record(
-                    "card_prompt_injection_detected",
-                    decision=guard_decision,
-                    raw_text="\n".join(part for part in (header, tag, cite, body) if part),
-                    details={
-                        "source_file": path.name,
-                        "card_content_sha256": hashlib.sha256(
-                            "\n".join(
-                                part for part in (header, tag, cite, body) if part
-                            ).encode("utf-8")
-                        ).hexdigest(),
-                    },
-                )
-            try:
-                labels, field_method = label_card(
-                    header=header,
-                    tag=tag,
-                    cite=cite,
-                    body=body,
-                    source_file=path.name,
-                    client=(
-                        self.llm
-                        if use_model and guard_decision.safe_for_model
-                        else None
-                    ),
-                )
-            except (LLMUnavailable, LLMResponseError, ValidationError):
-                labels, _ = label_card(
-                    header=header,
-                    tag=tag,
-                    cite=cite,
-                    body=body,
-                    source_file=path.name,
-                    client=None,
-                )
-                field_method = "heuristic-fallback"
-            if model_processing_skipped:
-                field_method = "guarded-heuristic"
-            field_methods.add(field_method)
-            flags.update(labels.get("flags", []))
-            if labels.get("evidence_type") == "paraphrased" and not labels.get(
-                "source_text_present"
-            ):
+            flags = set(card["flags"]) | set(labels.flags)
+            if labels.evidence_type == "paraphrased" and not labels.source_text_present:
                 flags.add("paraphrase_no_source")
             if flags & CORRUPTION_FLAGS:
                 flags.add("do_not_ingest")
-            citation = parse_citation(cite, header)
-            read_text = span_text(body, read_spans) if read_spans else body
-            emphasis_text = span_text(body, emphasis_spans)
-            embedding_parts = [header, tag, read_text, emphasis_text]
-            embedding_text = "\n".join(part for part in embedding_parts if part)
+            if flags and not labels.explanation:
+                raise CaseFileError(
+                    ErrorCode.INGESTION_CARD_INVALID,
+                    "The Evidence Librarian did not explain a flagged or excluded card.",
+                    stage="ingestion.validate_cards",
+                    agent="evidence_librarian",
+                    safe_details={"card_position": position},
+                )
+
+            read_text = (
+                span_text(card["body"], card["read_spans"])
+                if card["read_spans"]
+                else card["body"]
+            )
+            emphasis_text = span_text(card["body"], card["emphasis_spans"])
+            embedding_text = "\n".join(
+                part
+                for part in (
+                    card["header"],
+                    card["tag"],
+                    read_text,
+                    emphasis_text,
+                )
+                if part
+            )
             returned_document = "\n".join(
-                part for part in (cite, header, tag, body) if part
-            )
-            side = default_side or labels.get("side", "unknown")
-            if side not in {"pro", "con", "unknown"}:
-                raise ValueError("default_side must be pro, con, or unknown")
-            source_paragraphs = sorted(
-                set(
-                    ([] if boundary.header is None else [boundary.header])
-                    + boundary.tag
-                    + boundary.cite
-                    + boundary.body
+                part
+                for part in (
+                    card["citation"],
+                    card["header"],
+                    card["tag"],
+                    card["body"],
                 )
+                if part
             )
-            cards.append(
-                CardRecord(
-                    id=_card_id(header, body),
-                    header=header,
-                    tag=tag,
-                    cite_full=cite,
-                    body=body,
-                    read_spans=read_spans,
-                    emphasis_spans=emphasis_spans,
-                    marking_convention=card_marking,
-                    evidence_type=labels.get("evidence_type", "unknown"),
-                    source_text_present=bool(labels.get("source_text_present")),
-                    resolution=resolved,
-                    resolution_confidence=confidence,
-                    side=side,
-                    topic_tags=list(labels.get("topic_tags", [])),
-                    ingest_status=_status(body, flags),
-                    flags=sorted(flags),
-                    source_file=path.name,
-                    source_paragraphs=source_paragraphs,
-                    embedding_text=embedding_text,
-                    returned_document=returned_document,
-                    injection_risk=guard_decision.risk,
-                    injection_signals=guard_decision.signals,
-                    model_processing_skipped=model_processing_skipped,
-                    **citation,
-                )
-            )
+            record = CardRecord(
+                id=_card_id(card["header"], card["body"]),
+                header=card["header"],
+                tag=card["tag"],
+                cite_full=card["citation"],
+                body=card["body"],
+                read_spans=card["read_spans"],
+                emphasis_spans=card["emphasis_spans"],
+                marking_convention=card["marking_convention"],
+                evidence_type=labels.evidence_type,
+                source_text_present=labels.source_text_present,
+                resolution=resolved,
+                resolution_confidence="high",
+                side=labels.side,
+                topic_tags=labels.topic_tags,
+                ingest_status=ingest_status(card["body"], flags),
+                flags=sorted(flags),
+                source_file=document.source_filename,
+                source_paragraphs=card["source_paragraphs"],
+                embedding_text=embedding_text,
+                returned_document=returned_document,
+                explanation=labels.explanation,
+                injection_risk=document.screening.risk,
+                injection_signals=document.screening.signals,
+                model_processing_skipped=False,
+                **card["citation_fields"],
+            ).to_dict()
+            preview_card(record, position=position)
+            cards.append(record)
 
-        seen_sources: dict[str, CardRecord] = {}
-        for card in cards:
-            key = _source_key(card)
-            if key and key in seen_sources and seen_sources[key].id != card.id:
-                card.flags = sorted(set(card.flags) | {"duplicate_source"})
-                card.ingest_status = "flagged"
-            elif key:
-                seen_sources[key] = card
-
-        token = uuid.uuid4().hex
-        preview = IngestionPreview(
-            token=token,
-            source_file=str(path),
-            source_sha256=_sha256_file(path),
+        boundary_prompt = load_prompt("evidence_librarian_boundaries")
+        labeling_prompt = load_prompt("evidence_librarian_labels")
+        warnings = [
+            f"Card {position} is excluded or flagged: {card['explanation']}"[:500]
+            for position, card in enumerate(cards, start=1)
+            if not is_indexable(card) or card.get("flags")
+        ]
+        staged = StagedIngestion(
+            schema_version=STAGED_INGESTION_SCHEMA_VERSION,
+            job_id=uuid.uuid4().hex,
+            confirmation_token=uuid.uuid4().hex,
+            source_path=str(document.source_path),
+            source_filename=document.source_filename,
+            source_sha256=document.source_sha256,
             resolution=resolved,
-            resolution_confidence=confidence,
-            marking_convention=convention,
-            marking_votes=votes,
-            boundary_method=boundary_method,
-            field_method="+".join(sorted(field_methods)) or "none",
-            validation=validation,
-            cards=[card.to_dict() for card in cards],
-            document_injection_risk=document_decision.risk,
-            document_injection_signals=document_decision.signals,
+            side=default_side,
+            marking_convention=document.marking_convention,
+            marking_votes=document.marking_votes,
+            cards=cards,
+            warnings=warnings,
+            model=str(getattr(self.llm, "model", type(self.llm).__name__)),
+            boundary_prompt=boundary_prompt.template_name,
+            labeling_prompt=labeling_prompt.template_name,
         )
+        artifact = staged.artifact()
         if stage:
-            _atomic_json(self.settings.pending_dir / f"{token}.json", preview.to_dict())
-        return preview
+            stage_ingestion(self.settings, staged)
+        return artifact
 
-    def confirm(self, token: str) -> dict[str, Any]:
-        if not re.fullmatch(r"[0-9a-f]{32}", token):
-            raise ValueError("Invalid confirmation token")
-        pending = self.settings.pending_dir / f"{token}.json"
-        if not pending.exists():
-            raise FileNotFoundError("Confirmation token was not found or was already used")
-        preview = IngestionPreview.from_dict(json.loads(pending.read_text(encoding="utf-8")))
-        if not preview.validation.get("valid"):
-            raise ValueError("Cannot confirm an ingest with failed boundary validation")
-        source = Path(preview.source_file)
-        if not source.exists() or _sha256_file(source) != preview.source_sha256:
-            raise ValueError("Source DOCX changed after preview; create a new preview")
-
-        current: list[dict[str, Any]] = []
-        if self.settings.cards_path.exists():
-            loaded = json.loads(self.settings.cards_path.read_text(encoding="utf-8"))
-            if isinstance(loaded, list):
-                current = loaded
-        by_id = {card["id"]: card for card in current}
-        for card in preview.cards:
-            by_id[card["id"]] = card
-        saved = sorted(by_id.values(), key=lambda card: (card["resolution"], card["id"]))
-        _atomic_json(self.settings.cards_path, saved)
-        pending.unlink()
-
-        from casefile.retrieval import CaseFileIndex
-
-        index = CaseFileIndex(self.settings)
-        index.rebuild_cards(saved)
-        return {
-            "written": len(preview.cards),
-            "searchable": sum(1 for card in preview.cards if is_indexable(card)),
-            "total_records": len(saved),
-            "cards_path": str(self.settings.cards_path),
-        }
+    def confirm(self, token: str) -> IngestionCommitResult:
+        return commit_ingestion(self.settings, token)
 
     def approve_quarantined_card(self, card_id: str) -> dict[str, Any]:
-        """Separately approve one high-risk card for retrieval without changing its text."""
-        if not re.fullmatch(r"[0-9a-f]{64}", card_id):
-            raise ValueError("Invalid card id")
-        if not self.settings.cards_path.exists():
-            raise FileNotFoundError("No ingested cards are available")
-        loaded = json.loads(self.settings.cards_path.read_text(encoding="utf-8"))
-        if not isinstance(loaded, list):
-            raise ValueError("Card ledger is malformed")
-        found = False
-        for card in loaded:
-            if card.get("id") == card_id:
-                if card.get("injection_risk") != "high":
-                    raise ValueError("Only high-risk quarantined cards require approval")
-                card["injection_approved"] = True
-                found = True
-                break
-        if not found:
-            raise FileNotFoundError("Card id was not found")
-        _atomic_json(self.settings.cards_path, loaded)
-        from casefile.retrieval import CaseFileIndex
-
-        searchable = CaseFileIndex(self.settings).rebuild_cards(loaded)
-        self.security_audit.record(
-            "quarantined_card_approved",
-            details={"card_id": card_id, "searchable_records": searchable},
+        return approve_quarantined_card(
+            self.settings,
+            self.security_audit,
+            card_id,
         )
-        return {"card_id": card_id, "injection_approved": True, "searchable_records": searchable}
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("docx", nargs="?")
     parser.add_argument("--resolution")
-    parser.add_argument("--side", choices=["pro", "con", "unknown"])
+    parser.add_argument("--side", choices=["pro", "con"])
     parser.add_argument("--confirm", metavar="TOKEN")
-    parser.add_argument("--no-model", action="store_true")
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args()
     pipeline = IngestionPipeline()
     if args.confirm:
-        result = pipeline.confirm(args.confirm)
+        result = pipeline.confirm(args.confirm).model_dump(mode="json")
         print(json.dumps(result, indent=2) if args.as_json else result)
         return
-    if not args.docx:
-        parser.error("docx is required unless --confirm is used")
+    if not args.docx or not args.resolution or not args.side:
+        parser.error("docx, --resolution, and --side are required for a preview")
     preview = pipeline.preview(
         args.docx,
         resolution=args.resolution,
         default_side=args.side,
-        use_model=not args.no_model,
     )
-    print(json.dumps(preview.to_dict(), ensure_ascii=False, indent=2) if args.as_json else preview.summary())
+    value = preview.model_dump(mode="json")
+    print(
+        json.dumps(value, ensure_ascii=False, indent=2)
+        if args.as_json
+        else preview_summary(preview)
+    )
 
 
 if __name__ == "__main__":
     main()
+
+
+__all__ = ["IngestionPipeline", "is_indexable"]

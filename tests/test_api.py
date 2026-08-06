@@ -1,91 +1,338 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import Any
 
 from fastapi.testclient import TestClient
 
 import casefile.api.main as api_main
-from casefile.agent.graph import CaseFileAgent
+from casefile.agents.contracts import (
+    ActiveGoal,
+    AgentTraceEntry,
+    AttachmentHandle,
+    ClarificationRequest,
+    ConversationMessage,
+    RequestContext,
+    TopicPacket,
+)
+from casefile.agents.errors import ErrorCode, ErrorDetail
+from casefile.agents.state import CaseFileState
 
 
-def test_demo_console_is_served_with_safe_testing_controls() -> None:
-    response = TestClient(api_main.app).get("/")
+class StubRuntime:
+    def __init__(self, settings: Any, response_factory: Any) -> None:
+        self.settings = settings
+        self.response_factory = response_factory
+        self.calls: list[tuple[str, dict[str, Any]]] = []
 
-    assert response.status_code == 200
-    assert response.headers["content-type"].startswith("text/html")
-    assert "CaseFile Demo Console" in response.text
-    assert 'data-testid="scenario-evidence"' in response.text
-    assert 'data-testid="scenario-topic"' in response.text
-    assert 'data-testid="scenario-coaching"' in response.text
-    assert 'data-testid="role-select"' not in response.text
-    assert "Coach access" not in response.text
-    assert 'data-testid="send-button"' in response.text
-    assert 'data-testid="attachment-input"' in response.text
-    assert 'data-testid="submitted-prompt"' in response.text
-    assert 'data-testid="prompt-entered"' in response.text
-    assert 'byId("prompt-entered").textContent = message' in response.text
-    assert "/chat/with-attachment" in response.text
-    assert "Confirm evidence import" in response.text
-    assert "Agent trace" in response.text
-    assert "New session" in response.text
-    assert 'id="trace-session"' in response.text
-    assert 'payload.append("session_id", sessionId)' in response.text
-    assert "Developer status" in response.text
-    assert "renderGroundingCard" in response.text
-    assert "source-mark emphasis" not in response.text
-    assert ".source-mark.emphasis" in response.text
-    assert "AI-generated · grounded in cards below" in response.text
-    assert "Demo console" not in response.text
-    assert 'id="status-calendar" data-testid="status-calendar" hidden' in response.text
-    assert "ANTHROPIC_API_KEY=" not in response.text
+    def ask(self, message: str, **kwargs: Any) -> CaseFileState:
+        self.calls.append((message, kwargs))
+        return self.response_factory(message, kwargs)
 
 
-def test_health_exposes_safe_demo_backend_status(monkeypatch) -> None:
-    fake_agent = SimpleNamespace(
-        backend="langgraph",
-        tools=SimpleNamespace(index=SimpleNamespace(backend="chroma")),
+def _request(kwargs: dict[str, Any]) -> RequestContext:
+    return RequestContext(
+        request_id=kwargs["request_id"],
+        session_id=kwargs.get("session_id") or "generated-session-id-0001",
+        role=kwargs["role"],
+        user_id=kwargs["user_id"],
+        active_resolution=kwargs["resolution"],
+        attachments=kwargs.get("attachments", []),
     )
-    fake_settings = SimpleNamespace(anthropic_api_key="configured", mock_calendar=True)
-    monkeypatch.setattr(api_main, "get_agent", lambda: fake_agent)
-    monkeypatch.setattr(api_main, "get_settings", lambda: fake_settings)
 
-    response = TestClient(api_main.app).get("/health")
+
+def _completed_state(_: str, kwargs: dict[str, Any]) -> CaseFileState:
+    topic = TopicPacket(
+        event="Public Forum",
+        resolution="Resolved: A demo topic.",
+        provider="Test provider",
+        backend="fixture",
+        synthetic=True,
+        source_ref="fixture://topic",
+    )
+    return CaseFileState(
+        request=_request(kwargs),
+        status="completed",
+        active_agent="evidence_librarian",
+        active_goal=ActiveGoal(
+            summary="Retrieve the current topic.",
+            completion_criteria=["Return a TopicPacket."],
+        ),
+        messages=[
+            ConversationMessage(role="user", content="Find the topic."),
+            ConversationMessage(role="assistant", content="The topic is ready."),
+        ],
+        artifacts=[topic],
+        agent_trace=[
+            AgentTraceEntry(
+                sequence=1,
+                agent="supervisor",
+                event="handoff",
+                from_agent="supervisor",
+                to_agent="evidence_librarian",
+                reason_code="topic_lookup",
+                summary="Delegated topic lookup.",
+            )
+        ],
+    )
+
+
+def _failed_state(_: str, kwargs: dict[str, Any]) -> CaseFileState:
+    return CaseFileState(
+        request=_request(kwargs),
+        status="failed",
+        active_agent="skills_coach",
+        messages=[ConversationMessage(role="user", content="Read another student.")],
+        error=ErrorDetail(
+            code=ErrorCode.AUTHORIZATION_DENIED,
+            message="Students may read only their own progress.",
+            stage="tools.get_progress",
+            agent="skills_coach",
+            tool="get_progress",
+            retryable=False,
+            details={},
+        ),
+        agent_trace=[
+            AgentTraceEntry(
+                sequence=1,
+                agent="skills_coach",
+                event="activated",
+                summary="Attempted an authorized progress lookup.",
+            )
+        ],
+    )
+
+
+def _needs_input_state(_: str, kwargs: dict[str, Any]) -> CaseFileState:
+    return CaseFileState(
+        request=_request(kwargs),
+        status="needs_input",
+        active_agent="supervisor",
+        messages=[
+            ConversationMessage(role="user", content="Import this exact request."),
+            ConversationMessage(
+                role="assistant",
+                content="Which side should the Librarian assign to this document?",
+            ),
+        ],
+        pending_question=ClarificationRequest(
+            question="Which side should the Librarian assign to this document?",
+            missing_fields=["side"],
+            reason_code="missing_ingestion_side",
+        ),
+    )
+
+
+def test_demo_console_serves_phase_nine_typed_ui() -> None:
+    client = TestClient(api_main.app)
+
+    html = client.get("/")
+    javascript = client.get("/demo.js")
+
+    assert html.status_code == 200
+    assert javascript.status_code == 200
+    assert javascript.headers["content-type"].startswith("application/javascript")
+    assert "CaseFile Demo Console" in html.text
+    for test_id in (
+        "scenario-evidence",
+        "scenario-argument",
+        "scenario-ingest",
+        "scenario-coaching",
+        "scenario-progress",
+        "scenario-error",
+        "submitted-prompt",
+        "model-details",
+    ):
+        assert f'data-testid="{test_id}"' in html.text
+    assert 'id="trace-agent"' in html.text
+    assert 'id="trace-handoffs"' in html.text
+    assert 'id="trace-tools"' in html.text
+    assert 'id="trace-models"' in html.text
+    assert 'byId("prompt-entered").textContent = message' in javascript.text
+    assert "switch (artifact.artifact_type)" in javascript.text
+    for artifact_type in (
+        "evidence_packet",
+        "rule_packet",
+        "topic_packet",
+        "ingestion_preview",
+        "ingestion_commit_result",
+        "argument_draft",
+        "drill_plan",
+        "coach_turn",
+        "progress_summary",
+        "assessment_proposal",
+        "calendar_event",
+    ):
+        assert f'case "{artifact_type}"' in javascript.text
+    assert "data." + "intent" not in javascript.text
+    assert 'startsWith("[' not in javascript.text
+    assert 'fetch("/ingestion/confirm"' in javascript.text
+    assert 'fetch("/health/ready"' in javascript.text
+
+
+def test_health_exposes_required_runtime_dependencies(monkeypatch) -> None:
+    ready_calls: list[bool] = []
+    index = SimpleNamespace(
+        backend="chroma",
+        embedding_model="sentence-transformers/all-MiniLM-L6-v2",
+        validate_ready=lambda: ready_calls.append(True),
+    )
+    runtime = SimpleNamespace(
+        backend="langgraph",
+        tools=SimpleNamespace(index=index),
+        settings=SimpleNamespace(
+            model="claude-test",
+            calendar_provider="fixture",
+            nsda_provider="fixture",
+        ),
+    )
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
+
+    client = TestClient(api_main.app)
+    live = client.get("/health/live")
+    ready = client.get("/health/ready")
+
+    assert live.json() == {"status": "live"}
+    assert ready.status_code == 200
+    assert ready.json() == {
+        "status": "ready",
+        "graph": "langgraph",
+        "model": "claude-test",
+        "retrieval": "chroma",
+        "retrieval_collections": "cards,rules",
+        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+        "storage": "ready",
+        "calendar": "fixture",
+        "nsda": "fixture",
+    }
+    assert ready_calls == [True]
+
+
+def test_chat_maps_new_runtime_state_to_typed_success_envelope(
+    monkeypatch,
+    isolated_settings,
+) -> None:
+    runtime = StubRuntime(isolated_settings, _completed_state)
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
+
+    response = TestClient(api_main.app).post(
+        "/chat",
+        json={
+            "message": "Find the topic.",
+            "role": "student",
+            "user_id": "student-1",
+            "resolution": "R1",
+            "session_id": "phase-nine-session-0001",
+        },
+        headers={"X-Request-ID": "phase-nine-request-1"},
+    )
 
     assert response.status_code == 200
+    assert response.headers["X-Request-ID"] == "phase-nine-request-1"
+    body = response.json()
+    assert body["status"] == "completed"
+    assert body["response"] == "The topic is ready."
+    assert body["request_id"] == "phase-nine-request-1"
+    assert body["session_id"] == "phase-nine-session-0001"
+    assert body["active_agent"] == "evidence_librarian"
+    assert body["active_goal"]["summary"] == "Retrieve the current topic."
+    assert body["awaiting_input"] is False
+    assert body["awaiting_confirmation"] is False
+    assert body["artifacts"][0]["artifact_type"] == "topic_packet"
+    assert body["agent_trace"][0]["event"] == "handoff"
+    assert runtime.calls[0][0] == "Find the topic."
+
+
+def test_chat_maps_failed_state_to_non_200_typed_error_with_trace(
+    monkeypatch,
+    isolated_settings,
+) -> None:
+    runtime = StubRuntime(isolated_settings, _failed_state)
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
+
+    response = TestClient(api_main.app).post(
+        "/chat",
+        json={
+            "message": "Read another student.",
+            "role": "student",
+            "user_id": "student-1",
+            "resolution": "R1",
+            "session_id": "phase-nine-session-0002",
+        },
+        headers={"X-Request-ID": "phase-nine-request-2"},
+    )
+
+    assert response.status_code == 403
     assert response.json() == {
-        "status": "ok",
-        "agent_backend": "langgraph",
-        "retrieval_backend": "chroma",
-        "model_status": "configured",
-        "calendar_backend": "mock",
-        "nsda_backend": "mock",
+        "status": "failed",
+        "request_id": "phase-nine-request-2",
+        "session_id": "phase-nine-session-0002",
+        "error": {
+            "code": "AUTHORIZATION_DENIED",
+            "message": "Students may read only their own progress.",
+            "stage": "tools.get_progress",
+            "agent": "skills_coach",
+            "tool": "get_progress",
+            "retryable": False,
+            "details": {},
+        },
+        "agent_trace": [
+            {
+                "sequence": 1,
+                "agent": "skills_coach",
+                "event": "activated",
+                "from_agent": None,
+                "to_agent": None,
+                "reason_code": None,
+                "summary": "Attempted an authorized progress lookup.",
+            }
+        ],
+        "tool_trace": [],
+        "model_trace": [],
     }
 
 
-def test_student_can_upload_preview_and_confirm_attached_docx(
+def test_request_validation_error_preserves_session_context() -> None:
+    response = TestClient(api_main.app).post(
+        "/chat",
+        json={
+            "message": "",
+            "role": "student",
+            "user_id": "student-1",
+            "resolution": "R1",
+            "session_id": "phase-nine-session-0003",
+        },
+    )
+
+    assert response.status_code == 422
+    body = response.json()
+    assert body["status"] == "failed"
+    assert body["error"]["code"] == "REQUEST_INVALID"
+    # Body validation occurs before the endpoint binds its validated session.
+    assert body["session_id"] is None
+
+
+def test_attachment_transport_hands_opaque_handle_and_exact_prompt_to_runtime(
     monkeypatch,
     sample_docx,
     isolated_settings,
 ) -> None:
-    agent = CaseFileAgent(isolated_settings)
-    monkeypatch.setattr(api_main, "get_agent", lambda: agent)
-    monkeypatch.setattr(api_main, "_rate_limit", lambda route, user_id: None)
-    client = TestClient(api_main.app)
+    runtime = StubRuntime(isolated_settings, _needs_input_state)
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
 
     with sample_docx.open("rb") as stream:
-        response = client.post(
+        response = TestClient(api_main.app).post(
             "/chat/with-attachment",
             data={
-                "message": "Import and parse the attached DOCX evidence file.",
+                "message": "Import this exact request.",
                 "role": "student",
                 "user_id": "student-1",
-                "resolution": "2026-09-CRYPTO",
-                "side": "pro",
-                "use_model": "false",
+                "resolution": "R1",
+                "session_id": "phase-nine-session-0004",
             },
             files={
                 "attachment": (
-                    "uploaded-cards.docx",
+                    "uploaded cards.docx",
                     stream,
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 )
@@ -93,82 +340,64 @@ def test_student_can_upload_preview_and_confirm_attached_docx(
         )
 
     assert response.status_code == 200
-    preview = response.json()
-    assert preview["intent"] == "ingest_cards"
-    assert preview["attachment"]["name"] == "uploaded-cards.docx"
-    assert preview["ingest_preview"]["source_file"] == "uploaded-cards.docx"
-    assert preview["ingest_preview"]["counts"]["ok"] >= 1
-    assert preview["tool_trace"][-1]["tool"] == "ingest_cards"
-    assert preview["awaiting_clarification"] is False
-    assert preview["session_id"]
-    staged = list(isolated_settings.uploads_dir.rglob("*.docx"))
-    assert len(staged) == 1
-
-    confirmed = client.post(
-        "/ingest/confirm",
-        json={
-            "confirmation_token": preview["ingest_preview"]["token"],
-            "role": "student",
-            "user_id": "student-1",
-            "resolution": "2026-09-CRYPTO",
-            "idempotency_key": "upload-confirm-1",
-        },
-    )
-    assert confirmed.status_code == 200
-    assert confirmed.json()["written"] >= 1
-    assert list(isolated_settings.uploads_dir.rglob("*.docx")) == []
+    body = response.json()
+    assert body["status"] == "needs_input"
+    assert body["awaiting_input"] is True
+    assert body["awaiting_confirmation"] is False
+    assert body["active_agent"] == "supervisor"
+    message, call = runtime.calls[0]
+    assert message == "Import this exact request."
+    assert len(call["attachments"]) == 1
+    handle = call["attachments"][0]
+    assert isinstance(handle, AttachmentHandle)
+    assert handle.filename == "uploaded-cards.docx"
+    assert not handle.attachment_id.startswith("/")
+    assert (isolated_settings.uploads_dir / handle.attachment_id).is_file()
 
 
 def test_attachment_upload_rejects_invalid_documents(
     monkeypatch,
     isolated_settings,
 ) -> None:
-    agent = CaseFileAgent(isolated_settings)
-    monkeypatch.setattr(api_main, "get_agent", lambda: agent)
-    monkeypatch.setattr(api_main, "_rate_limit", lambda route, user_id: None)
-    client = TestClient(api_main.app)
-    common = {
-        "message": "Parse the attached evidence file.",
-        "user_id": "student-1",
-        "resolution": "R1",
-        "side": "pro",
-        "use_model": "false",
-    }
+    runtime = StubRuntime(isolated_settings, _completed_state)
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
 
-    invalid = client.post(
+    response = TestClient(api_main.app).post(
         "/chat/with-attachment",
-        data={**common, "role": "student"},
+        data={
+            "message": "Parse the attached evidence file.",
+            "role": "student",
+            "user_id": "student-1",
+            "resolution": "R1",
+        },
         files={"attachment": ("cards.docx", b"not a docx")},
     )
-    assert invalid.status_code == 400
-    assert "not a valid Word DOCX" in invalid.json()["detail"]
+
+    assert response.status_code == 400
+    assert response.json()["error"] == {
+        "code": "REQUEST_INVALID",
+        "message": "The attachment is not a valid Word DOCX document",
+        "stage": "api.request",
+        "agent": None,
+        "tool": None,
+        "retryable": False,
+        "details": {},
+    }
+    assert runtime.calls == []
     assert list(isolated_settings.uploads_dir.rglob("*.docx")) == []
 
 
-def test_chat_api_resumes_a_pending_clarification(
-    monkeypatch,
-    isolated_settings,
-) -> None:
-    agent = CaseFileAgent(isolated_settings)
-    monkeypatch.setattr(api_main, "get_agent", lambda: agent)
-    monkeypatch.setattr(api_main, "_rate_limit", lambda route, user_id: None)
-    client = TestClient(api_main.app)
-    context = {
-        "role": "student",
-        "user_id": "student-1",
-        "resolution": "R1",
-        "session_id": "api-session-clarify-01",
+def test_only_integration_required_explicit_mutation_routes_remain() -> None:
+    routes = {
+        (method, route.path)
+        for route in api_main.app.routes
+        for method in route.methods or set()
     }
 
-    first = client.post("/chat", json={**context, "message": "Build a drill."})
-    assert first.status_code == 200
-    assert first.json()["awaiting_clarification"] is True
-
-    completed = client.post(
-        "/chat",
-        json={**context, "message": "Pro"},
-    )
-    assert completed.status_code == 200
-    assert completed.json()["intent"] == "generate_drill"
-    assert completed.json()["resumed_from_clarification"] is True
-    assert completed.json()["awaiting_clarification"] is False
+    assert ("POST", "/calendar/session/confirm") in routes
+    assert ("POST", "/ingestion/confirm") in routes
+    assert ("POST", "/ingestion/quarantine/approve") in routes
+    assert ("POST", "/ingest/confirm") not in routes
+    assert ("POST", "/ingest/approve-quarantined") not in routes
+    assert ("POST", "/calendar/session") not in routes
+    assert ("GET", "/health") not in routes

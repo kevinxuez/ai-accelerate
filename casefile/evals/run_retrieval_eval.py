@@ -14,7 +14,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from casefile.config import Settings, get_settings
-from casefile.retrieval import CaseFileIndex
+from casefile.retrieval import CaseFileIndex, RuleChunk
 
 
 HERE = Path(__file__).resolve().parent
@@ -125,9 +125,7 @@ def _embedding_text(card: EvalCard, mode: CardTextMode) -> str:
         return card.embedding_text
     if mode == "header-tag":
         return "\n".join(part for part in (card.header, card.tag) if part)
-    return "\n".join(
-        part for part in (card.header, card.tag, card.body) if part
-    )
+    return "\n".join(part for part in (card.header, card.tag, card.body) if part)
 
 
 def _card_payload(card: EvalCard, mode: CardTextMode) -> dict:
@@ -142,6 +140,7 @@ def _card_payload(card: EvalCard, mode: CardTextMode) -> dict:
             ),
             "ingest_status": "ok",
             "flags": [],
+            "source_file": f"{card.id}.docx",
             "injection_risk": "low",
             "injection_approved": False,
         }
@@ -189,7 +188,10 @@ def _evaluate_strategy(
         settings = _settings_for_strategy(Path(directory), get_settings(), strategy)
         settings.cards_path.write_text(
             json.dumps(
-                [_card_payload(card, strategy.card_text_mode) for card in dataset.cards],
+                [
+                    _card_payload(card, strategy.card_text_mode)
+                    for card in dataset.cards
+                ],
                 ensure_ascii=False,
                 indent=2,
             )
@@ -206,7 +208,11 @@ def _evaluate_strategy(
             encoding="utf-8",
         )
         settings.progress_path.write_text("[]\n", encoding="utf-8")
-        index = CaseFileIndex(settings, enable_chroma=False)
+        index = CaseFileIndex(settings)
+        index.rebuild_cards()
+        index.rebuild_rules(
+            [RuleChunk(**_rule_payload(rule)) for rule in dataset.rules]
+        )
 
         results = []
         latencies: list[float] = []
@@ -276,16 +282,12 @@ def _evaluate_strategy(
                     "expected_ids": query.expected_ids,
                     "retrieved_ids": retrieved,
                     "scores": [hit.get("score") for hit in hits],
-                    "recall_at_k": (
-                        None if recall is None else round(recall, 6)
-                    ),
+                    "recall_at_k": (None if recall is None else round(recall, 6)),
                     "precision_at_k": (
                         None if precision is None else round(precision, 6)
                     ),
                     "reciprocal_rank": (
-                        None
-                        if reciprocal_rank is None
-                        else round(reciprocal_rank, 6)
+                        None if reciprocal_rank is None else round(reciprocal_rank, 6)
                     ),
                     "success": bool(success),
                     "latency_ms": round(elapsed, 3),
@@ -314,7 +316,7 @@ def _evaluate_strategy(
             "card_text_mode": strategy.card_text_mode,
             "k": strategy.k,
             "min_relevance": strategy.min_relevance,
-            "backend": "json",
+            "backend": index.backend,
         },
         "metrics": metrics,
         "results": results,
@@ -346,9 +348,7 @@ def run(
         for mode in modes
         for threshold in thresholds
     ]
-    evaluations = [
-        _evaluate_strategy(dataset, strategy) for strategy in strategies
-    ]
+    evaluations = [_evaluate_strategy(dataset, strategy) for strategy in strategies]
     best = max(
         evaluations,
         key=lambda item: (

@@ -6,10 +6,10 @@ from dataclasses import replace
 
 import pytest
 
+from casefile.agents.errors import CaseFileError, ErrorCode
 from casefile.config import get_settings
 from casefile.llm import (
     AnthropicJSONClient,
-    LLMUnavailable,
     build_anthropic_client,
 )
 
@@ -29,7 +29,9 @@ def test_complete_json_uses_configured_anthropic_base_url(monkeypatch) -> None:
         captured["request"] = request
         captured["timeout"] = timeout
         response = {
-            "content": [{"type": "text", "text": '{"status": "ready"}'}]
+            "content": [{"type": "text", "text": '{"status": "ready"}'}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 12, "output_tokens": 5},
         }
         return _Response(json.dumps(response).encode("utf-8"))
 
@@ -41,7 +43,13 @@ def test_complete_json_uses_configured_anthropic_base_url(monkeypatch) -> None:
         timeout=12,
     )
 
-    result = client.complete_json(system="Return JSON.", user="Report status.")
+    result = client.complete_json(
+        system="Return JSON.",
+        user="Report status.",
+        agent="supervisor",
+        prompt_template="supervisor/classify.md",
+        prompt_version="1",
+    )
 
     request = captured["request"]
     headers = {name.lower(): value for name, value in request.header_items()}
@@ -54,6 +62,14 @@ def test_complete_json_uses_configured_anthropic_base_url(monkeypatch) -> None:
     assert headers["anthropic-version"] == "2023-06-01"
     assert body["model"] == "claude-test-deployment"
     assert captured["timeout"] == 12
+    trace = client.calls[0]
+    assert trace.agent == "supervisor"
+    assert trace.prompt_template == "supervisor/classify.md"
+    assert trace.prompt_version == "1"
+    assert trace.stop_reason == "end_turn"
+    assert (trace.input_tokens, trace.output_tokens) == (12, 5)
+    assert trace.status == "completed"
+    assert trace.prompt_sha256 and trace.response_sha256
 
 
 def test_anthropic_base_url_rejects_non_https_or_markdown() -> None:
@@ -62,8 +78,9 @@ def test_anthropic_base_url_rejects_non_https_or_markdown() -> None:
         "[https://example.com/anthropic](https://example.com/anthropic)",
         "https://example.com/anthropic?api-version=test",
     ):
-        with pytest.raises(LLMUnavailable, match="ANTHROPIC_BASE_URL"):
+        with pytest.raises(CaseFileError, match="ANTHROPIC_BASE_URL") as caught:
             _ = AnthropicJSONClient("test-key", base_url=base_url).messages_url
+        assert caught.value.code == ErrorCode.MODEL_CONFIGURATION_ERROR
 
 
 def test_build_anthropic_client_copies_settings() -> None:

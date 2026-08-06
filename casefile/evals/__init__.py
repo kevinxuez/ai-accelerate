@@ -1,2 +1,1 @@
-"""Golden-set and judge evaluation utilities."""
-
+"""Required Chroma retrieval evaluation utilities."""

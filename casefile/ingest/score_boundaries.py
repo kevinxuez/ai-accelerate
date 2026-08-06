@@ -39,8 +39,12 @@ def score(prediction: dict[str, Any], truth: dict[str, Any]) -> dict[str, Any]:
         "exact_rate": len(exact_keys) / len(expected) if expected else 0.0,
         "citation_matched": len(set(cite_pred) & set(cite_truth)),
         "header_correct_on_exact": header_correct,
-        "missed": [expected_keys[value] for value in set(expected_keys) - set(predicted_keys)],
-        "spurious": [predicted_keys[value] for value in set(predicted_keys) - set(expected_keys)],
+        "missed": [
+            expected_keys[value] for value in set(expected_keys) - set(predicted_keys)
+        ],
+        "spurious": [
+            predicted_keys[value] for value in set(predicted_keys) - set(expected_keys)
+        ],
     }
 
 
@@ -56,7 +60,9 @@ def main() -> None:
     print(f"predicted cards    : {result['predicted_cards']}")
     print(f"exact boundary     : {result['exact']} ({result['exact_rate']:.0%})")
     print(f"citation matched   : {result['citation_matched']}")
-    print(f"header correct     : {result['header_correct_on_exact']}/{result['exact']} of exact")
+    print(
+        f"header correct     : {result['header_correct_on_exact']}/{result['exact']} of exact"
+    )
     print(f"missed             : {len(result['missed'])}")
     print(f"spurious           : {len(result['spurious'])}")
 

@@ -1,44 +1,146 @@
-"""Filtered card/rule retrieval with optional Chroma and an offline JSON fallback."""
+"""Required Chroma retrieval over the confirmed evidence and rules ledgers."""
 
 from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 import threading
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, Protocol
 
-from casefile.config import Settings, get_settings
-from casefile.ingest.pipeline import is_indexable
-from casefile.models import RuleChunk
+from casefile.agents.errors import CaseFileError, ErrorCode
+from casefile.config import (
+    PINNED_EMBEDDING_DIMENSIONS,
+    PINNED_EMBEDDING_MODEL,
+    Settings,
+    get_settings,
+)
+from casefile.ingest.validate import is_indexable
 from casefile.security.prompt_guard import inspect_text
 
 
-DIMENSIONS = 384
-TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9'-]{1,}")
+COLLECTION_SCHEMA_VERSION = 1
+_UNSET = object()
 
 
-def _terms(text: str) -> list[str]:
-    words = [word.lower() for word in TOKEN.findall(text)]
-    return words + [f"{left}_{right}" for left, right in zip(words, words[1:])]
+@dataclass
+class RuleChunk:
+    id: str
+    section_number: str
+    section_title: str
+    text: str
+    document: str
+    event: str = "Public Forum"
+    content_trust: Literal["untrusted_document"] = "untrusted_document"
+    injection_risk: Literal["low", "medium", "high"] = "low"
+    injection_signals: list[str] = field(default_factory=list)
+    injection_approved: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 
-def hash_embedding(text: str, dimensions: int = DIMENSIONS) -> list[float]:
-    """Stable local feature hashing; no model download or network call is required."""
-    vector = [0.0] * dimensions
-    for term in _terms(text):
-        digest = hashlib.blake2b(term.encode("utf-8"), digest_size=8).digest()
-        value = int.from_bytes(digest, "big")
-        index = value % dimensions
-        vector[index] += -1.0 if value & 1 else 1.0
-    norm = math.sqrt(sum(value * value for value in vector))
-    return [value / norm for value in vector] if norm else vector
+class Embedder(Protocol):
+    name: str
+    dimensions: int
+
+    def embed(self, texts: list[str]) -> list[list[float]]: ...
 
 
-def cosine(left: list[float], right: list[float]) -> float:
-    return sum(a * b for a, b in zip(left, right))
+class SentenceTransformerEmbedder:
+    name = PINNED_EMBEDDING_MODEL
+    dimensions = PINNED_EMBEDDING_DIMENSIONS
+
+    def __init__(self, settings: Settings) -> None:
+        path = settings.embedding_model_path
+        if not path.is_dir():
+            raise CaseFileError(
+                ErrorCode.CONFIGURATION_ERROR,
+                "The pinned embedding model assets are not provisioned locally.",
+                stage="retrieval.embedding.startup",
+                safe_details={"model": self.name},
+            )
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:
+            raise CaseFileError(
+                ErrorCode.CONFIGURATION_ERROR,
+                "sentence-transformers is required but is not installed.",
+                stage="retrieval.embedding.startup",
+                safe_details={"model": self.name},
+                cause=exc,
+            ) from exc
+        try:
+            self._model = SentenceTransformer(
+                str(path),
+                local_files_only=True,
+            )
+            actual = self._model.get_sentence_embedding_dimension()
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.CONFIGURATION_ERROR,
+                "The pinned embedding model assets could not be loaded.",
+                stage="retrieval.embedding.startup",
+                safe_details={"model": self.name},
+                cause=exc,
+            ) from exc
+        if actual != self.dimensions:
+            raise CaseFileError(
+                ErrorCode.CONFIGURATION_ERROR,
+                "The embedding model dimensions do not match the pinned configuration.",
+                stage="retrieval.embedding.startup",
+                safe_details={
+                    "model": self.name,
+                    "expected_dimensions": self.dimensions,
+                    "actual_dimensions": actual,
+                },
+            )
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        try:
+            values = self._model.encode(
+                texts,
+                normalize_embeddings=True,
+                convert_to_numpy=True,
+                show_progress_bar=False,
+            )
+            return [list(map(float, vector)) for vector in values]
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_UNAVAILABLE,
+                "The pinned embedding model could not encode the retrieval request.",
+                stage="retrieval.embedding.encode",
+                retryable=True,
+                cause=exc,
+            ) from exc
+
+
+def build_embedder(settings: Settings) -> Embedder:
+    return SentenceTransformerEmbedder(settings)
+
+
+def build_chroma_client(settings: Settings) -> Any:
+    try:
+        import chromadb
+    except ImportError as exc:
+        raise CaseFileError(
+            ErrorCode.CONFIGURATION_ERROR,
+            "Chroma is required but is not installed.",
+            stage="retrieval.chroma.startup",
+            cause=exc,
+        ) from exc
+    try:
+        return chromadb.PersistentClient(path=str(settings.chroma_dir))
+    except Exception as exc:
+        raise CaseFileError(
+            ErrorCode.RETRIEVAL_UNAVAILABLE,
+            "The configured Chroma store is unavailable.",
+            stage="retrieval.chroma.startup",
+            retryable=True,
+            cause=exc,
+        ) from exc
 
 
 def chunk_rules(path: str | Path) -> list[RuleChunk]:
@@ -86,86 +188,100 @@ class CaseFileIndex:
         self,
         settings: Settings | None = None,
         *,
-        enable_chroma: bool = True,
+        client: Any = _UNSET,
+        embedder: Embedder | object = _UNSET,
     ) -> None:
         self.settings = settings or get_settings()
         self.settings.ensure_runtime_dirs()
         self._lock = threading.RLock()
-        self._client: Any | None = None
-        if enable_chroma:
-            try:
-                import chromadb  # type: ignore
-
-                self._client = chromadb.PersistentClient(path=str(self.settings.chroma_dir))
-            except (ImportError, RuntimeError, ValueError):
-                self._client = None
+        self._embedder = (
+            build_embedder(self.settings) if embedder is _UNSET else embedder
+        )
+        self._client = (
+            build_chroma_client(self.settings) if client is _UNSET else client
+        )
+        if not hasattr(self._embedder, "embed"):
+            raise TypeError("embedder test double must implement embed(texts)")
+        self._ensure_collection("cards")
+        self._ensure_collection("rules")
 
     @property
     def backend(self) -> str:
-        return "chroma" if self._client is not None else "json"
+        return "chroma"
+
+    @property
+    def embedding_model(self) -> str:
+        return str(self._embedder.name)
+
+    def validate_ready(self) -> None:
+        self._ensure_collection("cards")
+        self._ensure_collection("rules")
 
     def rebuild_cards(self, cards: list[dict[str, Any]] | None = None) -> int:
         with self._lock:
-            if cards is None:
-                cards = self._load_cards()
+            cards = self._load_cards() if cards is None else cards
             searchable = [card for card in cards if is_indexable(card)]
-            if self._client is not None:
+            collection = self._reset_collection("cards")
+            if searchable:
                 try:
-                    self._client.delete_collection("cards")
-                except Exception:
-                    pass
-                collection = self._client.get_or_create_collection(
-                    "cards", metadata={"hnsw:space": "cosine"}
-                )
-                if searchable:
                     collection.upsert(
-                        ids=[card["id"] for card in searchable],
-                        documents=[card["returned_document"] for card in searchable],
-                        embeddings=[hash_embedding(card["embedding_text"]) for card in searchable],
+                        ids=[str(card["id"]) for card in searchable],
+                        documents=[
+                            str(card["returned_document"]) for card in searchable
+                        ],
+                        embeddings=self._embedder.embed(
+                            [str(card["embedding_text"]) for card in searchable]
+                        ),
                         metadatas=[
                             {
-                                "resolution": card["resolution"],
-                                "side": card["side"],
-                                "header": card["header"],
-                                "source_file": card["source_file"],
+                                "resolution": str(card["resolution"]),
+                                "side": str(card["side"]),
+                                "source_file": str(card["source_file"]),
+                                "card_id": str(card["id"]),
+                                "indexable": True,
                             }
                             for card in searchable
                         ],
                     )
+                except CaseFileError:
+                    raise
+                except Exception as exc:
+                    raise CaseFileError(
+                        ErrorCode.INDEX_REBUILD_FAILED,
+                        "The Chroma evidence collection could not be rebuilt.",
+                        stage="retrieval.cards.rebuild",
+                        cause=exc,
+                    ) from exc
             return len(searchable)
 
-    def rebuild_rules(self) -> int:
-        chunks: list[RuleChunk] = []
-        for path in sorted(self.settings.rules_dir.glob("*.md")):
-            if path.name.lower() == "readme.md":
-                continue
-            chunks.extend(chunk_rules(path))
-        payload = [chunk.to_dict() for chunk in chunks]
-        searchable = [
-            chunk
-            for chunk in chunks
-            if chunk.injection_risk != "high" or chunk.injection_approved
-        ]
-        rules_json = self.settings.data_dir / "rules_chunks.json"
-        rules_json.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-        )
-        if self._client is not None:
-            try:
-                self._client.delete_collection("rules")
-            except Exception:
-                pass
-            collection = self._client.get_or_create_collection(
-                "rules", metadata={"hnsw:space": "cosine"}
+    def rebuild_rules(self, chunks: list[RuleChunk] | None = None) -> int:
+        try:
+            if chunks is None:
+                chunks = [
+                    chunk
+                    for path in sorted(self.settings.rules_dir.glob("*.md"))
+                    if path.name.lower() != "readme.md"
+                    for chunk in chunk_rules(path)
+                ]
+            payload = [chunk.to_dict() for chunk in chunks]
+            searchable = [
+                chunk
+                for chunk in chunks
+                if chunk.injection_risk != "high" or chunk.injection_approved
+            ]
+            rules_json = self.settings.data_dir / "rules_chunks.json"
+            rules_json.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
             )
+            collection = self._reset_collection("rules")
             if searchable:
                 collection.upsert(
                     ids=[chunk.id for chunk in searchable],
                     documents=[chunk.text for chunk in searchable],
-                    embeddings=[
-                        hash_embedding(f"{chunk.section_title}\n{chunk.text}")
-                        for chunk in searchable
-                    ],
+                    embeddings=self._embedder.embed(
+                        [f"{chunk.section_title}\n{chunk.text}" for chunk in searchable]
+                    ),
                     metadatas=[
                         {
                             "section_number": chunk.section_number,
@@ -176,7 +292,16 @@ class CaseFileIndex:
                         for chunk in searchable
                     ],
                 )
-        return len(searchable)
+            return len(searchable)
+        except CaseFileError:
+            raise
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.INDEX_REBUILD_FAILED,
+                "The Chroma rules collection could not be rebuilt.",
+                stage="retrieval.rules.rebuild",
+                cause=exc,
+            ) from exc
 
     def search_cards(
         self,
@@ -189,8 +314,15 @@ class CaseFileIndex:
         min_relevance: float | None = None,
     ) -> list[dict[str, Any]]:
         if not resolution:
-            raise ValueError("resolution is required for card retrieval")
-        threshold = self.settings.min_relevance if min_relevance is None else min_relevance
+            raise CaseFileError(
+                ErrorCode.REQUEST_INVALID,
+                "resolution is required for card retrieval.",
+                stage="retrieval.cards.query",
+                tool="search_cards",
+            )
+        threshold = (
+            self.settings.min_relevance if min_relevance is None else min_relevance
+        )
         allowed_sources = set(source_files or [])
         cards = [
             card
@@ -205,58 +337,27 @@ class CaseFileIndex:
         ]
         if not cards:
             return []
-        by_id = {card["id"]: card for card in cards}
-        if self._client is not None:
-            try:
-                clauses: list[dict[str, Any]] = [{"resolution": {"$eq": resolution}}]
-                if side is not None:
-                    clauses.append({"side": {"$eq": side}})
-                if allowed_sources:
-                    sources = sorted(allowed_sources)
-                    clauses.append(
-                        {
-                            "source_file": (
-                                {"$eq": sources[0]}
-                                if len(sources) == 1
-                                else {"$in": sources}
-                            )
-                        }
+        by_id = {str(card["id"]): card for card in cards}
+        clauses: list[dict[str, Any]] = [{"resolution": {"$eq": resolution}}]
+        if side is not None:
+            clauses.append({"side": {"$eq": side}})
+        if allowed_sources:
+            sources = sorted(allowed_sources)
+            clauses.append(
+                {
+                    "source_file": (
+                        {"$eq": sources[0]} if len(sources) == 1 else {"$in": sources}
                     )
-                where: dict[str, Any] = clauses[0] if len(clauses) == 1 else {"$and": clauses}
-                result = self._client.get_collection("cards").query(
-                    query_embeddings=[hash_embedding(query)],
-                    n_results=min(n, len(cards)),
-                    where=where,
-                    include=["distances"],
-                )
-                ids = result.get("ids", [[]])[0]
-                distances = result.get("distances", [[]])[0]
-                ranked = []
-                for card_id, distance in zip(ids, distances):
-                    score = 1.0 - float(distance)
-                    if score >= threshold and card_id in by_id:
-                        ranked.append(self._with_score(by_id[card_id], score))
-                return ranked
-            except Exception:
-                # A committed JSON ledger is the reliability path for a live demo.
-                pass
-        query_vector = hash_embedding(query)
-        ranked = sorted(
-            (
-                (
-                    cosine(query_vector, hash_embedding(card["embedding_text"])),
-                    card,
-                )
-                for card in cards
-            ),
-            key=lambda item: item[0],
-            reverse=True,
+                }
+            )
+        where = clauses[0] if len(clauses) == 1 else {"$and": clauses}
+        result = self._query(
+            "cards",
+            query=query,
+            n=min(n, len(cards)),
+            where=where,
         )
-        return [
-            self._with_score(card, score)
-            for score, card in ranked[:n]
-            if score >= threshold
-        ]
+        return self._resolve_hits(result, by_id, threshold, kind="card")
 
     def available_card_files(
         self,
@@ -264,8 +365,6 @@ class CaseFileIndex:
         resolution: str,
         side: str | None = None,
     ) -> list[str]:
-        """List committed, searchable evidence files for the active context."""
-
         if not resolution:
             return []
         return sorted(
@@ -288,57 +387,184 @@ class CaseFileIndex:
         ]
         if not chunks:
             return []
-        query_vector = hash_embedding(question)
-        ranked = sorted(
-            (
-                (
-                    cosine(
-                        query_vector,
-                        hash_embedding(f"{chunk['section_title']}\n{chunk['text']}"),
-                    ),
-                    chunk,
-                )
-                for chunk in chunks
-            ),
-            key=lambda item: item[0],
-            reverse=True,
+        by_id = {str(chunk["id"]): chunk for chunk in chunks}
+        result = self._query("rules", query=question, n=min(n, len(chunks)))
+        return self._resolve_hits(
+            result,
+            by_id,
+            self.settings.min_relevance,
+            kind="rule",
         )
-        return [
-            {
-                **chunk,
-                "content_trust": chunk.get("content_trust", "untrusted_document"),
-                "retrieval_trust": "untrusted_retrieval",
-                "score": round(score, 6),
-                "_chunk_id": chunk["id"],
+
+    def _query(
+        self,
+        collection_name: str,
+        *,
+        query: str,
+        n: int,
+        where: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            collection = self._client.get_collection(
+                collection_name,
+                embedding_function=None,
+            )
+            arguments: dict[str, Any] = {
+                "query_embeddings": self._embedder.embed([query]),
+                "n_results": n,
+                "include": ["distances"],
             }
-            for score, chunk in ranked[:n]
-            if score >= self.settings.min_relevance
-        ]
+            if where is not None:
+                arguments["where"] = where
+            result = collection.query(**arguments)
+        except CaseFileError:
+            raise
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_UNAVAILABLE,
+                "The configured Chroma collection could not be queried.",
+                stage=f"retrieval.{collection_name}.query",
+                retryable=True,
+                cause=exc,
+            ) from exc
+        if not isinstance(result, dict):
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_UNAVAILABLE,
+                "The configured Chroma collection returned an invalid query result.",
+                stage=f"retrieval.{collection_name}.query",
+            )
+        return result
+
+    def _resolve_hits(
+        self,
+        result: dict[str, Any],
+        by_id: dict[str, dict[str, Any]],
+        threshold: float,
+        *,
+        kind: str,
+    ) -> list[dict[str, Any]]:
+        ids = result.get("ids", [[]])
+        distances = result.get("distances", [[]])
+        hit_ids = ids[0] if isinstance(ids, list) and ids else []
+        hit_distances = (
+            distances[0] if isinstance(distances, list) and distances else []
+        )
+        if not isinstance(hit_ids, list) or not isinstance(hit_distances, list):
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_UNAVAILABLE,
+                "The configured Chroma collection returned malformed hits.",
+                stage=f"retrieval.{kind}s.resolve",
+            )
+        unknown = [str(item) for item in hit_ids if str(item) not in by_id]
+        if unknown:
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_INDEX_MISMATCH,
+                "Chroma referenced an id that is missing from the committed ledger.",
+                stage=f"retrieval.{kind}s.resolve",
+                safe_details={"unknown_id_count": len(unknown)},
+            )
+        resolved: list[dict[str, Any]] = []
+        for item, distance in zip(hit_ids, hit_distances):
+            score = 1.0 - float(distance)
+            if score < threshold:
+                continue
+            record = by_id[str(item)]
+            resolved.append(
+                {
+                    **record,
+                    "content_trust": record.get("content_trust", "untrusted_document"),
+                    "retrieval_trust": "untrusted_retrieval",
+                    "injection_risk": record.get("injection_risk", "low"),
+                    "injection_signals": record.get("injection_signals", []),
+                    "score": round(score, 6),
+                    "_chunk_id": str(item),
+                }
+            )
+        return resolved
+
+    def _expected_metadata(self) -> dict[str, Any]:
+        return {
+            "casefile_schema_version": COLLECTION_SCHEMA_VERSION,
+            "embedding_model": self._embedder.name,
+            "embedding_dimensions": self._embedder.dimensions,
+            "hnsw:space": "cosine",
+        }
+
+    def _ensure_collection(self, name: str) -> Any:
+        expected = self._expected_metadata()
+        try:
+            collection = self._client.get_or_create_collection(
+                name,
+                metadata=expected,
+                embedding_function=None,
+            )
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_UNAVAILABLE,
+                "The configured Chroma collection is unavailable.",
+                stage=f"retrieval.{name}.startup",
+                retryable=True,
+                cause=exc,
+            ) from exc
+        metadata = getattr(collection, "metadata", None) or {}
+        mismatch = {
+            key: {"expected": value, "actual": metadata.get(key)}
+            for key, value in expected.items()
+            if metadata.get(key) != value
+        }
+        if mismatch:
+            raise CaseFileError(
+                ErrorCode.RETRIEVAL_INDEX_MISMATCH,
+                "The Chroma collection schema does not match the configured embedding.",
+                stage=f"retrieval.{name}.startup",
+                safe_details={"mismatched_fields": sorted(mismatch)},
+            )
+        return collection
+
+    def _reset_collection(self, name: str) -> Any:
+        try:
+            self._client.delete_collection(name)
+            return self._client.get_or_create_collection(
+                name,
+                metadata=self._expected_metadata(),
+                embedding_function=None,
+            )
+        except Exception as exc:
+            raise CaseFileError(
+                ErrorCode.INDEX_REBUILD_FAILED,
+                "The configured Chroma collection could not be reset.",
+                stage=f"retrieval.{name}.rebuild",
+                cause=exc,
+            ) from exc
 
     def _load_cards(self) -> list[dict[str, Any]]:
-        if not self.settings.cards_path.exists():
-            return []
-        value = json.loads(self.settings.cards_path.read_text(encoding="utf-8"))
-        return value if isinstance(value, list) else []
+        return self._load_json_list(self.settings.cards_path, "evidence ledger")
 
     def _load_rule_chunks(self) -> list[dict[str, Any]]:
         path = self.settings.data_dir / "rules_chunks.json"
         if not path.exists():
             self.rebuild_rules()
-        if not path.exists():
-            return []
-        value = json.loads(path.read_text(encoding="utf-8"))
-        return value if isinstance(value, list) else []
+        return self._load_json_list(path, "rules ledger")
 
     @staticmethod
-    def _with_score(card: dict[str, Any], score: float) -> dict[str, Any]:
-        # The returned document always starts with the intact citation.
-        return {
-            **card,
-            "content_trust": card.get("content_trust", "untrusted_document"),
-            "retrieval_trust": "untrusted_retrieval",
-            "injection_risk": card.get("injection_risk", "low"),
-            "injection_signals": card.get("injection_signals", []),
-            "score": round(score, 6),
-            "_chunk_id": card["id"],
-        }
+    def _load_json_list(path: Path, label: str) -> list[dict[str, Any]]:
+        if not path.exists():
+            return []
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise CaseFileError(
+                ErrorCode.STORAGE_READ_FAILED,
+                f"The {label} could not be read.",
+                stage="retrieval.ledger.read",
+                cause=exc,
+            ) from exc
+        if not isinstance(value, list) or not all(
+            isinstance(item, dict) for item in value
+        ):
+            raise CaseFileError(
+                ErrorCode.STORAGE_READ_FAILED,
+                f"The {label} is malformed.",
+                stage="retrieval.ledger.read",
+            )
+        return value

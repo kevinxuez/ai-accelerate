@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from casefile.models import ParagraphRecord
+from .contracts import ParagraphRecord
 
 
 def _merge_spans(spans: list[list[int]]) -> list[list[int]]:
@@ -69,4 +69,3 @@ def card_convention(
             scores[color] = scores.get(color, 0) + round(fraction * record.length)
     winner, amount = max(scores.items(), key=lambda item: (item[1], item[0]))
     return winner if amount > 0 else document_default
-

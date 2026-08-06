@@ -1,4 +1,4 @@
-"""Synthetic NSDA-compatible provider and optional HTTP adapter.
+"""Explicit synthetic-fixture and HTTP NSDA-compatible providers.
 
 The bundled records are deliberately fictional. They exercise provider boundaries without
 claiming that the National Speech & Debate Association publishes these endpoints or data.
@@ -18,7 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from casefile.config import Settings, get_settings
 
 
-DEFAULT_DATA_PATH = Path(__file__).with_name("nsda_mock.json")
+DEFAULT_DATA_PATH = Path(__file__).with_name("nsda_fixture.json")
 TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9'-]{1,}")
 EVENT_ALIASES = {
     "pf": "Public Forum",
@@ -39,6 +39,10 @@ class NSDANotFound(NSDAProviderError):
     """A requested synthetic provider record does not exist."""
 
 
+class NSDAProviderDisabled(NSDAProviderError):
+    """The optional NSDA capability is explicitly disabled."""
+
+
 class NSDAModel(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
@@ -54,7 +58,7 @@ class NSDATopic(NSDAModel):
     effective_to: date
     current: bool = False
     source_ref: str = Field(min_length=1, max_length=300)
-    synthetic: Literal[True] = True
+    synthetic: bool
 
 
 class NSDARule(NSDAModel):
@@ -66,7 +70,7 @@ class NSDARule(NSDAModel):
     edition: str = Field(min_length=1, max_length=100)
     effective_date: date
     source_ref: str = Field(min_length=1, max_length=300)
-    synthetic: Literal[True] = True
+    synthetic: bool
 
 
 class NSDARuleResult(NSDARule):
@@ -84,7 +88,7 @@ class NSDATournament(NSDAModel):
     events: list[str] = Field(min_length=1, max_length=30)
     status: str = Field(min_length=1, max_length=50)
     registration_ref: str = Field(min_length=1, max_length=300)
-    synthetic: Literal[True] = True
+    synthetic: bool
 
 
 class NSDAMember(NSDAModel):
@@ -95,7 +99,7 @@ class NSDAMember(NSDAModel):
     state: str = Field(pattern=r"^[A-Z]{2}$")
     eligible_events: list[str] = Field(max_length=30)
     status: str = Field(min_length=1, max_length=50)
-    synthetic: Literal[True] = True
+    synthetic: bool
 
 
 class NSDADataset(NSDAModel):
@@ -103,7 +107,7 @@ class NSDADataset(NSDAModel):
     provider_code: str = Field(pattern=r"^nsda$")
     dataset_version: str = Field(min_length=1, max_length=50)
     generated_at: str = Field(min_length=1, max_length=50)
-    mock: Literal[True]
+    fixture: Literal[True]
     synthetic: Literal[True]
     disclaimer: str = Field(min_length=1, max_length=1000)
     topics: list[NSDATopic] = Field(max_length=100)
@@ -125,8 +129,8 @@ class NSDAMetadata(NSDAModel):
     backend: str = Field(min_length=1, max_length=50)
     dataset_version: str = Field(min_length=1, max_length=50)
     generated_at: str = Field(min_length=1, max_length=50)
-    mock: Literal[True]
-    synthetic: Literal[True]
+    fixture: bool
+    synthetic: bool
     disclaimer: str = Field(min_length=1, max_length=1000)
     counts: NSDACounts
 
@@ -135,8 +139,8 @@ class NSDAEnvelope(NSDAModel):
     provider: str = Field(min_length=1, max_length=200)
     provider_code: str = Field(pattern=r"^nsda$")
     backend: str | None = Field(default=None, min_length=1, max_length=50)
-    mock: Literal[True]
-    synthetic: Literal[True]
+    fixture: bool
+    synthetic: bool
     dataset_version: str = Field(min_length=1, max_length=50)
     disclaimer: str = Field(min_length=1, max_length=1000)
     data: Any
@@ -177,10 +181,10 @@ def _terms(value: str) -> set[str]:
     return {term.lower() for term in TOKEN.findall(value)}
 
 
-class MockNSDAProvider:
+class FixtureNSDAProvider:
     """Read-only provider backed by a validated, bundled synthetic fixture."""
 
-    backend = "mock"
+    backend = "fixture"
 
     def __init__(self, data_path: str | Path | None = None) -> None:
         path = Path(data_path) if data_path else DEFAULT_DATA_PATH
@@ -189,10 +193,10 @@ class MockNSDAProvider:
                 path.read_text(encoding="utf-8")
             )
         except (OSError, ValueError) as exc:
-            raise NSDAProviderError(f"NSDA mock dataset is invalid: {exc}") from exc
-        if not self.dataset.mock or not self.dataset.synthetic:
+            raise NSDAProviderError(f"NSDA fixture dataset is invalid: {exc}") from exc
+        if not self.dataset.fixture or not self.dataset.synthetic:
             raise NSDAProviderError(
-                "NSDA mock dataset must be marked mock=true and synthetic=true"
+                "NSDA fixture dataset must be marked fixture=true and synthetic=true"
             )
 
     def metadata(self) -> dict[str, Any]:
@@ -202,7 +206,7 @@ class MockNSDAProvider:
             "backend": self.backend,
             "dataset_version": self.dataset.dataset_version,
             "generated_at": self.dataset.generated_at,
-            "mock": True,
+            "fixture": True,
             "synthetic": True,
             "disclaimer": self.dataset.disclaimer,
             "counts": {
@@ -299,7 +303,7 @@ class MockNSDAProvider:
 
 
 class HTTPNSDAProvider:
-    """Client for an NSDA-compatible HTTP API, including the bundled mock routes."""
+    """Client for an explicitly configured NSDA-compatible HTTP API."""
 
     backend = "http"
 
@@ -318,7 +322,9 @@ class HTTPNSDAProvider:
             "::1",
         }
         if parsed.scheme != "https" and not local_http:
-            raise ValueError("NSDA_BASE_URL must use HTTPS except for localhost testing")
+            raise ValueError(
+                "NSDA_BASE_URL must use HTTPS except for localhost testing"
+            )
         if not parsed.netloc or parsed.username or parsed.password:
             raise ValueError("NSDA_BASE_URL is malformed or contains credentials")
         if parsed.query or parsed.fragment:
@@ -333,9 +339,7 @@ class HTTPNSDAProvider:
             self.client.close()
 
     def metadata(self) -> dict[str, Any]:
-        return self._validated(
-            NSDAMetadata, self._get("/metadata"), "metadata"
-        )
+        return self._validated(NSDAMetadata, self._get("/metadata"), "metadata")
 
     def current_topic(
         self, event: str = "Public Forum", *, as_of: date | None = None
@@ -382,8 +386,7 @@ class HTTPNSDAProvider:
         if not isinstance(payload, list):
             raise NSDAProviderError("NSDA provider tournament data must be a list")
         return [
-            self._validated(NSDATournament, value, "tournament")
-            for value in payload
+            self._validated(NSDATournament, value, "tournament") for value in payload
         ]
 
     def get_member(self, member_id: str) -> dict[str, Any]:
@@ -396,9 +399,7 @@ class HTTPNSDAProvider:
         )
 
     @staticmethod
-    def _validated(
-        model: type[BaseModel], value: Any, label: str
-    ) -> dict[str, Any]:
+    def _validated(model: type[BaseModel], value: Any, label: str) -> dict[str, Any]:
         try:
             return model.model_validate(value).model_dump(mode="json")
         except ValidationError as exc:
@@ -433,10 +434,12 @@ class HTTPNSDAProvider:
 
 def build_nsda_provider(settings: Settings | None = None) -> NSDAProvider:
     active = settings or get_settings()
-    if active.nsda_base_url:
+    if active.nsda_provider == "http":
         return HTTPNSDAProvider(
-            active.nsda_base_url,
+            active.nsda_base_url or "",
             api_key=active.nsda_api_key,
             timeout_seconds=active.nsda_timeout_seconds,
         )
-    return MockNSDAProvider(active.nsda_mock_data)
+    if active.nsda_provider == "fixture":
+        return FixtureNSDAProvider(active.nsda_fixture_path)
+    raise NSDAProviderDisabled("The NSDA provider capability is disabled")

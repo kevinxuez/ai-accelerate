@@ -9,21 +9,21 @@ import pytest
 from fastapi.testclient import TestClient
 
 import casefile.api.nsda as nsda_api
-from casefile.agent.graph import CaseFileAgent
 from casefile.api.main import app
 from casefile.providers.nsda import (
+    FixtureNSDAProvider,
     HTTPNSDAProvider,
-    MockNSDAProvider,
     NSDANotFound,
+    NSDAProviderDisabled,
     build_nsda_provider,
 )
 
 
-def test_mock_nsda_provider_is_explicitly_synthetic_and_filterable() -> None:
-    provider = MockNSDAProvider()
+def test_fixture_nsda_provider_is_explicitly_synthetic_and_filterable() -> None:
+    provider = FixtureNSDAProvider()
 
     metadata = provider.metadata()
-    assert metadata["mock"] is True
+    assert metadata["fixture"] is True
     assert metadata["synthetic"] is True
     assert "not an official NSDA API" in metadata["disclaimer"]
     assert metadata["counts"] == {
@@ -38,21 +38,21 @@ def test_mock_nsda_provider_is_explicitly_synthetic_and_filterable() -> None:
     assert topic["synthetic"] is True
 
     rules = provider.search_rules("evidence source", event="public_forum")
-    assert [rule["id"] for rule in rules] == ["pf-mock-2.1"]
+    assert [rule["id"] for rule in rules] == ["pf-fixture-2.1"]
     assert rules[0]["score"] > 0
 
     tournaments = provider.list_tournaments(state="ca", event="PF")
-    assert [item["id"] for item in tournaments] == ["nsda-mock-ca-001"]
+    assert [item["id"] for item in tournaments] == ["nsda-fixture-ca-001"]
 
     assert provider.get_member("student-1")["status"] == "active"
     with pytest.raises(NSDANotFound):
         provider.get_member("missing-member")
 
 
-def test_provider_builder_honors_configured_mock_data(
+def test_provider_builder_honors_explicit_fixture_configuration(
     tmp_path, isolated_settings
 ) -> None:
-    payload = MockNSDAProvider().dataset.model_dump(mode="json")
+    payload = FixtureNSDAProvider().dataset.model_dump(mode="json")
     payload["dataset_version"] = "custom-fixture-test"
     custom_fixture = tmp_path / "custom-nsda.json"
     custom_fixture.write_text(
@@ -61,81 +61,70 @@ def test_provider_builder_honors_configured_mock_data(
     )
     settings = replace(
         isolated_settings,
+        nsda_provider="fixture",
         nsda_base_url=None,
-        nsda_mock_data=custom_fixture,
+        nsda_fixture_path=custom_fixture,
     )
 
     provider = build_nsda_provider(settings)
 
-    assert isinstance(provider, MockNSDAProvider)
+    assert isinstance(provider, FixtureNSDAProvider)
     assert provider.metadata()["dataset_version"] == "custom-fixture-test"
 
 
-def test_mock_nsda_api_returns_versioned_envelopes_and_404s() -> None:
+def test_provider_builder_does_not_select_a_fixture_when_disabled(
+    isolated_settings,
+) -> None:
+    settings = replace(
+        isolated_settings,
+        nsda_provider="disabled",
+        nsda_base_url=None,
+    )
+
+    with pytest.raises(NSDAProviderDisabled):
+        build_nsda_provider(settings)
+
+
+def test_configured_fixture_api_returns_versioned_envelopes_and_404s(
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(
+        nsda_api,
+        "get_configured_nsda_provider",
+        lambda: FixtureNSDAProvider(),
+    )
     client = TestClient(app)
 
-    metadata = client.get("/mock/nsda/v1/metadata")
+    metadata = client.get("/nsda/v1/metadata")
     assert metadata.status_code == 200
-    assert metadata.json()["mock"] is True
+    assert metadata.json()["fixture"] is True
     assert metadata.json()["synthetic"] is True
     assert metadata.json()["dataset_version"] == "2026.08-demo.1"
 
     topic = client.get(
-        "/mock/nsda/v1/topics/current",
+        "/nsda/v1/topics/current",
         params={"event": "pf", "as_of": "2026-08-04"},
     )
     assert topic.status_code == 200
     assert topic.json()["data"]["id"] == "pf-2026-07-demo"
 
     rules = client.get(
-        "/mock/nsda/v1/rules/search",
+        "/nsda/v1/rules/search",
         params={"q": "evidence source", "event": "Public Forum"},
     )
     assert rules.status_code == 200
-    assert rules.json()["data"][0]["id"] == "pf-mock-2.1"
+    assert rules.json()["data"][0]["id"] == "pf-fixture-2.1"
 
     tournaments = client.get(
-        "/mock/nsda/v1/tournaments",
+        "/nsda/v1/tournaments",
         params={"state": "CA", "event": "pf"},
     )
     assert tournaments.status_code == 200
     assert tournaments.json()["data"][0]["state"] == "CA"
 
-    missing = client.get("/mock/nsda/v1/members/does-not-exist")
+    missing = client.get("/nsda/v1/members/does-not-exist")
     assert missing.status_code == 404
-    assert "Synthetic NSDA member was not found" in missing.json()["detail"]
-
-
-def test_configured_nsda_facade_uses_bundled_mock_by_default() -> None:
-    response = TestClient(app).get(
-        "/nsda/v1/topics/current",
-        params={"event": "pf", "as_of": "2026-08-04"},
-    )
-
-    assert response.status_code == 200
-    assert response.json()["backend"] == "mock"
-    assert response.json()["data"]["id"] == "pf-2026-07-demo"
-
-
-def test_chat_agent_uses_configured_nsda_provider_for_current_topic(
-    isolated_settings,
-) -> None:
-    settings = replace(isolated_settings, nsda_base_url=None)
-    agent = CaseFileAgent(settings)
-
-    result = agent.ask(
-        "What is the current Public Forum topic for 2026-08-04?",
-        role="student",
-        user_id="student-1",
-        resolution="2026-09-CRYPTO",
-    )
-
-    assert result["intent"] == "current_topic"
-    assert result["tool_trace"][0]["tool"] == "current_topic"
-    assert result["task_trace"][0]["status"] == "success"
-    assert "four-day instructional week" in result["response"]
-    assert "Synthetic NSDA-compatible fixture" in result["response"]
-    assert "not an official NSDA" in result["response"]
+    assert "Synthetic NSDA member was not found" in missing.json()["error"]["message"]
 
 
 def test_configured_nsda_facade_calls_selected_provider(monkeypatch) -> None:
@@ -146,10 +135,10 @@ def test_configured_nsda_facade_calls_selected_provider(monkeypatch) -> None:
             return {
                 "provider": "National Speech & Debate Association",
                 "provider_code": "nsda",
-                "backend": "mock",
+                "backend": "http",
                 "dataset_version": "remote-test",
                 "generated_at": "2026-08-04T00:00:00Z",
-                "mock": True,
+                "fixture": True,
                 "synthetic": True,
                 "disclaimer": "Synthetic remote fixture.",
                 "counts": {
@@ -190,7 +179,7 @@ def test_configured_nsda_facade_calls_selected_provider(monkeypatch) -> None:
     }
 
 
-def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:
+def test_http_nsda_adapter_accepts_https_and_unwraps_fixture_envelope() -> None:
     observed: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -200,7 +189,7 @@ def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:
             json={
                 "provider": "National Speech & Debate Association",
                 "provider_code": "nsda",
-                "mock": True,
+                "fixture": True,
                 "synthetic": True,
                 "dataset_version": "test",
                 "disclaimer": "synthetic",
@@ -214,7 +203,7 @@ def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:
                     "effective_from": "2026-07-01",
                     "effective_to": "2026-08-31",
                     "current": True,
-                    "source_ref": "mock://nsda/topics/pf-test",
+                    "source_ref": "fixture://nsda/topics/pf-test",
                     "synthetic": True,
                 },
             },
@@ -222,7 +211,7 @@ def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     provider = HTTPNSDAProvider(
-        "https://nsda-mock.example/v1",
+        "https://nsda-fixture.example/v1",
         api_key="test-token",
         client=client,
     )
@@ -239,10 +228,10 @@ def test_http_nsda_adapter_accepts_https_and_unwraps_mock_envelope() -> None:
 @pytest.mark.parametrize(
     "url",
     [
-        "http://nsda-mock.example/v1",
-        "ftp://nsda-mock.example/v1",
-        "https://user:password@nsda-mock.example/v1",
-        "https://nsda-mock.example/v1?token=secret",
+        "http://nsda-fixture.example/v1",
+        "ftp://nsda-fixture.example/v1",
+        "https://user:password@nsda-fixture.example/v1",
+        "https://nsda-fixture.example/v1?token=secret",
     ],
 )
 def test_http_nsda_adapter_rejects_unsafe_base_urls(url: str) -> None:
@@ -252,7 +241,7 @@ def test_http_nsda_adapter_rejects_unsafe_base_urls(url: str) -> None:
 
 def test_http_nsda_adapter_allows_local_http_for_development() -> None:
     provider = HTTPNSDAProvider(
-        "http://127.0.0.1:8000/mock/nsda/v1",
+        "http://127.0.0.1:8000/nsda/v1",
         client=httpx.Client(transport=httpx.MockTransport(lambda request: None)),
     )
     assert provider.base_url.startswith("http://127.0.0.1")

@@ -1,7 +1,8 @@
-"""FastAPI backend and responsive local demo console."""
+"""FastAPI boundary and local four-agent demonstration console."""
 
 from __future__ import annotations
 
+import hashlib
 import io
 import re
 import uuid
@@ -10,87 +11,56 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import HTMLResponse, JSONResponse, Response
+from pydantic import ValidationError
 
-from casefile.agent.graph import CaseFileAgent
-from casefile.agent.tools import ToolContext
+from casefile.agents.contracts import AttachmentHandle
+from casefile.agents.errors import CaseFileError, ErrorCode, HTTP_STATUS_BY_CODE
+from casefile.agents.runtime import CaseFileRuntime
+from casefile.agents.state import CaseFileState
+from casefile.api.contracts import (
+    CalendarConfirmationRequest,
+    ChatRequest,
+    ChatSuccessResponse,
+    ErrorResponse,
+    IngestionConfirmRequest,
+    QuarantineApprovalRequest,
+)
+from casefile.api.errors import install_error_handlers, request_id_for
 from casefile.api.nsda import provider_router as nsda_provider_router
-from casefile.api.nsda import router as nsda_mock_router
-from casefile.config import get_settings
+from casefile.config import Settings, get_settings
 from casefile.security.audit import RateLimiter
+from casefile.tools import ToolContext
 
 
 app = FastAPI(title="CaseFile", version="0.1.0")
-app.include_router(nsda_mock_router)
+install_error_handlers(app)
 app.include_router(nsda_provider_router)
 DEMO_HTML = Path(__file__).with_name("demo.html").read_text(encoding="utf-8")
+DEMO_JS = Path(__file__).with_name("demo.js").read_text(encoding="utf-8")
 MAX_DOCX_FILES = 5_000
 MAX_DOCX_UNCOMPRESSED_BYTES = 50 * 1024 * 1024
 
 
-class StrictRequest(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-        strict=True,
-        str_strip_whitespace=True,
-    )
-
-
-class ChatRequest(StrictRequest):
-    message: str = Field(min_length=1, max_length=20_000)
-    role: Literal["student", "coach"]
-    user_id: str = Field(min_length=1, max_length=100)
-    resolution: str = Field(min_length=1, max_length=200)
-    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
-    session_id: str | None = Field(
-        default=None,
-        pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{15,127}$",
-    )
-
-
-class IngestPreviewRequest(StrictRequest):
-    file_path: str = Field(min_length=1, max_length=2000)
-    resolution: str = Field(min_length=1, max_length=200)
-    side: Literal["pro", "con", "unknown"] | None = None
-    role: Literal["student", "coach"]
-    user_id: str = Field(min_length=1, max_length=100)
-    use_model: bool = True
-
-
-class IngestConfirmRequest(StrictRequest):
-    confirmation_token: str = Field(pattern=r"^[0-9a-f]{32}$")
-    role: Literal["student", "coach"]
-    user_id: str = Field(min_length=1, max_length=100)
-    resolution: str = Field(min_length=1, max_length=200)
-    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
-
-
-class ApproveCardRequest(StrictRequest):
-    card_id: str = Field(pattern=r"^[0-9a-f]{64}$")
-    role: Literal["student", "coach"]
-    user_id: str = Field(min_length=1, max_length=100)
-    resolution: str = Field(min_length=1, max_length=200)
-    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
-
-
-class ScheduleRequest(StrictRequest):
-    student_id: str = Field(min_length=1, max_length=100)
-    start: str = Field(default="", max_length=100)
-    duration_minutes: int = Field(default=45, ge=15, le=180)
-    attendee_email: str | None = Field(default=None, max_length=320)
-    timezone_name: str = Field(default="America/Chicago", min_length=1, max_length=100)
-    confirmation_token: str | None = Field(default=None, pattern=r"^[0-9a-f]{32}$")
-    role: Literal["student", "coach"]
-    user_id: str = Field(min_length=1, max_length=100)
-    resolution: str = Field(min_length=1, max_length=200)
-    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
+def _attachment_path(settings: Settings, handle: AttachmentHandle) -> str:
+    path = (settings.uploads_dir / handle.attachment_id).resolve()
+    if not path.is_relative_to(settings.uploads_dir.resolve()):
+        raise CaseFileError(
+            ErrorCode.AUTHORIZATION_DENIED,
+            "The attachment handle is outside the configured upload directory.",
+            stage="api.attachment.resolve",
+        )
+    return str(path)
 
 
 @lru_cache(maxsize=1)
-def get_agent() -> CaseFileAgent:
-    return CaseFileAgent()
+def get_runtime() -> CaseFileRuntime:
+    settings = get_settings()
+    return CaseFileRuntime(
+        settings,
+        attachment_resolver=lambda handle: _attachment_path(settings, handle),
+    )
 
 
 @lru_cache(maxsize=1)
@@ -100,13 +70,20 @@ def get_rate_limiter() -> RateLimiter:
 
 def _rate_limit(route: str, user_id: str) -> None:
     if not get_rate_limiter().allow(f"{route}:{user_id}"):
-        raise HTTPException(status_code=429, detail="Request rate limit exceeded")
+        raise CaseFileError(
+            ErrorCode.RATE_LIMITED,
+            "The request rate limit was exceeded.",
+            stage="api.rate_limit",
+        )
 
 
 def _safe_docx_name(filename: str | None) -> str:
     original = Path(filename or "").name
     if Path(original).suffix.lower() != ".docx":
-        raise HTTPException(status_code=400, detail="Only .docx attachments are supported")
+        raise HTTPException(
+            status_code=400,
+            detail="Only .docx attachments are supported",
+        )
     stem = re.sub(r"[^A-Za-z0-9._-]+", "-", Path(original).stem).strip(".-_")
     return f"{(stem[:120] or 'evidence')}.docx"
 
@@ -115,9 +92,11 @@ def _validate_docx_payload(payload: bytes) -> None:
     try:
         with zipfile.ZipFile(io.BytesIO(payload)) as archive:
             members = archive.infolist()
-            if len(members) > MAX_DOCX_FILES or sum(
-                member.file_size for member in members
-            ) > MAX_DOCX_UNCOMPRESSED_BYTES:
+            if (
+                len(members) > MAX_DOCX_FILES
+                or sum(member.file_size for member in members)
+                > MAX_DOCX_UNCOMPRESSED_BYTES
+            ):
                 raise HTTPException(
                     status_code=413,
                     detail="The DOCX expands beyond the safe parsing limit",
@@ -142,49 +121,125 @@ def _remove_upload(path: Path) -> None:
         pass
 
 
-@app.get("/health")
-def health() -> dict[str, str]:
-    agent = get_agent()
-    settings = get_settings()
+def _latest_assistant_response(state: CaseFileState) -> str:
+    for message in reversed(state.messages):
+        if message.role == "assistant":
+            return message.content
+    raise CaseFileError(
+        ErrorCode.INTERNAL_ERROR,
+        "The completed agent state did not contain a response.",
+        stage="api.response_mapping",
+        request_id=state.request.request_id,
+    )
+
+
+def _state_response(state: CaseFileState) -> JSONResponse:
+    headers = {"X-Request-ID": state.request.request_id}
+    if state.status == "failed":
+        if state.error is None:
+            raise CaseFileError(
+                ErrorCode.INTERNAL_ERROR,
+                "The failed agent state did not contain an error.",
+                stage="api.response_mapping",
+                request_id=state.request.request_id,
+            )
+        envelope = ErrorResponse(
+            request_id=state.request.request_id,
+            session_id=state.request.session_id,
+            error=state.error,
+            agent_trace=state.agent_trace,
+            tool_trace=state.tool_trace,
+            model_trace=state.model_trace,
+        )
+        return JSONResponse(
+            status_code=HTTP_STATUS_BY_CODE[state.error.code],
+            content=envelope.model_dump(mode="json"),
+            headers=headers,
+        )
+    success = ChatSuccessResponse(
+        status=state.status,
+        response=_latest_assistant_response(state),
+        request_id=state.request.request_id,
+        session_id=state.request.session_id,
+        active_agent=state.active_agent,
+        active_goal=state.active_goal,
+        awaiting_input=state.status == "needs_input",
+        awaiting_confirmation=state.status == "needs_confirmation",
+        artifacts=state.artifacts,
+        agent_trace=state.agent_trace,
+        tool_trace=state.tool_trace,
+        model_trace=state.model_trace,
+    )
+    return JSONResponse(
+        status_code=200,
+        content=success.model_dump(mode="json"),
+        headers=headers,
+    )
+
+
+def _bind_request_context(
+    request: Request,
+    *,
+    session_id: str | None,
+) -> str:
+    active_request_id = request_id_for(request)
+    request.state.request_id = active_request_id
+    request.state.session_id = session_id
+    return active_request_id
+
+
+@app.get("/health/live")
+def health_live() -> dict[str, str]:
+    return {"status": "live"}
+
+
+@app.get("/health/ready")
+def health_ready() -> dict[str, str]:
+    runtime = get_runtime()
+    settings = runtime.settings
+    runtime.tools.index.validate_ready()
     return {
-        "status": "ok",
-        "agent_backend": agent.backend,
-        "retrieval_backend": agent.tools.index.backend,
-        "model_status": "configured" if settings.anthropic_api_key else "offline",
-        "calendar_backend": "mock" if settings.mock_calendar else "google",
-        "nsda_backend": "http" if getattr(settings, "nsda_base_url", None) else "mock",
+        "status": "ready",
+        "graph": runtime.backend,
+        "model": settings.model,
+        "retrieval": runtime.tools.index.backend,
+        "retrieval_collections": "cards,rules",
+        "embedding_model": runtime.tools.index.embedding_model,
+        "storage": "ready",
+        "calendar": settings.calendar_provider,
+        "nsda": settings.nsda_provider,
     }
 
 
 @app.post("/chat")
-def chat(request: ChatRequest) -> dict:
-    _rate_limit("chat", request.user_id)
-    try:
-        return get_agent().ask(
-            request.message,
-            role=request.role,
-            user_id=request.user_id,
-            resolution=request.resolution,
-            request_id=request.idempotency_key,
-            session_id=request.session_id,
-        )
-    except (ValueError, RuntimeError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+def chat(request: ChatRequest, http_request: Request) -> JSONResponse:
+    request_id = _bind_request_context(
+        http_request,
+        session_id=request.session_id,
+    )
+    state = get_runtime().ask(
+        request.message,
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+        request_id=request_id,
+        session_id=request.session_id,
+    )
+    http_request.state.session_id = state.request.session_id
+    return _state_response(state)
 
 
 @app.post("/chat/with-attachment")
 async def chat_with_attachment(
+    http_request: Request,
     message: str = Form(...),
     role: Literal["student", "coach"] = Form(...),
     user_id: str = Form(...),
     resolution: str = Form(...),
     attachment: UploadFile = File(...),
-    side: Literal["pro", "con", "unknown"] = Form("unknown"),
-    use_model: bool = Form(True),
-    idempotency_key: str | None = Form(None),
     session_id: str | None = Form(None),
-) -> dict:
-    """Screen a request, then stage and parse its attached DOCX for confirmation."""
+) -> JSONResponse:
+    """Validate transport safety, then hand the attachment to the Supervisor."""
 
     try:
         request = ChatRequest(
@@ -192,196 +247,169 @@ async def chat_with_attachment(
             role=role,
             user_id=user_id,
             resolution=resolution,
-            idempotency_key=idempotency_key,
             session_id=session_id,
         )
     except ValidationError as exc:
-        raise HTTPException(
-            status_code=422,
-            detail=exc.errors(include_url=False),
+        raise CaseFileError(
+            ErrorCode.REQUEST_INVALID,
+            "The multipart request did not match the required schema.",
+            stage="api.request_validation",
+            safe_details={"schema": ChatRequest.__name__},
+            cause=exc,
+            http_status=422,
         ) from exc
-    _rate_limit("chat-attachment", request.user_id)
-    agent = get_agent()
-    routed = agent.ask(
-        request.message,
-        role=request.role,
-        user_id=request.user_id,
-        resolution=request.resolution,
-        request_id=request.idempotency_key,
+    request_id = _bind_request_context(
+        http_request,
         session_id=request.session_id,
     )
-    if routed.get("security_decision", {}).get("action") == "block":
-        return routed
-    if routed.get("intent") == "integrity_refusal":
-        return routed
-    if routed.get("intent") not in {"ingest_cards", "unknown"}:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "The prompt does not request evidence import. Remove the attachment or "
-                "ask CaseFile to import or parse it."
-            ),
-        )
-
+    runtime = get_runtime()
     safe_name = _safe_docx_name(attachment.filename)
-    settings = agent.settings
     try:
-        payload = await attachment.read(settings.max_upload_bytes + 1)
+        payload = await attachment.read(runtime.settings.max_upload_bytes + 1)
     finally:
         await attachment.close()
     if not payload:
         raise HTTPException(status_code=400, detail="The attached DOCX is empty")
-    if len(payload) > settings.max_upload_bytes:
+    if len(payload) > runtime.settings.max_upload_bytes:
         raise HTTPException(
             status_code=413,
-            detail=f"Attachment exceeds the {settings.max_upload_bytes}-byte limit",
+            detail=(
+                f"Attachment exceeds the {runtime.settings.max_upload_bytes}-byte limit"
+            ),
         )
     _validate_docx_payload(payload)
 
-    upload_directory = settings.uploads_dir / uuid.uuid4().hex
+    upload_id = uuid.uuid4().hex
+    upload_directory = runtime.settings.uploads_dir / upload_id
     upload_directory.mkdir(parents=True, exist_ok=False)
     upload_path = upload_directory / safe_name
     upload_path.write_bytes(payload)
+    handle = AttachmentHandle(
+        attachment_id=f"{upload_id}/{safe_name}",
+        filename=safe_name,
+        media_type=(
+            attachment.content_type
+            or "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        size_bytes=len(payload),
+        sha256=hashlib.sha256(payload).hexdigest(),
+    )
+    retain_upload = False
     try:
-        result = agent.tools.ingest_cards(
-            ToolContext(request.role, request.user_id, request.resolution),
-            file_path=str(upload_path),
+        state = runtime.ask(
+            request.message,
+            role=request.role,
+            user_id=request.user_id,
             resolution=request.resolution,
-            side=side if side in {"pro", "con"} else None,
-            dry_run=True,
-            use_model=use_model,
+            request_id=request_id,
+            session_id=request.session_id,
+            attachments=[handle],
         )
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
-        _remove_upload(upload_path)
-        detail = str(exc).replace(str(upload_path), safe_name)
-        raise HTTPException(status_code=400, detail=detail) from exc
-    except Exception:
-        _remove_upload(upload_path)
-        raise
-    if isinstance(result, str):
-        _remove_upload(upload_path)
-        agent.clear_session(routed["session_id"])
-        return {
-            **routed,
-            "intent": "ingest_cards",
-            "response": result,
-            "awaiting_clarification": False,
-        }
-
-    public_result = {**result, "source_file": safe_name}
-    if not public_result.get("validation", {}).get("valid"):
-        (settings.pending_dir / f"{public_result['token']}.json").unlink(
-            missing_ok=True
+        http_request.state.session_id = state.request.session_id
+        retain_upload = state.status in {"needs_input", "needs_confirmation"} or any(
+            artifact.artifact_type in {"ingestion_preview", "ingestion_commit_result"}
+            for artifact in state.artifacts
         )
-        _remove_upload(upload_path)
+        return _state_response(state)
+    finally:
+        if not retain_upload:
+            _remove_upload(upload_path)
 
-    tool_trace = [
-        *routed.get("tool_trace", []),
+
+@app.post("/ingestion/confirm")
+def ingestion_confirm(
+    request: IngestionConfirmRequest,
+    http_request: Request,
+) -> JSONResponse:
+    _rate_limit("ingestion-confirm", request.user_id)
+    request_id = _bind_request_context(http_request, session_id=None)
+    runtime = get_runtime()
+    context = ToolContext(
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+        request_id=request_id,
+        agent="evidence_librarian",
+    )
+    result = runtime.evidence_librarian.commit_ingestion(
+        context,
+        confirmation_token=request.confirmation_token,
+        idempotency_key=request.idempotency_key,
+    )
+    return JSONResponse(
+        status_code=200,
+        content=result.model_dump(mode="json"),
+        headers={"X-Request-ID": request_id},
+    )
+
+
+@app.post("/ingestion/quarantine/approve")
+def approve_quarantined(
+    request: QuarantineApprovalRequest,
+    http_request: Request,
+) -> JSONResponse:
+    _rate_limit("ingestion-quarantine-approve", request.user_id)
+    request_id = _bind_request_context(http_request, session_id=None)
+    context = ToolContext(
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+        request_id=request_id,
+        agent="evidence_librarian",
+    )
+    result = get_runtime().tools.ingestion_tools.approve_quarantined_card(
+        context,
+        card_id=request.card_id,
+        idempotency_key=request.idempotency_key,
+    )
+    return JSONResponse(
+        status_code=200,
+        content=result,
+        headers={"X-Request-ID": request_id},
+    )
+
+
+@app.post("/calendar/session/confirm")
+def calendar_confirm(
+    request: CalendarConfirmationRequest,
+    http_request: Request,
+) -> JSONResponse:
+    _rate_limit("calendar-confirm", request.user_id)
+    request_id = _bind_request_context(http_request, session_id=None)
+    runtime = get_runtime()
+    context = ToolContext(
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+        request_id=request_id,
+        agent="supervisor",
+    )
+    result = runtime.tools.registry.invoke(
+        "supervisor",
+        "schedule_session",
+        context,
         {
-            "tool": "ingest_cards",
-            "arguments": {
-                "attachment": safe_name,
-                "size_bytes": len(payload),
-                "resolution": request.resolution,
-                "side": side,
-                "dry_run": True,
-            },
-            "result_type": "dict",
-            "status": "success",
-            "attempts": 1,
-            "depends_on": [],
+            "student_id": request.user_id,
+            "start": "1970-01-01T00:00:00+00:00",
+            "duration_minutes": 45,
+            "attendee_email": None,
+            "timezone_name": "UTC",
+            "confirmation_token": request.confirmation_token,
+            "idempotency_key": request.idempotency_key,
         },
-    ]
-    agent.clear_session(routed["session_id"])
-    return {
-        **routed,
-        "intent": "ingest_cards",
-        "response": public_result["summary"],
-        "awaiting_clarification": False,
-        "iterations": 1,
-        "tool_trace": tool_trace,
-        "task_trace": [
-            {
-                "id": "ingest",
-                "action": "ingest_cards",
-                "status": "success",
-                "attempts": 1,
-                "depends_on": [],
-            }
-        ],
-        "attachment": {
-            "name": safe_name,
-            "size_bytes": len(payload),
-        },
-        "ingest_preview": public_result,
-    }
-
-
-@app.post("/ingest/preview")
-def ingest_preview(request: IngestPreviewRequest) -> dict | str:
-    _rate_limit("ingest-preview", request.user_id)
-    context = ToolContext(request.role, request.user_id, request.resolution)
-    try:
-        return get_agent().tools.ingest_cards(
-            context,
-            file_path=request.file_path,
-            resolution=request.resolution,
-            side=request.side,
-            dry_run=True,
-            use_model=request.use_model,
-        )
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@app.post("/ingest/confirm")
-def ingest_confirm(request: IngestConfirmRequest) -> dict | str:
-    _rate_limit("ingest-confirm", request.user_id)
-    context = ToolContext(request.role, request.user_id, request.resolution)
-    try:
-        return get_agent().tools.ingest_cards(
-            context,
-            confirmation_token=request.confirmation_token,
-            dry_run=False,
-            idempotency_key=request.idempotency_key,
-        )
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@app.post("/ingest/approve-quarantined")
-def approve_quarantined(request: ApproveCardRequest) -> dict | str:
-    _rate_limit("ingest-approve", request.user_id)
-    context = ToolContext(request.role, request.user_id, request.resolution)
-    try:
-        return get_agent().tools.approve_quarantined_card(
-            context,
-            card_id=request.card_id,
-            idempotency_key=request.idempotency_key,
-        )
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@app.post("/calendar/session")
-def schedule_session(request: ScheduleRequest) -> dict | str:
-    _rate_limit("calendar", request.user_id)
-    context = ToolContext(request.role, request.user_id, request.resolution)
-    try:
-        return get_agent().tools.schedule_session(
-            context,
-            student_id=request.student_id,
-            start=request.start,
-            duration_minutes=request.duration_minutes,
-            attendee_email=request.attendee_email,
-            timezone_name=request.timezone_name,
-            confirmation_token=request.confirmation_token,
-            idempotency_key=request.idempotency_key,
-        )
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    )
+    return JSONResponse(
+        status_code=200,
+        content=result,
+        headers={"X-Request-ID": request_id},
+    )
 
 
 @app.get("/", response_class=HTMLResponse)
 def demo_ui() -> str:
     return DEMO_HTML
+
+
+@app.get("/demo.js", response_class=Response)
+def demo_javascript() -> Response:
+    return Response(DEMO_JS, media_type="application/javascript")

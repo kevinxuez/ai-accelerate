@@ -1,0 +1,21 @@
+flowchart TD
+    A["DOCX attachment handle"] --> B["Transport ZIP safety checks"]
+    B --> C["Evidence Librarian"]
+    C --> D["Lossless OOXML paragraphs + source SHA-256"]
+    D --> E["Prompt-injection document screen"]
+    E -->|"unsafe"| X["DOCUMENT_UNSAFE"]
+    E -->|"safe"| F["Model boundary pass"]
+    F --> G["Validate exact paragraph assignments"]
+    G --> H["Model card labeling"]
+    H --> I["Deterministic flags, spans, IDs, provenance"]
+    I --> J["Stage IngestionPreview + confirmation token"]
+    J --> K{"Explicit confirmation?"}
+    K -->|"no"| L["No ledger or index write"]
+    K -->|"yes"| M["Verify token and unchanged source hash"]
+    M --> N["Atomic versioned ledger write"]
+    N --> O["Required Chroma rebuild"]
+    O --> P["Retire token + remove staged upload"]
+    P --> Q["IngestionCommitResult"]
+
+    classDef failure fill:#f7e2de,color:#6d271f,stroke:#9b3b32,stroke-width:2px;
+    class X failure;
