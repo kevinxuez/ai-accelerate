@@ -59,7 +59,7 @@ class Supervisor:
             schema=SupervisorDecision,
             operation="decide",
             payload={"state": self._public_state(state)},
-            max_tokens=1_500,
+            max_tokens=3_000,
         )
         self._validate_decision(state, decision)
         return decision
@@ -79,7 +79,7 @@ class Supervisor:
                 "decision": decision.model_dump(mode="json"),
                 "state": self._public_state(state),
             },
-            max_tokens=800,
+            max_tokens=1_500,
         )
         if state.request.role == "student" and call.student_id != state.request.user_id:
             self._invalid(
@@ -112,15 +112,10 @@ class Supervisor:
                 "decision": decision.model_dump(mode="json"),
                 "state": self._public_state(state),
             },
-            max_tokens=900,
+            max_tokens=1_500,
         )
         expected = _COACH_OPERATION_BY_ARTIFACT.get(decision.required_artifact or "")
-        if task.operation != expected:
-            self._invalid(
-                state,
-                "The Supervisor prepared a coaching operation that did not match its handoff.",
-                field="operation",
-            )
+        task = task.model_copy(update={"operation": expected})
         if state.request.role == "student" and task.student_id != state.request.user_id:
             self._invalid(
                 state,
@@ -150,7 +145,8 @@ class Supervisor:
             criterion = "Return a confirmed calendar event or confirmation request."
         else:
             criterion = "Present the completed result to the user."
-        return ActiveGoal(summary=decision.goal, completion_criteria=[criterion])
+        summary = decision.goal or decision.task or "Complete the user's request."
+        return ActiveGoal(summary=summary[:500], completion_criteria=[criterion])
 
     def _complete(
         self,
@@ -183,7 +179,7 @@ class Supervisor:
                     stage=f"supervisor.{operation}",
                     agent=SUPERVISOR,
                     request_id=state.request.request_id,
-                    safe_details={"schema": schema.__name__},
+                    safe_details=error.safe_details,
                     cause=error,
                 ) from error
             raise error.with_request_id(state.request.request_id)
@@ -222,7 +218,9 @@ class Supervisor:
                     "The Supervisor delegated argument generation without an EvidencePacket.",
                     field="target_agent",
                 )
-        if decision.action in {"finish", "refuse"} and not decision.task.strip():
+        if decision.action in {"finish", "refuse"} and not (
+            decision.task and decision.task.strip()
+        ):
             self._invalid(
                 state,
                 "The Supervisor completed a turn without a user-facing response.",
@@ -235,6 +233,16 @@ class Supervisor:
             mode="json",
             exclude={"agent_trace", "tool_trace", "model_trace", "error"},
         )
+        for packet in [value.get("evidence_packet"), *value.get("artifacts", [])]:
+            if (
+                not isinstance(packet, dict)
+                or packet.get("artifact_type") != "evidence_packet"
+            ):
+                continue
+            for card in packet.get("cards", []):
+                if isinstance(card, dict):
+                    for field in ("body", "citation", "read_spans", "emphasis_spans"):
+                        card.pop(field, None)
         pending = value.get("pending_confirmation")
         if isinstance(pending, dict):
             pending.pop("token", None)

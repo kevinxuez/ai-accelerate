@@ -299,7 +299,7 @@ class ArgumentStrategist:
             raw = self.model.complete_json(
                 system=prompt.content,
                 user=json.dumps(payload, ensure_ascii=False),
-                max_tokens=1_500,
+                max_tokens=4_000,
                 schema=ArgumentRequest,
                 agent=STRATEGIST,
                 prompt_template=prompt.template_name,
@@ -364,7 +364,7 @@ class ArgumentStrategist:
                     },
                     ensure_ascii=False,
                 ),
-                max_tokens=4_500,
+                max_tokens=8_000,
                 schema=ArgumentDraft,
                 agent=STRATEGIST,
                 prompt_template=prompt.template_name,

@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Four-agent LangGraph runtime</title>
+  <desc id="desc">A slide-ready architecture chart showing a request passing through a security gate to a supervisor that routes work to three specialist agents, then returns an outcome while persisting state and traces.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071522"/>
+      <stop offset="0.55" stop-color="#0B2030"/>
+      <stop offset="1" stop-color="#0B1827"/>
+    </linearGradient>
+    <linearGradient id="supervisor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1D5B61"/>
+      <stop offset="1" stop-color="#153F48"/>
+    </linearGradient>
+    <linearGradient id="specialist" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#162E42"/>
+      <stop offset="1" stop-color="#102537"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrowGold" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#E6B85C"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#6FA6D8"/>
+    </marker>
+    <marker id="arrowSlate" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 6 L 0 11 z" fill="#8498AA"/>
+    </marker>
+    <style>
+      text { font-family: Inter, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; }
+      .eyebrow { font-size: 18px; font-weight: 700; letter-spacing: 3.5px; fill: #6FA6D8; }
+      .headline { font-size: 48px; font-weight: 720; letter-spacing: -1.4px; fill: #F7FAFC; }
+      .subtitle { font-size: 22px; font-weight: 400; fill: #AEBCCA; }
+      .stage { font-size: 15px; font-weight: 760; letter-spacing: 2px; fill: #7790A5; }
+      .card-title { font-size: 25px; font-weight: 700; fill: #F7FAFC; }
+      .card-body { font-size: 17px; font-weight: 430; fill: #AEBCCA; }
+      .super-title { font-size: 29px; font-weight: 740; fill: #FFFFFF; }
+      .super-body { font-size: 18px; font-weight: 460; fill: #C6D9D9; }
+      .chip { font-size: 14px; font-weight: 700; letter-spacing: .4px; }
+      .outcome { font-size: 16px; font-weight: 650; }
+      .micro { font-size: 14px; font-weight: 520; fill: #8FA3B5; }
+      .footer-title { font-size: 17px; font-weight: 720; fill: #E8EEF3; }
+      .footer-body { font-size: 15px; font-weight: 430; fill: #98AABC; }
+    </style>
+  </defs>
+
+  <!-- Slide background -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <circle cx="1650" cy="-30" r="460" fill="#123A4A" opacity="0.22"/>
+  <circle cx="150" cy="1050" r="390" fill="#132D45" opacity="0.26"/>
+  <path d="M0 915 C420 840 580 1010 1010 930 C1390 858 1585 814 1920 870 L1920 1080 L0 1080 Z" fill="#09131F" opacity="0.62"/>
+
+  <!-- Header -->
+  <text x="92" y="80" class="eyebrow">LANGGRAPH RUNTIME</text>
+  <text x="92" y="142" class="headline">One supervisor. Three specialists. Shared state.</text>
+  <text x="92" y="182" class="subtitle">Typed routing keeps every handoff observable, recoverable, and easy to extend.</text>
+  <g transform="translate(1682 64)">
+    <rect width="146" height="42" rx="21" fill="#102E3B" stroke="#2D5966"/>
+    <circle cx="24" cy="21" r="7" fill="#54D19C"/>
+    <text x="43" y="27" class="chip" fill="#DDEBEF">STATEFUL</text>
+  </g>
+
+  <!-- Phase labels -->
+  <text x="96" y="270" class="stage">01 · ENTER</text>
+  <text x="477" y="270" class="stage">02 · ORCHESTRATE</text>
+  <text x="1496" y="270" class="stage">03 · RESOLVE</text>
+
+  <!-- Incoming request card -->
+  <g filter="url(#softShadow)">
+    <rect x="92" y="318" width="286" height="170" rx="24" fill="#10283A" stroke="#294B63" stroke-width="2"/>
+    <rect x="116" y="342" width="48" height="48" rx="14" fill="#173B54"/>
+    <path d="M132 364 h16 M140 356 v16" stroke="#79B2E2" stroke-width="3" stroke-linecap="round"/>
+    <text x="184" y="366" class="card-title">Request</text>
+    <text x="116" y="423" class="card-body">API · browser · CLI</text>
+    <text x="116" y="453" class="card-body">Create or resume session</text>
+  </g>
+
+  <!-- Security gate -->
+  <g filter="url(#softShadow)">
+    <rect x="92" y="557" width="286" height="170" rx="24" fill="#111F2B" stroke="#3E566A" stroke-width="2"/>
+    <path d="M140 582 l20 8 v17 c0 15 -9 25 -20 31 c-11 -6 -20 -16 -20 -31 v-17 z" fill="#1A3244" stroke="#7990A3" stroke-width="2"/>
+    <path d="M131 607 l7 7 l13 -16" fill="none" stroke="#76D4AF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="184" y="611" class="card-title">Security gate</text>
+    <text x="116" y="663" class="card-body">Prompt guard · rate limit</text>
+    <text x="116" y="693" class="card-body">Step limit · typed errors</text>
+  </g>
+
+  <!-- Entry connections -->
+  <path d="M235 488 L235 548" fill="none" stroke="#8498AA" stroke-width="3" marker-end="url(#arrowSlate)"/>
+  <path d="M378 642 C420 642 429 554 468 554" fill="none" stroke="#E6B85C" stroke-width="3.5" marker-end="url(#arrowGold)"/>
+  <g transform="translate(392 590)">
+    <rect width="74" height="28" rx="14" fill="#142B37"/>
+    <text x="37" y="19" text-anchor="middle" class="chip" fill="#E6B85C">ALLOWED</text>
+  </g>
+
+  <!-- LangGraph orchestration panel -->
+  <g filter="url(#shadow)">
+    <rect x="468" y="301" width="930" height="544" rx="34" fill="#0D1C29" stroke="#294557" stroke-width="2"/>
+  </g>
+  <g transform="translate(504 326)">
+    <rect width="146" height="34" rx="17" fill="#142B3B" stroke="#26495E"/>
+    <circle cx="20" cy="17" r="5" fill="#E6B85C"/>
+    <text x="36" y="22" class="chip" fill="#C9D5DE">LANGGRAPH</text>
+  </g>
+
+  <!-- Supervisor node -->
+  <g filter="url(#softShadow)">
+    <rect x="520" y="448" width="292" height="218" rx="26" fill="url(#supervisor)" stroke="#E6B85C" stroke-width="2.5"/>
+    <circle cx="568" cy="496" r="23" fill="#E6B85C"/>
+    <path d="M558 497 l7 7 l14 -17" fill="none" stroke="#173F47" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="603" y="505" class="super-title">Supervisor</text>
+    <text x="548" y="558" class="super-body">Reads current CaseFileState</text>
+    <text x="548" y="589" class="super-body">and chooses the next typed action.</text>
+    <rect x="548" y="616" width="116" height="28" rx="14" fill="#12363E"/>
+    <text x="606" y="635" text-anchor="middle" class="chip" fill="#E9C97C">ROUTING OWNER</text>
+  </g>
+
+  <!-- Specialist cards -->
+  <g filter="url(#softShadow)">
+    <rect x="926" y="379" width="420" height="118" rx="22" fill="url(#specialist)" stroke="#3A6785" stroke-width="2"/>
+    <circle cx="968" cy="421" r="20" fill="#193D57"/>
+    <path d="M959 419 h18 M959 426 h12 M959 412 h15" stroke="#80B7E4" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="1002" y="420" class="card-title">Evidence Librarian</text>
+    <text x="1002" y="451" class="card-body">Evidence · rules · topics · ingestion</text>
+    <rect x="1174" y="457" width="146" height="24" rx="12" fill="#132E42"/>
+    <text x="1247" y="474" text-anchor="middle" class="chip" fill="#7FB7E4">EVIDENCE PACKET</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="926" y="527" width="420" height="118" rx="22" fill="url(#specialist)" stroke="#4F5D97" stroke-width="2"/>
+    <circle cx="968" cy="569" r="20" fill="#2E315E"/>
+    <path d="M959 576 l4 -15 l15 -4 l-4 15 z M963 572 l11 -11" fill="none" stroke="#A8A5F2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1002" y="568" class="card-title">Argument Strategist</text>
+    <text x="1002" y="599" class="card-body">Create or revise grounded arguments</text>
+    <rect x="1182" y="605" width="138" height="24" rx="12" fill="#292C51"/>
+    <text x="1251" y="622" text-anchor="middle" class="chip" fill="#B7B4F5">ARGUMENT DRAFT</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="926" y="675" width="420" height="118" rx="22" fill="url(#specialist)" stroke="#367366" stroke-width="2"/>
+    <circle cx="968" cy="717" r="20" fill="#19493E"/>
+    <path d="M958 720 l7 7 l14 -18 M958 710 h9" fill="none" stroke="#78D3AF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1002" y="716" class="card-title">Skills Coach</text>
+    <text x="1002" y="747" class="card-body">Drills · coaching · progress tracking</text>
+    <rect x="1162" y="753" width="158" height="24" rx="12" fill="#16382F"/>
+    <text x="1241" y="770" text-anchor="middle" class="chip" fill="#83D6B5">COACHING ARTIFACT</text>
+  </g>
+
+  <!-- Routing arrows -->
+  <path d="M812 500 C854 500 866 438 916 438" fill="none" stroke="#6FA6D8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M812 557 L916 577" fill="none" stroke="#7B78C9" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M812 614 C854 614 866 734 916 734" fill="none" stroke="#58A98E" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M926 407 C866 374 836 403 792 453" fill="none" stroke="#6FA6D8" stroke-width="2.5" stroke-dasharray="7 8" marker-end="url(#arrowBlue)" opacity="0.82"/>
+  <path d="M926 554 C874 531 847 531 812 542" fill="none" stroke="#7B78C9" stroke-width="2.5" stroke-dasharray="7 8" marker-end="url(#arrowBlue)" opacity="0.82"/>
+  <path d="M926 703 C872 686 847 653 807 632" fill="none" stroke="#58A98E" stroke-width="2.5" stroke-dasharray="7 8" marker-end="url(#arrowBlue)" opacity="0.82"/>
+  <text x="837" y="345" class="micro">delegate task</text>
+  <text x="784" y="814" class="micro">typed artifact returns to supervisor</text>
+
+  <!-- Outcomes panel -->
+  <g filter="url(#softShadow)">
+    <rect x="1490" y="318" width="338" height="409" rx="28" fill="#0E1D2A" stroke="#294557" stroke-width="2"/>
+    <text x="1524" y="368" class="card-title">Next state</text>
+    <text x="1524" y="397" class="card-body">Every exit is explicit.</text>
+
+    <g transform="translate(1524 430)">
+      <rect width="270" height="52" rx="16" fill="#142D2A" stroke="#367964"/>
+      <circle cx="26" cy="26" r="7" fill="#54D19C"/>
+      <text x="47" y="32" class="outcome" fill="#DFF8EE">completed</text>
+    </g>
+    <g transform="translate(1524 495)">
+      <rect width="270" height="52" rx="16" fill="#25233B" stroke="#6D62A4"/>
+      <circle cx="26" cy="26" r="7" fill="#A79AEE"/>
+      <text x="47" y="32" class="outcome" fill="#EEEAFE">needs_input</text>
+    </g>
+    <g transform="translate(1524 560)">
+      <rect width="270" height="52" rx="16" fill="#292439" stroke="#8A6C94"/>
+      <circle cx="26" cy="26" r="7" fill="#D3A7DF"/>
+      <text x="47" y="32" class="outcome" fill="#F4E7F6">needs_confirmation</text>
+    </g>
+    <g transform="translate(1524 625)">
+      <rect width="270" height="52" rx="16" fill="#312324" stroke="#8C4C4C"/>
+      <circle cx="26" cy="26" r="7" fill="#E08074"/>
+      <text x="47" y="32" class="outcome" fill="#FAE7E3">failed · typed error</text>
+    </g>
+  </g>
+
+  <!-- Main resolve connection -->
+  <path d="M1398 557 C1435 557 1442 520 1480 520" fill="none" stroke="#E6B85C" stroke-width="3.5" marker-end="url(#arrowGold)"/>
+
+  <!-- Shared state and observability rail -->
+  <g filter="url(#softShadow)">
+    <rect x="92" y="902" width="1736" height="116" rx="26" fill="#0D1B27" stroke="#294557" stroke-width="2"/>
+  </g>
+  <g transform="translate(124 929)">
+    <circle cx="26" cy="26" r="24" fill="#17384B"/>
+    <path d="M15 22 h22 M15 30 h22 M21 14 v24 M31 14 v24" stroke="#7FAFD0" stroke-width="2" opacity="0.9"/>
+    <text x="68" y="24" class="footer-title">Versioned CaseFileState</text>
+    <text x="68" y="50" class="footer-body">Messages · artifacts · pending actions</text>
+  </g>
+  <line x1="575" y1="925" x2="575" y2="995" stroke="#294557" stroke-width="2"/>
+  <g transform="translate(620 929)">
+    <circle cx="26" cy="26" r="24" fill="#2C2D4F"/>
+    <path d="M16 33 l7 -10 l7 5 l8 -14" fill="none" stroke="#AAA7F3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="68" y="24" class="footer-title">Observable by design</text>
+    <text x="68" y="50" class="footer-body">Agent · tool · model traces</text>
+  </g>
+  <line x1="1050" y1="925" x2="1050" y2="995" stroke="#294557" stroke-width="2"/>
+  <g transform="translate(1095 929)">
+    <circle cx="26" cy="26" r="24" fill="#173C35"/>
+    <path d="M16 27 l7 7 l14 -18" fill="none" stroke="#72D0AB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="68" y="24" class="footer-title">Recoverable sessions</text>
+    <text x="68" y="50" class="footer-body">Replies reuse the same session_id</text>
+  </g>
+  <rect x="1608" y="936" width="178" height="40" rx="20" fill="#1B3D42" stroke="#4D7777"/>
+  <text x="1697" y="962" text-anchor="middle" class="chip" fill="#D8E8E7">PERSIST + RETURN</text>
+</svg>

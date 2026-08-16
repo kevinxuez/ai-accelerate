@@ -54,7 +54,7 @@ class AnthropicJSONClient:
     api_key: str | None
     model: str = "claude-sonnet-4-6"
     base_url: str = "https://api.anthropic.com"
-    timeout: float = 90
+    timeout: float = 240
     expose_prompts: bool = False
     calls: list[ModelCallRecord] = field(default_factory=list, init=False)
 
@@ -199,12 +199,12 @@ class AnthropicJSONClient:
             text_blocks = [
                 block.get("text")
                 for block in content
-                if isinstance(block, dict) and block.get("type") == "text"
+                if isinstance(block, dict) and isinstance(block.get("text"), str)
             ]
-            if not all(isinstance(text, str) for text in text_blocks):
+            if not text_blocks:
                 raise CaseFileError(
                     ErrorCode.MODEL_OUTPUT_INVALID,
-                    "The configured model returned malformed text content.",
+                    "The configured model response did not contain usable text content.",
                     stage="model.response",
                     agent=agent,
                     safe_details={"schema": schema_name},
@@ -213,14 +213,18 @@ class AnthropicJSONClient:
             try:
                 value = json.loads(raw_response)
             except json.JSONDecodeError as exc:
-                raise CaseFileError(
-                    ErrorCode.MODEL_OUTPUT_INVALID,
-                    "The configured model did not return the required JSON object.",
-                    stage="model.response",
-                    agent=agent,
-                    safe_details={"schema": schema_name},
-                    cause=exc,
-                ) from exc
+                try:
+                    start = raw_response.index("{")
+                    value, _ = json.JSONDecoder().raw_decode(raw_response[start:])
+                except (ValueError, json.JSONDecodeError):
+                    raise CaseFileError(
+                        ErrorCode.MODEL_OUTPUT_INVALID,
+                        "The configured model did not return a usable JSON object.",
+                        stage="model.response",
+                        agent=agent,
+                        safe_details={"schema": schema_name},
+                        cause=exc,
+                    ) from exc
             if not isinstance(value, dict):
                 raise CaseFileError(
                     ErrorCode.MODEL_OUTPUT_INVALID,
@@ -233,12 +237,41 @@ class AnthropicJSONClient:
                 try:
                     value = schema.model_validate(value).model_dump(mode="json")
                 except ValidationError as exc:
+                    errors = exc.errors(include_url=False)
+                    invalid_fields = sorted(
+                        {
+                            ".".join(str(part) for part in location)
+                            for item in errors
+                            if (location := item.get("loc"))
+                        }
+                    )
+                    invalid_values: dict[str, Any] = {}
+                    for item in errors:
+                        location = item.get("loc")
+                        if not location:
+                            continue
+                        path = ".".join(str(part) for part in location)
+                        if path in invalid_values:
+                            continue
+                        rejected = item.get("input")
+                        if isinstance(rejected, str):
+                            invalid_values[path] = (
+                                rejected
+                                if len(rejected) <= 120
+                                else rejected[:120] + "…"
+                            )
+                        elif isinstance(rejected, (int, float, bool)) or rejected is None:
+                            invalid_values[path] = rejected
                     raise CaseFileError(
                         ErrorCode.MODEL_OUTPUT_INVALID,
                         "The configured model output did not match its required schema.",
                         stage="model.response",
                         agent=agent,
-                        safe_details={"schema": schema_name},
+                        safe_details={
+                            "schema": schema_name,
+                            "invalid_fields": invalid_fields,
+                            "invalid_values": invalid_values,
+                        },
                         cause=exc,
                     ) from exc
         except CaseFileError as error:
@@ -295,7 +328,11 @@ class AnthropicJSONClient:
                 prompt_template=prompt_template,
                 prompt_version=prompt_version,
                 prompt_sha256=_sha256(f"{system}\n{user}"),
-                response_sha256=_sha256(response) if response is not None else None,
+                response_sha256=(
+                    _sha256(response)
+                    if response is not None and error is None
+                    else None
+                ),
                 schema_name=schema_name,
                 started_at=started_at,
                 latency_ms=max(0, round((time.perf_counter() - started) * 1000)),

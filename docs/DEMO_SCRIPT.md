@@ -14,7 +14,7 @@ export CASEFILE_NSDA_PROVIDER=fixture
 uvicorn casefile.api.main:app --reload
 ```
 
-Verify `GET /health/ready` reports `ready`, `langgraph`, `chroma`, the pinned embedding model,
+Verify `GET /health/ready` reports `ready`, `langgraph`, `in_memory`, the pinned embedding model,
 and the two explicitly selected fixture providers. Open <http://127.0.0.1:8000>.
 
 The right panel should show the active agent, response status, request/session IDs, ordered agent
@@ -31,7 +31,7 @@ Point out:
 - The result is rendered from an `EvidencePacket`, not parsed from prose.
 - Every card includes its complete citation, body, card ID, source file, retrieval score, and
   preserved read/emphasis spans.
-- Provenance names the required Chroma backend, pinned embedding model, ledger version, and
+- Provenance names the in-memory backend, pinned embedding model, ledger version, and
   confirmed-only policy.
 
 ## 2. Generate and revise an argument
@@ -59,10 +59,10 @@ Point out:
 - `needs_confirmation` is distinct from `needs_input`.
 - The `IngestionPreview` shows every proposed card's full text, citation, side, evidence type,
   marked spans, model provenance, flags, explanations, and exclusion status.
-- Nothing has entered the evidence ledger or Chroma collection yet.
+- Nothing has entered the evidence ledger yet.
 
 Select **Confirm evidence import**. Show the real `IngestionCommitResult`: written/searchable
-counts, ledger version, rebuilt index, source filename, and job ID.
+counts, ledger version, retrieval-ready status, source filename, and job ID.
 
 ## 4. Practice with the Skills Coach
 
@@ -102,6 +102,6 @@ The request intentionally asks for another student's progress. Point out:
 
 ## Closing summary
 
-The demo has exercised all four agents, typed artifacts, specialist handoffs, required Chroma
+The demo has exercised all four agents, typed artifacts, specialist handoffs, in-memory semantic
 retrieval, lossless evidence handling, versioned sessions, confirmation-gated writes, explicit
 providers, grouped traces, and fail-closed error behavior through one LangGraph runtime.

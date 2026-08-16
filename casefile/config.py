@@ -8,11 +8,19 @@ from importlib import import_module
 from pathlib import Path
 from typing import Literal, cast
 
+from dotenv import load_dotenv
+
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_ROOT.parent
 PINNED_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 PINNED_EMBEDDING_DIMENSIONS = 384
+
+# Load .env deterministically on every import, independent of how the
+# process was launched (bare `uvicorn`, `--env-file`, pytest, a script).
+# Real environment variables set by the shell or platform still win —
+# this only fills in what isn't already set.
+load_dotenv(REPO_ROOT / ".env")
 
 
 def _env_path(name: str, default: Path) -> Path:
@@ -36,7 +44,6 @@ def _env_roots(name: str, defaults: tuple[Path, ...]) -> tuple[Path, ...]:
 @dataclass(frozen=True)
 class Settings:
     data_dir: Path = _env_path("CASEFILE_DATA_DIR", PACKAGE_ROOT / "data")
-    chroma_dir: Path = _env_path("CASEFILE_CHROMA_DIR", PACKAGE_ROOT / "chroma_db")
     rules_dir: Path = _env_path("CASEFILE_RULES_DIR", PACKAGE_ROOT / "rules")
     model: str = os.getenv("CASEFILE_MODEL", "claude-sonnet-4-6")
     anthropic_api_key: str | None = os.getenv("ANTHROPIC_API_KEY")
@@ -44,7 +51,7 @@ class Settings:
         "ANTHROPIC_BASE_URL", "https://api.anthropic.com"
     )
     model_timeout_seconds: float = float(
-        os.getenv("CASEFILE_MODEL_TIMEOUT_SECONDS", "90")
+        os.getenv("CASEFILE_MODEL_TIMEOUT_SECONDS", "240")
     )
     expose_model_prompts: bool = _env_bool("CASEFILE_EXPOSE_MODEL_PROMPTS", False)
     embedding_model_path: Path = _env_path(
@@ -149,7 +156,6 @@ class Settings:
 
     def ensure_runtime_dirs(self) -> None:
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.chroma_dir.mkdir(parents=True, exist_ok=True)
         self.pending_dir.mkdir(parents=True, exist_ok=True)
         self.calendar_pending_dir.mkdir(parents=True, exist_ok=True)
         self.uploads_dir.mkdir(parents=True, exist_ok=True)

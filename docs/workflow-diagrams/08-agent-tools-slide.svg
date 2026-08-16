@@ -1,0 +1,267 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Agent tools and responsibilities</title>
+  <desc id="desc">A slide-ready graphic explaining the main use and agent-scoped tools for the Supervisor, Evidence Librarian, Argument Strategist, and Skills Coach, with registry guardrails for every tool call.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071522"/>
+      <stop offset="0.55" stop-color="#0B2030"/>
+      <stop offset="1" stop-color="#0B1827"/>
+    </linearGradient>
+    <linearGradient id="superHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1C595E"/>
+      <stop offset="1" stop-color="#153D46"/>
+    </linearGradient>
+    <linearGradient id="libHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#173F5B"/>
+      <stop offset="1" stop-color="#123249"/>
+    </linearGradient>
+    <linearGradient id="stratHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#33335F"/>
+      <stop offset="1" stop-color="#252746"/>
+    </linearGradient>
+    <linearGradient id="coachHead" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#194A3E"/>
+      <stop offset="1" stop-color="#14372F"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="165%">
+      <feDropShadow dx="0" dy="15" stdDeviation="17" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      text { font-family: Inter, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; }
+      .eyebrow { font-size: 18px; font-weight: 700; letter-spacing: 3.5px; fill: #6FA6D8; }
+      .headline { font-size: 48px; font-weight: 720; letter-spacing: -1.4px; fill: #F7FAFC; }
+      .subtitle { font-size: 22px; font-weight: 400; fill: #AEBCCA; }
+      .agent { font-size: 28px; font-weight: 730; letter-spacing: -.4px; fill: #FFFFFF; }
+      .role { font-size: 16px; font-weight: 680; letter-spacing: 1.4px; }
+      .label { font-size: 14px; font-weight: 760; letter-spacing: 1.5px; fill: #7890A3; }
+      .purpose { font-size: 18px; font-weight: 500; fill: #E5EBEF; }
+      .purpose-muted { font-size: 16px; font-weight: 430; fill: #A9B8C4; }
+      .tool { font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size: 15px; font-weight: 650; fill: #E8EEF2; }
+      .tool-note { font-size: 13px; font-weight: 430; fill: #8FA2B2; }
+      .badge { font-size: 14px; font-weight: 750; letter-spacing: .3px; }
+      .guard-title { font-size: 19px; font-weight: 720; fill: #EDF3F6; }
+      .guard-body { font-size: 14px; font-weight: 430; fill: #96A9B8; }
+      .micro { font-size: 13px; font-weight: 500; fill: #8398AA; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <circle cx="1655" cy="-30" r="465" fill="#123A4A" opacity="0.22"/>
+  <circle cx="45" cy="1070" r="410" fill="#132D45" opacity="0.25"/>
+  <path d="M0 905 C410 820 690 996 1050 930 C1410 864 1620 810 1920 870 L1920 1080 L0 1080 Z" fill="#09131F" opacity="0.65"/>
+
+  <!-- Header -->
+  <text x="92" y="80" class="eyebrow">AGENT TOOL BOUNDARIES</text>
+  <text x="92" y="142" class="headline">Each agent gets only the tools its job requires.</text>
+  <text x="92" y="182" class="subtitle">Least-privilege access keeps research, writing, coaching, and scheduling cleanly separated.</text>
+  <g transform="translate(1630 64)">
+    <rect width="198" height="42" rx="21" fill="#102E3B" stroke="#2D5966"/>
+    <path d="M20 15 l8 3 v7 c0 6 -4 10 -8 12 c-4 -2 -8 -6 -8 -12 v-7 z" fill="#54D19C"/>
+    <text x="41" y="27" class="badge" fill="#DDEBEF">LEAST PRIVILEGE</text>
+  </g>
+
+  <!-- Supervisor card -->
+  <g filter="url(#shadow)">
+    <rect x="92" y="260" width="405" height="570" rx="30" fill="#0D1C29" stroke="#3D686C" stroke-width="2"/>
+    <path d="M92 290 Q92 260 122 260 H467 Q497 260 497 290 V395 H92 Z" fill="url(#superHead)"/>
+  </g>
+  <g transform="translate(122 290)">
+    <circle cx="30" cy="30" r="28" fill="#E6B85C"/>
+    <path d="M18 31 l8 8 l17 -21" fill="none" stroke="#163F46" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="74" y="26" class="agent">Supervisor</text>
+    <text x="74" y="52" class="role" fill="#F1CB76">ROUTING OWNER</text>
+  </g>
+  <g transform="translate(122 425)">
+    <text class="label">MAIN USE</text>
+    <text y="38" class="purpose">Choose the next action</text>
+    <text y="67" class="purpose-muted">Route work, ask for input, finish,</text>
+    <text y="91" class="purpose-muted">or coordinate a coaching session.</text>
+
+    <text y="142" class="label">AGENT-SCOPED TOOL · 1</text>
+    <g transform="translate(0 165)" filter="url(#softShadow)">
+      <rect width="345" height="74" rx="16" fill="#132C36" stroke="#3E7274"/>
+      <circle cx="32" cy="37" r="17" fill="#1C474A"/>
+      <path d="M23 33 h18 M27 25 v7 M37 25 v7 M25 40 h5 M34 40 h5" fill="none" stroke="#E8C56F" stroke-width="2" stroke-linecap="round"/>
+      <text x="61" y="33" class="tool">schedule_session</text>
+      <text x="61" y="54" class="tool-note">Stage or create a calendar event</text>
+    </g>
+
+    <g transform="translate(0 275)">
+      <rect width="345" height="72" rx="16" fill="#111F2A" stroke="#2B4556"/>
+      <text x="18" y="28" class="badge" fill="#DDE7EC">Primary outputs</text>
+      <text x="18" y="52" class="tool-note">SupervisorDecision · CalendarEvent</text>
+    </g>
+  </g>
+
+  <!-- Evidence Librarian card -->
+  <g filter="url(#shadow)">
+    <rect x="535" y="260" width="405" height="570" rx="30" fill="#0D1C29" stroke="#386681" stroke-width="2"/>
+    <path d="M535 290 Q535 260 565 260 H910 Q940 260 940 290 V395 H535 Z" fill="url(#libHead)"/>
+  </g>
+  <g transform="translate(565 290)">
+    <circle cx="30" cy="30" r="28" fill="#2B658B"/>
+    <path d="M18 22 h24 M18 30 h19 M18 38 h14" stroke="#8EC3EA" stroke-width="3" stroke-linecap="round"/>
+    <text x="74" y="26" class="agent">Evidence Librarian</text>
+    <text x="74" y="52" class="role" fill="#8DC1E7">RESEARCH OWNER</text>
+  </g>
+  <g transform="translate(565 425)">
+    <text class="label">MAIN USE</text>
+    <text y="38" class="purpose">Find and curate trusted inputs</text>
+    <text y="67" class="purpose-muted">Search evidence, rules, and topics;</text>
+    <text y="91" class="purpose-muted">preview and confirm DOCX ingestion.</text>
+
+    <text y="142" class="label">AGENT-SCOPED TOOLS · 6</text>
+    <g transform="translate(0 164)">
+      <rect width="167" height="58" rx="14" fill="#112A3B" stroke="#315C77"/>
+      <text x="14" y="25" class="tool">list_confirmed_</text>
+      <text x="14" y="44" class="tool">files</text>
+    </g>
+    <g transform="translate(178 164)">
+      <rect width="167" height="58" rx="14" fill="#112A3B" stroke="#315C77"/>
+      <text x="14" y="35" class="tool">search_cards</text>
+    </g>
+    <g transform="translate(0 232)">
+      <rect width="167" height="58" rx="14" fill="#112A3B" stroke="#315C77"/>
+      <text x="14" y="35" class="tool">search_rules</text>
+    </g>
+    <g transform="translate(178 232)">
+      <rect width="167" height="58" rx="14" fill="#112A3B" stroke="#315C77"/>
+      <text x="14" y="35" class="tool">get_current_topic</text>
+    </g>
+    <g transform="translate(0 300)">
+      <rect width="167" height="62" rx="14" fill="#172C35" stroke="#59644E"/>
+      <text x="14" y="26" class="tool">stage_ingestion_</text>
+      <text x="14" y="46" class="tool">preview</text>
+    </g>
+    <g transform="translate(178 300)">
+      <rect width="167" height="62" rx="14" fill="#2B281B" stroke="#7A6532"/>
+      <text x="14" y="26" class="tool">commit_ingestion</text>
+      <text x="14" y="47" class="tool-note" fill="#DEC273">confirmation token</text>
+    </g>
+  </g>
+
+  <!-- Argument Strategist card -->
+  <g filter="url(#shadow)">
+    <rect x="978" y="260" width="405" height="570" rx="30" fill="#0D1C29" stroke="#5A5993" stroke-width="2"/>
+    <path d="M978 290 Q978 260 1008 260 H1353 Q1383 260 1383 290 V395 H978 Z" fill="url(#stratHead)"/>
+  </g>
+  <g transform="translate(1008 290)">
+    <circle cx="30" cy="30" r="28" fill="#5552A0"/>
+    <path d="M18 42 l6 -22 l22 -6 l-6 22 z M24 36 l16 -16" fill="none" stroke="#C3BFF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="74" y="26" class="agent">Argument Strategist</text>
+    <text x="74" y="52" class="role" fill="#BBB7F3">SYNTHESIS OWNER</text>
+  </g>
+  <g transform="translate(1008 425)">
+    <text class="label">MAIN USE</text>
+    <text y="38" class="purpose">Build grounded arguments</text>
+    <text y="67" class="purpose-muted">Create or revise structured drafts</text>
+    <text y="91" class="purpose-muted">using only supplied evidence.</text>
+
+    <text y="142" class="label">AGENT-SCOPED TOOLS · 0</text>
+    <g transform="translate(0 164)" filter="url(#softShadow)">
+      <rect width="345" height="146" rx="20" fill="#25243F" stroke="#6662A2" stroke-width="2"/>
+      <circle cx="43" cy="45" r="22" fill="#353361"/>
+      <path d="M33 45 h20 M43 35 v20" stroke="#B8B3F3" stroke-width="3" stroke-linecap="round" transform="rotate(45 43 45)"/>
+      <text x="79" y="42" class="purpose" fill="#EEEAFE">No direct tool access</text>
+      <text x="24" y="83" class="purpose-muted">Receives a validated EvidencePacket</text>
+      <text x="24" y="108" class="purpose-muted">from the Librarian; cannot retrieve</text>
+      <text x="24" y="133" class="purpose-muted">or invent additional sources.</text>
+    </g>
+
+    <g transform="translate(0 328)">
+      <rect width="345" height="72" rx="16" fill="#17182C" stroke="#41406A"/>
+      <text x="18" y="28" class="badge" fill="#E1DFF8">Primary output</text>
+      <text x="18" y="52" class="tool-note">ArgumentDraft · citation-bounded</text>
+    </g>
+  </g>
+
+  <!-- Skills Coach card -->
+  <g filter="url(#shadow)">
+    <rect x="1421" y="260" width="407" height="570" rx="30" fill="#0D1C29" stroke="#377261" stroke-width="2"/>
+    <path d="M1421 290 Q1421 260 1451 260 H1798 Q1828 260 1828 290 V395 H1421 Z" fill="url(#coachHead)"/>
+  </g>
+  <g transform="translate(1451 290)">
+    <circle cx="30" cy="30" r="28" fill="#28775F"/>
+    <path d="M17 31 l8 8 l17 -21 M18 20 h10" fill="none" stroke="#88DDBB" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="74" y="26" class="agent">Skills Coach</text>
+    <text x="74" y="52" class="role" fill="#89D8B8">DEVELOPMENT OWNER</text>
+  </g>
+  <g transform="translate(1451 425)">
+    <text class="label">MAIN USE</text>
+    <text y="38" class="purpose">Turn performance into practice</text>
+    <text y="67" class="purpose-muted">Run drills, coach students, summarize</text>
+    <text y="91" class="purpose-muted">progress, and propose assessments.</text>
+
+    <text y="142" class="label">AGENT-SCOPED TOOLS · 2</text>
+    <g transform="translate(0 165)" filter="url(#softShadow)">
+      <rect width="347" height="74" rx="16" fill="#133028" stroke="#3C7764"/>
+      <circle cx="32" cy="37" r="17" fill="#1C4A3C"/>
+      <path d="M23 43 l7 -8 l6 5 l8 -12" fill="none" stroke="#89D8B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="61" y="33" class="tool">get_progress</text>
+      <text x="61" y="54" class="tool-note">Authorized student history</text>
+    </g>
+    <g transform="translate(0 251)" filter="url(#softShadow)">
+      <rect width="347" height="82" rx="16" fill="#29291D" stroke="#6D683A"/>
+      <circle cx="32" cy="41" r="17" fill="#464525"/>
+      <path d="M23 41 l7 7 l13 -17" fill="none" stroke="#DDD078" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="61" y="34" class="tool">log_assessment</text>
+      <text x="61" y="56" class="tool-note" fill="#D8C878">coach role · confirmed write</text>
+    </g>
+
+    <g transform="translate(0 340)">
+      <rect width="347" height="62" rx="16" fill="#111F2A" stroke="#2B4556"/>
+      <text x="18" y="25" class="badge" fill="#DDE7EC">Primary outputs</text>
+      <text x="18" y="47" class="tool-note">DrillPlan · CoachTurn · ProgressSummary</text>
+    </g>
+  </g>
+
+  <!-- Tool registry guardrail rail -->
+  <g filter="url(#softShadow)">
+    <rect x="92" y="875" width="1736" height="145" rx="28" fill="#0D1B27" stroke="#294557" stroke-width="2"/>
+  </g>
+  <g transform="translate(122 900)">
+    <circle cx="24" cy="24" r="22" fill="#183B4C"/>
+    <path d="M14 18 h20 M14 25 h20 M14 32 h14" stroke="#83B3D2" stroke-width="2.4" stroke-linecap="round"/>
+    <text x="58" y="22" class="guard-title">Every call passes through one typed ToolRegistry</text>
+    <text x="58" y="45" class="guard-body">Access is checked before execution; each result is traced.</text>
+  </g>
+
+  <line x1="667" y1="897" x2="667" y2="995" stroke="#294557" stroke-width="2"/>
+  <g transform="translate(704 905)">
+    <circle cx="18" cy="18" r="18" fill="#2C2D50"/>
+    <path d="M10 19 l6 6 l11 -15" fill="none" stroke="#B5B1F2" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="48" y="15" class="guard-title">Agent allowlist</text>
+    <text x="48" y="38" class="guard-body">Wrong agent → denied</text>
+  </g>
+
+  <g transform="translate(982 905)">
+    <circle cx="18" cy="18" r="18" fill="#1B463B"/>
+    <path d="M10 18 h16 M18 10 v16" stroke="#81D5B3" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="48" y="15" class="guard-title">Role + ownership</text>
+    <text x="48" y="38" class="guard-body">Student and coach boundaries</text>
+  </g>
+
+  <g transform="translate(1288 905)">
+    <circle cx="18" cy="18" r="18" fill="#183A4C"/>
+    <path d="M10 12 h16 M10 18 h12 M10 24 h16" stroke="#82B6DB" stroke-width="2.3" stroke-linecap="round"/>
+    <text x="48" y="15" class="guard-title">Strict inputs</text>
+    <text x="48" y="38" class="guard-body">Validated typed arguments</text>
+  </g>
+
+  <g transform="translate(1548 905)">
+    <circle cx="18" cy="18" r="18" fill="#433A21"/>
+    <path d="M10 21 l6 -7 l5 4 l7 -9" fill="none" stroke="#E5C66F" stroke-width="2.4" stroke-linecap="round"/>
+    <text x="48" y="15" class="guard-title">Audit trace</text>
+    <text x="48" y="38" class="guard-body">Start · complete · fail</text>
+  </g>
+
+  <g transform="translate(704 966)">
+    <rect width="1018" height="29" rx="14.5" fill="#142A36" stroke="#2A4958"/>
+    <text x="509" y="20" text-anchor="middle" class="micro" fill="#9EB0BD">Sensitive writes add confirmation tokens, idempotency keys, or coach-only authorization.</text>
+  </g>
+</svg>

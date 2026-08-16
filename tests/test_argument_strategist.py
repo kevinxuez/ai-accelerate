@@ -77,7 +77,7 @@ def _packet(*, empty: bool = False) -> EvidencePacket:
         empty_result=empty,
         provenance=EvidenceProvenance(
             ledger_schema_version=1,
-            retrieval_backend="chroma",
+            retrieval_backend="in_memory",
             embedding_model="sentence-transformers/all-MiniLM-L6-v2",
             confirmed_only=True,
         ),

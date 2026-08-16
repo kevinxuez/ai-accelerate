@@ -166,15 +166,12 @@ def _settings_for_strategy(
 ) -> Settings:
     data_dir = root / "data"
     rules_dir = root / "rules"
-    chroma_dir = root / "chroma"
     data_dir.mkdir(parents=True)
     rules_dir.mkdir(parents=True)
-    chroma_dir.mkdir(parents=True)
     return replace(
         base,
         data_dir=data_dir,
         rules_dir=rules_dir,
-        chroma_dir=chroma_dir,
         min_relevance=strategy.min_relevance,
         anthropic_api_key=None,
     )

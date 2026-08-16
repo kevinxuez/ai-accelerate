@@ -228,6 +228,191 @@
     "injection_approved": false
   },
   {
+    "id": "0a913550289c48e773bb18ba43c643ed1ad2344f701d2f143ac27dcdef20e8bd",
+    "header": "Sandgren 21",
+    "tag": "",
+    "cite_full": "Sandgren, \"How new regulations from Washington could lead to a blockchain brain drain | TheHill\", 2021, https://thehill.com/blogs/congress-blog/technology/578834-how-new-regulations-from-washington-could-lead-to-a-blockchain",
+    "author": "Sandgren",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://thehill.com/blogs/congress-blog/technology/578834-how-new-regulations-from-washington-could-lead-to-a-blockchain",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "But if legislators give in to crypto’s critics by taking a draconian approach to regulation, the U.S. will fail to reap the economic rewards of this world-changing technology—and entrepreneurs will flee to friendlier shores. Even now, the stage is being set for a blockchain brain drain. Take the Senate-passed infrastructure bill, which includes a provision that would define crypto miners, validators, and even software developers as “brokers,” requiring them to report information to the IRS about anonymous blockchain participants that they would have no way of obtaining. In effect, this provision would kill the nascent DeFi (decentralized finance) industry and make it almost impossible for everyday Americans to invest in new cryptocurrencies.",
+    "read_spans": [
+      [
+        92,
+        751
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        94,
+        289
+      ],
+      [
+        575,
+        751
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "crypto regulation",
+      "blockchain brain drain",
+      "DeFi",
+      "broker definition",
+      "infrastructure bill",
+      "IRS reporting"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      54,
+      55,
+      56
+    ],
+    "embedding_text": "Sandgren 21\nthe U.S. will fail to reap the economic rewards of this world-changing technology—and entrepreneurs will flee to friendlier shores. Even now, the stage is being set for a blockchain brain drain. Take the Senate-passed infrastructure bill, which includes a provision that would define crypto miners, validators, and even software developers as “brokers,” requiring them to report information to the IRS about anonymous blockchain participants that they would have no way of obtaining. In effect, this provision would kill the nascent DeFi (decentralized finance) industry and make it almost impossible for everyday Americans to invest in new cryptocurrencies.\nhe U.S. will fail to reap the economic rewards of this world-changing technology—and entrepreneurs will flee to friendlier shores. Even now, the stage is being set for a blockchain brain drain. T . In effect, this provision would kill the nascent DeFi (decentralized finance) industry and make it almost impossible for everyday Americans to invest in new cryptocurrencies.",
+    "returned_document": "Sandgren, \"How new regulations from Washington could lead to a blockchain brain drain | TheHill\", 2021, https://thehill.com/blogs/congress-blog/technology/578834-how-new-regulations-from-washington-could-lead-to-a-blockchain\nSandgren 21\nBut if legislators give in to crypto’s critics by taking a draconian approach to regulation, the U.S. will fail to reap the economic rewards of this world-changing technology—and entrepreneurs will flee to friendlier shores. Even now, the stage is being set for a blockchain brain drain. Take the Senate-passed infrastructure bill, which includes a provision that would define crypto miners, validators, and even software developers as “brokers,” requiring them to report information to the IRS about anonymous blockchain participants that they would have no way of obtaining. In effect, this provision would kill the nascent DeFi (decentralized finance) industry and make it almost impossible for everyday Americans to invest in new cryptocurrencies.",
+    "explanation": "No tag is present for this card. The body contains direct quoted text from the cited source. The card argues against strict crypto regulation, consistent with the con side opposing heavy-handed regulatory approaches.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "0c50b0a9958f081cde5f52c9aa063ff44afe31acdeec69106a4824ce67be3ce3",
+    "header": "Undheim '14",
+    "tag": "",
+    "cite_full": "Undheim, \"Why banks fear Bitcoin | Fortune\", 2014, https://fortune.com/2014/11/20/why-banks-fear-bitcoin/",
+    "author": "Undheim",
+    "author_type": "person",
+    "year": 2014,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://fortune.com/2014/11/20/why-banks-fear-bitcoin/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "This is why banks had better embrace the experimentation around crypto technologies and business models—in consortia rather than alone, in order to reduce risks and in order to foster and shape the set of appropriate platform innovations that will come over the next decade, one way or another. Why are bankers afraid of Bitcoin’s impact? Easy, it will lead to ripples across the financial sector, it will create new winners and losers, and it will likely decentralize banking services and create micro markets to an extent not seen since the advances of the barter economy and the market economy combined. In fact, this is what the Internet of Value is all about—erasing the distinction between bartering, money and service exchange in any market. Once each potential good has a financially tradable and storable equivalent, “a bitcoin,” if you will, trade will explode in a myriad of directions impossible to predict by current algorithms.",
+    "read_spans": [
+      [
+        104,
+        748
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        104,
+        748
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "bitcoin",
+      "banking sector",
+      "decentralization",
+      "cryptocurrency disruption",
+      "financial markets",
+      "internet of value"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      64,
+      65,
+      66
+    ],
+    "embedding_text": "Undheim '14\nin consortia rather than alone, in order to reduce risks and in order to foster and shape the set of appropriate platform innovations that will come over the next decade, one way or another. Why are bankers afraid of Bitcoin’s impact? Easy, it will lead to ripples across the financial sector, it will create new winners and losers, and it will likely decentralize banking services and create micro markets to an extent not seen since the advances of the barter economy and the market economy combined. In fact, this is what the Internet of Value is all about—erasing the distinction between bartering, money and service exchange in any market.\nin consortia rather than alone, in order to reduce risks and in order to foster and shape the set of appropriate platform innovations that will come over the next decade, one way or another. Why are bankers afraid of Bitcoin’s impact? Easy, it will lead to ripples across the financial sector, it will create new winners and losers, and it will likely decentralize banking services and create micro markets to an extent not seen since the advances of the barter economy and the market economy combined. In fact, this is what the Internet of Value is all about—erasing the distinction between bartering, money and service exchange in any market.",
+    "returned_document": "Undheim, \"Why banks fear Bitcoin | Fortune\", 2014, https://fortune.com/2014/11/20/why-banks-fear-bitcoin/\nUndheim '14\nThis is why banks had better embrace the experimentation around crypto technologies and business models—in consortia rather than alone, in order to reduce risks and in order to foster and shape the set of appropriate platform innovations that will come over the next decade, one way or another. Why are bankers afraid of Bitcoin’s impact? Easy, it will lead to ripples across the financial sector, it will create new winners and losers, and it will likely decentralize banking services and create micro markets to an extent not seen since the advances of the barter economy and the market economy combined. In fact, this is what the Internet of Value is all about—erasing the distinction between bartering, money and service exchange in any market. Once each potential good has a financially tradable and storable equivalent, “a bitcoin,” if you will, trade will explode in a myriad of directions impossible to predict by current algorithms.",
+    "explanation": "No tag is present in the card. The body is a direct quotation from the cited Fortune article. Side is con per default and content context (banks fearing Bitcoin's disruptive impact).",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "1631ca37b29432bbe1be6ae78ae9ae7f0107936b024c99814d1deea4e8a54e7f",
+    "header": "Heath '18",
+    "tag": "",
+    "cite_full": "Nick Heath, \"How blockchain could save lives by getting medicine where it's needed - TechRepublic\", 2018, https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/",
+    "author": "Nick Heath",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost,\" he said, speaking to TechRepublic at the London Blockchain Week summit. SEE: Quick glossary: Blockchain (Tech Pro Research) \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "read_spans": [
+      [
+        0,
+        170
+      ],
+      [
+        296,
+        470
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        296,
+        470
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "counterfeit drugs",
+      "blockchain supply chain",
+      "pharmaceutical safety",
+      "economic loss",
+      "public health",
+      "medicine authenticity"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      37,
+      38,
+      39
+    ],
+    "embedding_text": "Heath '18\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost, \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"\n\"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "returned_document": "Nick Heath, \"How blockchain could save lives by getting medicine where it's needed - TechRepublic\", 2018, https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/\nHeath '18\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost,\" he said, speaking to TechRepublic at the London Blockchain Week summit. SEE: Quick glossary: Blockchain (Tech Pro Research) \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "explanation": "Card is missing a tag. The body contains direct quotation marks indicating quoted evidence. Side matches default con.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
     "id": "177edb672eb9c4ce86951d64d52489a989009a6313cd2ad7734775d226f4be32",
     "header": "Meltzer ‘20",
     "tag": "",
@@ -272,6 +457,73 @@
     ],
     "embedding_text": "Meltzer ‘20\nFor others, the pandemic underscores the need for cooperation to address a host of unprecedented global challenges. It has brought into focus the vacuum left in the absence of U.S. leadership, and the critical need for the United States to play the role of reviving an international order, one that balances opportunities with assurance that gains are distributed fairly.",
     "returned_document": "Meltzer, Joshua and Neena Shenai. “Restoring US trust in globalization.” Brookings Institution. 2 September 2020. \nhttps://www.brookings.edu/opinions/restoring-us-trust-inglobalization/ \nMeltzer ‘20\nFor others, the pandemic underscores the need for cooperation to address a host of unprecedented global challenges. It has brought into focus the vacuum left in the absence of U.S. leadership, and the critical need for the United States to play the role of reviving an international order, one that balances opportunities with assurance that gains are distributed fairly.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "180c50e6e73ec85532dd9e61ff92c59727567df99165693d6897e5c41c04db31",
+    "header": "Thysse '21",
+    "tag": "",
+    "cite_full": "Thysse (Th-eye-ss), \"US Crypto Regulation Far More Invasive Than We Thought\", 2021, https://decentralizedlegalsystem.com/us-crypto-currency-regulation/",
+    "author": "Thysse (Th-eye-ss)",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://decentralizedlegalsystem.com/us-crypto-currency-regulation/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Designate Bitcoin, Ether, and their hard-forks as commodities and regulate their transactions accordingly; Create legal uncertainty for all other crypto projects and ICOs by allowing them to be labeled as securities; Ban the use of (unauthorized) stablecoins; Introduce prison sentences for the use of mixers and privacy coins; Rebrand smart-contracts that take longer than 24 hours to deliver as futures contracts and regulate them accordingly; Re-define legal tender and change the way money is created by the Federal Reserve; and authorize the issuing of a digital USD of which all transactions are recorded; Force Americans receiving over $10,000 in digital assets to verify the sender’s personal information, including Social Security number, and report to the government within 15 days; Introduce foreign regulations into US law for all virtual asset service providers in the US (and with US clients). In short: Congress wants to bring crypto-currencies under full oversight and control. These new regulations introduce massive regulatory burdens on existing projects, ban and criminalize current normal activities, restrain innovation and free enterprise, and even introduce a transparent central bank digital digital currency that redefines money as we know it! According to United States representative Don Beyer, congress should incorporate “digital assets into existing financial regulatory structures.”1) As you will see, they intend to do just that. And it will change the way things are done for crypto forever…",
+    "read_spans": [
+      [
+        0,
+        105
+      ],
+      [
+        216,
+        328
+      ],
+      [
+        446,
+        528
+      ],
+      [
+        908,
+        1270
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "paraphrased",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "crypto regulation",
+      "stablecoins",
+      "privacy coins",
+      "digital dollar",
+      "securities classification",
+      "regulatory burden"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag",
+      "paraphrase_no_source"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      4,
+      5,
+      6
+    ],
+    "embedding_text": "Thysse '21\nDesignate Bitcoin, Ether, and their hard-forks as commodities and regulate their transactions accordingly  Ban the use of (unauthorized) stablecoins; Introduce prison sentences for the use of mixers and privacy coins;  Re-define legal tender and change the way money is created by the Federal Reserve; In short: Congress wants to bring crypto-currencies under full oversight and control. These new regulations introduce massive regulatory burdens on existing projects, ban and criminalize current normal activities, restrain innovation and free enterprise, and even introduce a transparent central bank digital digital currency that redefines money as we know it!",
+    "returned_document": "Thysse (Th-eye-ss), \"US Crypto Regulation Far More Invasive Than We Thought\", 2021, https://decentralizedlegalsystem.com/us-crypto-currency-regulation/\nThysse '21\nDesignate Bitcoin, Ether, and their hard-forks as commodities and regulate their transactions accordingly; Create legal uncertainty for all other crypto projects and ICOs by allowing them to be labeled as securities; Ban the use of (unauthorized) stablecoins; Introduce prison sentences for the use of mixers and privacy coins; Rebrand smart-contracts that take longer than 24 hours to deliver as futures contracts and regulate them accordingly; Re-define legal tender and change the way money is created by the Federal Reserve; and authorize the issuing of a digital USD of which all transactions are recorded; Force Americans receiving over $10,000 in digital assets to verify the sender’s personal information, including Social Security number, and report to the government within 15 days; Introduce foreign regulations into US law for all virtual asset service providers in the US (and with US clients). In short: Congress wants to bring crypto-currencies under full oversight and control. These new regulations introduce massive regulatory burdens on existing projects, ban and criminalize current normal activities, restrain innovation and free enterprise, and even introduce a transparent central bank digital digital currency that redefines money as we know it! According to United States representative Don Beyer, congress should incorporate “digital assets into existing financial regulatory structures.”1) As you will see, they intend to do just that. And it will change the way things are done for crypto forever…",
+    "explanation": "No tag is present, consistent with the deterministic validation flag. The body reads as the author's own summary and analysis of proposed legislation rather than direct quotation from a primary source, making it paraphrased with no original source text reproduced.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -447,6 +699,67 @@
     "injection_approved": false
   },
   {
+    "id": "2184bc262fc1d983c45e915526a17ce937038c268c944072798e5b47043e01e0",
+    "header": "Srivastava '15",
+    "tag": "",
+    "cite_full": "Srivastava , 2015, https://www.aeaweb.org/conference/2018/preliminary/paper/r5STr4yk",
+    "author": "Srivastava",
+    "author_type": "person",
+    "year": 2015,
+    "date_raw": "",
+    "source": "aeaweb.org",
+    "url": "https://www.aeaweb.org/conference/2018/preliminary/paper/r5STr4yk",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Without growth and the improvement that could have been provided by the skillful and educated people who left, the country then can no longer attempt to compete globally and are left isolated from the rest of the world. This isolation can slow development and progress even further and cause a nation to grow even poorer",
+    "read_spans": [
+      [
+        0,
+        320
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        11,
+        220
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "paraphrased",
+    "source_text_present": false,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "brain drain",
+      "economic isolation",
+      "global competition",
+      "development",
+      "poverty",
+      "skilled emigration"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "fully_marked",
+      "no_tag",
+      "paraphrase_no_source"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      69,
+      70,
+      71
+    ],
+    "embedding_text": "Srivastava '15\nWithout growth and the improvement that could have been provided by the skillful and educated people who left, the country then can no longer attempt to compete globally and are left isolated from the rest of the world. This isolation can slow development and progress even further and cause a nation to grow even poorer\nwth and the improvement that could have been provided by the skillful and educated people who left, the country then can no longer attempt to compete globally and are left isolated from the rest of the world.",
+    "returned_document": "Srivastava , 2015, https://www.aeaweb.org/conference/2018/preliminary/paper/r5STr4yk\nSrivastava '15\nWithout growth and the improvement that could have been provided by the skillful and educated people who left, the country then can no longer attempt to compete globally and are left isolated from the rest of the world. This isolation can slow development and progress even further and cause a nation to grow even poorer",
+    "explanation": "No tag is present. The body reads as paraphrased rather than directly quoted text, and no source text is provided to verify the claim, warranting the paraphrase_no_source flag.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
     "id": "21906a340935ba63c86175a2d50285709d15db90342e7e8da4a4360d534ef9cc",
     "header": "Tierney ‘18",
     "tag": "",
@@ -565,6 +878,81 @@
     "injection_approved": false
   },
   {
+    "id": "297542527ab9eaea19bbd5bed01af6c4ab311b989023a17fda3fedf426318c2f",
+    "header": "Channing ‘18",
+    "tag": "",
+    "cite_full": "Channing, Nathaniel III. “How cryptocurrency can help the global economy.” The Chain. https://vocal.media/theChain/how-cryptocurrency-can-help-the-global-economy ",
+    "author": "Channing",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "vocal.media",
+    "url": "https://vocal.media/theChain/how-cryptocurrency-can-help-the-global-economy",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Blockchain technology, for all its hype and attention, is just an accounting ledger that powers cryptocurrencies. At the center of blockchain technology is decentralized trust, and this is how cryptocurrencies can help the global economy to be concentrated in the hands of the majority. The emergence of blockchain technology and Bitcoin, its most successful application to date, have the potential to help and even disrupt the global economy. While the evidence is not yet concrete, the way banks and governments are moving swiftly to regulate the emerging market is a clear indication 54 that these centralized and traditionally powerful institutions are agitated. Cryptocurrencies, as complicated and confusing as they are, are just an accounting unit of value. This is the same role that money plays into modern society, and has played since the Chinese people first created paper money and coins in the ninth century. Today, money is controlled by reserve banks, with the US Treasury serving as a global central bank even though no one, particularly economists, will officially say it. This is probably the reason why the US dollar acts as the world’s reserve currency. The 2008 global financial crisis had its epicenter in the US, and its aftershock was felt in countries as far afield as possible. While central banks are working out a strategy to curb the adoption of digital currencies as the replacement of fiat, we wonder how cryptocurrency can help the global economy. Cryptocurrencies and Bitcoin have been referred to as bubbles and are constantly being compared to the Dutch Tulips Mania. Despite this unfortunate comparison, cryptocurrencies have created a new and thriving industry. Bitcoin, which is mined using specialized equipment, has created several sub-sectors that have enriched many companies and people. Bitmain, a Chinese-based company, recently filed an IPO prospectus at the Stock Exchange of Hong Kong, and revealed that its profits for 2017 were north of $2.5 billion. Cryptocurrency exchanges cannot be ignored, as they are the institutions that keep the whole industry going while people trade the digital coins. Writers, journalists, graphic designers, programmers, marketers, and more have carved successful careers out of blockchain technology and cryptocurrencies. The modern world is driven by economic means of survival. People want to pay their bills, put food on the table, and send their children to school. If the new market allows them to do that, so be it. Sergey Brin, the billionaire co-founder of Google revealed that he mines Ethereum as a \"side hustle.\" The emergence of Bitcoin in 2009 disrupted the financial sector, particularly the payment system. However, it created a new liberal and decentralized \"Silicon Valley\" not controlled by venture capitalists. Initial coin offerings (ICOs) are the equivalent of Initial Public Offerings (IPOs) but for blockchain projects. In 2017 alone, blockchain projects raised more than $6 billion through ICOs, and have already raised more than $13 billion so far this year. The majority of projects that have been funded by Initial Coin Offerings wouldn’t have seen the light of day had their fate been decided by venture capitalists. ICOs have also taken away the power belonging to venture capitalists only, and placed it in the hands of the masses. Anyone can invest in ICO projects. Ripple Labs, the company that developed the Ripple protocol, makes a legitimate claim when it says that the current payment system was built for the \"disco era.\" Despite the high failure rate and slow transactions, the payment system is worth $1.6 trillion per annum. This is too much and unacceptable. The world has known this for years, but couldn’t do anything because there was no alternate solution. Cryptocurrencies, starting with Bitcoin, changed it all. Banks have also responded by lowering their transactions fees. Trade, at all levels, has always been centered around uncertainty and trust. Banks, corporations, governments, and even universities are products of uncertainty and lack of trust between transacting partners. These centralized institutions became the grease that kept the economic wheel turning. However, the institutions became all too powerful and are now working towards consolidating their power. Though blockchain technology was only introduced in 2009, it remains a novel way of lowering uncertainty between transacting parties. Smart contracts for revenue sharing, pioneered on the Ethereum platform and now utilized on almost every existing blockchain, have shown the world that technology can be used to lower uncertainty. Transactions in real estate, healthcare, the automobile industry, and more can be automated in order to allow organizations to conduct businesses in a radical way. Except in the history of bubbles, nowhere else in the world has other industries seen the growth experienced in the crypto market. In 2017 alone, the year of the famous crypto bull run, Bitcoin and Ether grew by a staggering 2,000 and 3,000 percent. Ever consider why so many young people are investing in cryptocurrency? Early adopters were in for the taking. Overnight millionaires were created. People with zero knowledge in investing came upon significant returns while Harvard-educated Wall Street money managers throw big parties when they achieve 70 percent returns. Cryptocurrencies are changing how wealth is created and distributed. A level playing field has been created and everyone has an equal opportunity to make money. A true egalitarian financial society is in motion, but some governments are fighting cryptocurrencies through innovation-inhibiting regulation. For close to a decade, governments and central banks watched as the cryptocurrency market grew exponentially. Critics joined the bandwagon. The financial status quo was changing. Startups with only a concept and not even a minimum viable product were raising millions in seconds. Governments, led by China, enacted a blanket ban on cryptocurrency exchanges, Initial Coin Offerings, and more. China was joined by other countries, such as South Korea, India, and more. Christine Lagarde, the chief of the International Monetary Fund (IMF) called for the regulation of Bitcoin and cryptocurrencies. Lagarde claimed that lack of regulation would open new channels for financial crimes such as finance terrorism and money laundering. However, not every country adopted the stance of China or Lagarde. Malta saw the potential of the technology and spotted an opportunity to bolster its economy. Malta, also known as the Blockchain Island, enacted friendly laws that attracted some of the biggest companies in the crypto industry such as Binance and Bittrex. Jobs have been created, a telltale sign Bitcoin is going mainstream. At the same time, China, due to its protectionism, sent some of its blockchain companies packing, leading them to settle in countries such as Singapore, Estonia, and Liechtenstein. Countries suffering from hyperinflation and the collapse of fiat currencies have turned to cryptocurrencies and blockchain technology to lead them out of their financial quagmire. Venezuela, whose economy was partly crippled by US-imposed sanctions, developed and issued a national cryptocurrency to bypass the sanctions. Many people see cryptocurrencies as a threat to fiat currencies. This is far from being true. Cryptocurrency and blockchain technology have a long way to go before they can completely overhaul the existing financial structure. It 55 would also be naïve to think that blockchain technology can solve all of the world’s problems. It is still far from doing so. It is young, and more research and mistakes need to be made before the technology can reach its full potential. However, we can’t take away how it has impacted the financial world. Cryptocurrency can help the global economy, and the fact that Wall Street frets about it is a sign that these alternative currencies are here to stay",
+    "read_spans": [
+      [
+        114,
+        443
+      ],
+      [
+        4302,
+        4798
+      ],
+      [
+        6474,
+        6979
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        285,
+        444
+      ],
+      [
+        4436,
+        4797
+      ],
+      [
+        6565,
+        6798
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "cryptocurrency",
+      "blockchain technology",
+      "global economy",
+      "decentralization",
+      "financial regulation",
+      "ICOs"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      46,
+      47,
+      48
+    ],
+    "embedding_text": "Channing ‘18\nAt the center of blockchain technology is decentralized trust, and this is how cryptocurrencies can help the global economy to be concentrated in the hands of the majority. The emergence of blockchain technology and Bitcoin, its most successful application to date, have the potential to help and even disrupt the global economy. . Though blockchain technology was only introduced in 2009, it remains a novel way of lowering uncertainty between transacting parties. Smart contracts for revenue sharing, pioneered on the Ethereum platform and now utilized on almost every existing blockchain, have shown the world that technology can be used to lower uncertainty. Transactions in real estate, healthcare, the automobile industry, and more can be automated in order to allow organizations to conduct businesses in a radical way. Malta saw the potential of the technology and spotted an opportunity to bolster its economy. Malta, also known as the Blockchain Island, enacted friendly laws that attracted some of the biggest companies in the crypto industry such as Binance and Bittrex. Jobs have been created, a telltale sign Bitcoin is going mainstream. At the same time, China, due to its protectionism, sent some of its blockchain companies packing, leading them to settle in countries such as Singapore, Estonia, and Liechtenstein.\n. The emergence of blockchain technology and Bitcoin, its most successful application to date, have the potential to help and even disrupt the global economy.  . Smart contracts for revenue sharing, pioneered on the Ethereum platform and now utilized on almost every existing blockchain, have shown the world that technology can be used to lower uncertainty. Transactions in real estate, healthcare, the automobile industry, and more can be automated in order to allow organizations to conduct businesses in a radical way . Malta, also known as the Blockchain Island, enacted friendly laws that attracted some of the biggest companies in the crypto industry such as Binance and Bittrex. Jobs have been created, a telltale sign Bitcoin is going mainstream.",
+    "returned_document": "Channing, Nathaniel III. “How cryptocurrency can help the global economy.” The Chain. https://vocal.media/theChain/how-cryptocurrency-can-help-the-global-economy \nChanning ‘18\nBlockchain technology, for all its hype and attention, is just an accounting ledger that powers cryptocurrencies. At the center of blockchain technology is decentralized trust, and this is how cryptocurrencies can help the global economy to be concentrated in the hands of the majority. The emergence of blockchain technology and Bitcoin, its most successful application to date, have the potential to help and even disrupt the global economy. While the evidence is not yet concrete, the way banks and governments are moving swiftly to regulate the emerging market is a clear indication 54 that these centralized and traditionally powerful institutions are agitated. Cryptocurrencies, as complicated and confusing as they are, are just an accounting unit of value. This is the same role that money plays into modern society, and has played since the Chinese people first created paper money and coins in the ninth century. Today, money is controlled by reserve banks, with the US Treasury serving as a global central bank even though no one, particularly economists, will officially say it. This is probably the reason why the US dollar acts as the world’s reserve currency. The 2008 global financial crisis had its epicenter in the US, and its aftershock was felt in countries as far afield as possible. While central banks are working out a strategy to curb the adoption of digital currencies as the replacement of fiat, we wonder how cryptocurrency can help the global economy. Cryptocurrencies and Bitcoin have been referred to as bubbles and are constantly being compared to the Dutch Tulips Mania. Despite this unfortunate comparison, cryptocurrencies have created a new and thriving industry. Bitcoin, which is mined using specialized equipment, has created several sub-sectors that have enriched many companies and people. Bitmain, a Chinese-based company, recently filed an IPO prospectus at the Stock Exchange of Hong Kong, and revealed that its profits for 2017 were north of $2.5 billion. Cryptocurrency exchanges cannot be ignored, as they are the institutions that keep the whole industry going while people trade the digital coins. Writers, journalists, graphic designers, programmers, marketers, and more have carved successful careers out of blockchain technology and cryptocurrencies. The modern world is driven by economic means of survival. People want to pay their bills, put food on the table, and send their children to school. If the new market allows them to do that, so be it. Sergey Brin, the billionaire co-founder of Google revealed that he mines Ethereum as a \"side hustle.\" The emergence of Bitcoin in 2009 disrupted the financial sector, particularly the payment system. However, it created a new liberal and decentralized \"Silicon Valley\" not controlled by venture capitalists. Initial coin offerings (ICOs) are the equivalent of Initial Public Offerings (IPOs) but for blockchain projects. In 2017 alone, blockchain projects raised more than $6 billion through ICOs, and have already raised more than $13 billion so far this year. The majority of projects that have been funded by Initial Coin Offerings wouldn’t have seen the light of day had their fate been decided by venture capitalists. ICOs have also taken away the power belonging to venture capitalists only, and placed it in the hands of the masses. Anyone can invest in ICO projects. Ripple Labs, the company that developed the Ripple protocol, makes a legitimate claim when it says that the current payment system was built for the \"disco era.\" Despite the high failure rate and slow transactions, the payment system is worth $1.6 trillion per annum. This is too much and unacceptable. The world has known this for years, but couldn’t do anything because there was no alternate solution. Cryptocurrencies, starting with Bitcoin, changed it all. Banks have also responded by lowering their transactions fees. Trade, at all levels, has always been centered around uncertainty and trust. Banks, corporations, governments, and even universities are products of uncertainty and lack of trust between transacting partners. These centralized institutions became the grease that kept the economic wheel turning. However, the institutions became all too powerful and are now working towards consolidating their power. Though blockchain technology was only introduced in 2009, it remains a novel way of lowering uncertainty between transacting parties. Smart contracts for revenue sharing, pioneered on the Ethereum platform and now utilized on almost every existing blockchain, have shown the world that technology can be used to lower uncertainty. Transactions in real estate, healthcare, the automobile industry, and more can be automated in order to allow organizations to conduct businesses in a radical way. Except in the history of bubbles, nowhere else in the world has other industries seen the growth experienced in the crypto market. In 2017 alone, the year of the famous crypto bull run, Bitcoin and Ether grew by a staggering 2,000 and 3,000 percent. Ever consider why so many young people are investing in cryptocurrency? Early adopters were in for the taking. Overnight millionaires were created. People with zero knowledge in investing came upon significant returns while Harvard-educated Wall Street money managers throw big parties when they achieve 70 percent returns. Cryptocurrencies are changing how wealth is created and distributed. A level playing field has been created and everyone has an equal opportunity to make money. A true egalitarian financial society is in motion, but some governments are fighting cryptocurrencies through innovation-inhibiting regulation. For close to a decade, governments and central banks watched as the cryptocurrency market grew exponentially. Critics joined the bandwagon. The financial status quo was changing. Startups with only a concept and not even a minimum viable product were raising millions in seconds. Governments, led by China, enacted a blanket ban on cryptocurrency exchanges, Initial Coin Offerings, and more. China was joined by other countries, such as South Korea, India, and more. Christine Lagarde, the chief of the International Monetary Fund (IMF) called for the regulation of Bitcoin and cryptocurrencies. Lagarde claimed that lack of regulation would open new channels for financial crimes such as finance terrorism and money laundering. However, not every country adopted the stance of China or Lagarde. Malta saw the potential of the technology and spotted an opportunity to bolster its economy. Malta, also known as the Blockchain Island, enacted friendly laws that attracted some of the biggest companies in the crypto industry such as Binance and Bittrex. Jobs have been created, a telltale sign Bitcoin is going mainstream. At the same time, China, due to its protectionism, sent some of its blockchain companies packing, leading them to settle in countries such as Singapore, Estonia, and Liechtenstein. Countries suffering from hyperinflation and the collapse of fiat currencies have turned to cryptocurrencies and blockchain technology to lead them out of their financial quagmire. Venezuela, whose economy was partly crippled by US-imposed sanctions, developed and issued a national cryptocurrency to bypass the sanctions. Many people see cryptocurrencies as a threat to fiat currencies. This is far from being true. Cryptocurrency and blockchain technology have a long way to go before they can completely overhaul the existing financial structure. It 55 would also be naïve to think that blockchain technology can solve all of the world’s problems. It is still far from doing so. It is young, and more research and mistakes need to be made before the technology can reach its full potential. However, we can’t take away how it has impacted the financial world. Cryptocurrency can help the global economy, and the fact that Wall Street frets about it is a sign that these alternative currencies are here to stay",
+    "explanation": "No tag is present for this card. The body appears to be a direct quotation from the cited article. Despite being filed in a Con document, the card's content argues in favor of cryptocurrency helping the global economy, which may suggest it is being used as a counterargument or evidence to refute; side is labeled con per default_side.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
     "id": "30b85e221747ae6db57cdbe629b586402c9b5440b4fadd94f625d2b7c1855522",
     "header": "Heath '18 - mil drug abuse",
     "tag": "",
@@ -620,6 +1008,134 @@
     ],
     "embedding_text": "Heath '18 - mil drug abuse\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost, \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"\n\"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
     "returned_document": "Nick Heath, \"How blockchain could save lives by getting medicine where it's needed - TechRepublic\", 2018, https://www.techrepublic.com/article/how-blockchain-could-save-lives-by-getting-medicine-where-its-needed/\nHeath '18 - mil drug abuse\n\"Counterfeit drugs are a real problem, the estimate for economic loss is about $200bn, and of course, it's more than financial, we're also talking about lives being lost,\" he said, speaking to TechRepublic at the London Blockchain Week summit. SEE: Quick glossary: Blockchain (Tech Pro Research) \"Somewhere up to about a million people have died because of counterfeit drugs, because they think they're getting some aspirin but the reality is some low-quality mishmash.\"",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "3b8d72264845186e5a46c85aaee571e03e0255e2e35717950399164e47691ea1",
+    "header": "DeParle '20",
+    "tag": "",
+    "cite_full": "Deparle, \"A Gloomy Prediction on How Much Poverty Could Rise - The New York Times\", 2020, https://www.nytimes.com/2020/04/16/upshot/coronavirus-prediction-rise-poverty.html",
+    "author": "Deparle",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.nytimes.com/2020/04/16/upshot/coronavirus-prediction-rise-poverty.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Poverty is also likely to rise disproportionately among children, a special concern because brain science shows that early deprivation can leave lifelong scars. Children raised in poverty on average have worse adult health, lower earnings and higher incarceration rates. If quarterly unemployment hits 30 percent — as the president of one Federal Reserve Bank predicts — 15.4 percent of Americans will fall into poverty for the year,",
+    "read_spans": [
+      [
+        0,
+        271
+      ],
+      [
+        371,
+        433
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        115,
+        267
+      ],
+      [
+        370,
+        433
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "poverty",
+      "unemployment",
+      "children",
+      "economic impact",
+      "COVID-19",
+      "inequality"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "body_truncated",
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      73,
+      74,
+      75
+    ],
+    "embedding_text": "DeParle '20\nPoverty is also likely to rise disproportionately among children, a special concern because brain science shows that early deprivation can leave lifelong scars. Children raised in poverty on average have worse adult health, lower earnings and higher incarceration rates.  15.4 percent of Americans will fall into poverty for the year,\nt early deprivation can leave lifelong scars. Children raised in poverty on average have worse adult health, lower earnings and higher incarceration rat  15.4 percent of Americans will fall into poverty for the year,",
+    "returned_document": "Deparle, \"A Gloomy Prediction on How Much Poverty Could Rise - The New York Times\", 2020, https://www.nytimes.com/2020/04/16/upshot/coronavirus-prediction-rise-poverty.html\nDeParle '20\nPoverty is also likely to rise disproportionately among children, a special concern because brain science shows that early deprivation can leave lifelong scars. Children raised in poverty on average have worse adult health, lower earnings and higher incarceration rates. If quarterly unemployment hits 30 percent — as the president of one Federal Reserve Bank predicts — 15.4 percent of Americans will fall into poverty for the year,",
+    "explanation": "No tag present as flagged by deterministic validation. The body appears truncated mid-sentence after the final comma, suggesting the full quoted passage was cut off.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "3fd9a5d076b5c2d65b7ff061cce63a0aa246f6f1d98da39b7eff3825f9688675",
+    "header": "Sherlock '17",
+    "tag": "",
+    "cite_full": "Michael Sherlock, Boston University, 2017, https://www.bu.edu/rbfl/files/2017/09/p991.pdf",
+    "author": "Michael Sherlock",
+    "author_type": "person",
+    "year": 2017,
+    "date_raw": "",
+    "source": "bu.edu",
+    "url": "https://www.bu.edu/rbfl/files/2017/09/p991.pdf",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "n, regulations should foster a supportive environment in which the technology can become more widely adopted. A regulatory environment that stifles widespread adoption of the technology will only exacerbate BitCoin’s current problems, and minimize the many actual and potential benefits of BitCoin. V. Guideposts for Regulation Strict BitCoin regulation will defeat the speed and efficiency gains created by BitCoin and chill innovation technologies based on the Blockchain.118 Current regulations, such as money transmitter and securities laws, should not be used to enforce BitCoin activities.119 Instead, only tailored regulations should be adopted to address specific BitCoin concerns.120 Moreover, the free market is a better determinant than the government of whether BitCoin continues to grow or becomes less popular.",
+    "read_spans": [
+      [
+        110,
+        474
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        328,
+        473
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "Bitcoin",
+      "blockchain innovation",
+      "light-touch regulation",
+      "free market",
+      "money transmitter laws"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "body_truncated",
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      13,
+      14,
+      15
+    ],
+    "embedding_text": "Sherlock '17\nA regulatory environment that stifles widespread adoption of the technology will only exacerbate BitCoin’s current problems, and minimize the many actual and potential benefits of BitCoin. V. Guideposts for Regulation Strict BitCoin regulation will defeat the speed and efficiency gains created by BitCoin and chill innovation technologies based on the Blockchain.\nStrict BitCoin regulation will defeat the speed and efficiency gains created by BitCoin and chill innovation technologies based on the Blockchain",
+    "returned_document": "Michael Sherlock, Boston University, 2017, https://www.bu.edu/rbfl/files/2017/09/p991.pdf\nSherlock '17\nn, regulations should foster a supportive environment in which the technology can become more widely adopted. A regulatory environment that stifles widespread adoption of the technology will only exacerbate BitCoin’s current problems, and minimize the many actual and potential benefits of BitCoin. V. Guideposts for Regulation Strict BitCoin regulation will defeat the speed and efficiency gains created by BitCoin and chill innovation technologies based on the Blockchain.118 Current regulations, such as money transmitter and securities laws, should not be used to enforce BitCoin activities.119 Instead, only tailored regulations should be adopted to address specific BitCoin concerns.120 Moreover, the free market is a better determinant than the government of whether BitCoin continues to grow or becomes less popular.",
+    "explanation": "No tag provided and body appears truncated mid-argument. Card argues against strict crypto regulation, supporting the con side on cryptocurrency regulation topics.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -1126,6 +1642,81 @@
     "injection_approved": false
   },
   {
+    "id": "664fcfd6d992430718387eb87550166b7b6a9c2a39805043fca89cae8e9b787e",
+    "header": "Ganne ‘18",
+    "tag": "",
+    "cite_full": "Ganne, Emmanuelle. “Can Blockchain revolutionize international trade?” World Trade Organization. 2018. https://www.wto.org/english/res_e/booksp_e/blockchainrev18_e.pdf ",
+    "author": "Ganne",
+    "author_type": "person",
+    "year": 2018,
+    "date_raw": "",
+    "source": "wto.org",
+    "url": "https://www.wto.org/english/res_e/booksp_e/blockchainrev18_e.pdf",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Information added to the blockchain is immediately visible to all participants in the network and distributed – i.e. each peer keeps a complete copy of the data (or as close to it as possible), and updates, if any, are shared with the whole network without anyone having to trust a single central third party. Blockchain ensures immediate, across the board transparency – although in the case of permissioned blockchains (see Section 2.3), trust is more centralized and the readability of some information can be restricted to participants with permission to better suit the objectives of the blockchain.",
+    "read_spans": [
+      [
+        37,
+        308
+      ],
+      [
+        329,
+        438
+      ],
+      [
+        559,
+        604
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        37,
+        111
+      ],
+      [
+        207,
+        308
+      ],
+      [
+        329,
+        438
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "blockchain transparency",
+      "distributed ledger",
+      "permissioned blockchain",
+      "international trade",
+      "data visibility",
+      "decentralization"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      7,
+      8,
+      9
+    ],
+    "embedding_text": "Ganne ‘18\ns immediately visible to all participants in the network and distributed – i.e. each peer keeps a complete copy of the data (or as close to it as possible), and updates, if any, are shared with the whole network without anyone having to trust a single central third party immediate, across the board transparency – although in the case of permissioned blockchains (see Section 2.3) better suit the objectives of the blockchain.\ns immediately visible to all participants in the network and distributed – if any, are shared with the whole network without anyone having to trust a single central third party immediate, across the board transparency – although in the case of permissioned blockchains (see Section 2.3)",
+    "returned_document": "Ganne, Emmanuelle. “Can Blockchain revolutionize international trade?” World Trade Organization. 2018. https://www.wto.org/english/res_e/booksp_e/blockchainrev18_e.pdf \nGanne ‘18\nInformation added to the blockchain is immediately visible to all participants in the network and distributed – i.e. each peer keeps a complete copy of the data (or as close to it as possible), and updates, if any, are shared with the whole network without anyone having to trust a single central third party. Blockchain ensures immediate, across the board transparency – although in the case of permissioned blockchains (see Section 2.3), trust is more centralized and the readability of some information can be restricted to participants with permission to better suit the objectives of the blockchain.",
+    "explanation": "No tag is present for this card. The body appears to be a direct quotation from the WTO publication explaining blockchain transparency and data distribution.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
     "id": "66de11bfdbef79ab24e6b5b01fa746dc95dc6460935becb6d31b9eadabd0e08c",
     "header": "Dreyfuss '20",
     "tag": "",
@@ -1203,6 +1794,124 @@
     ],
     "embedding_text": "Dreyfuss '20\nLosses from cryptocurrency crime surged to $4.52 billion last year year’s losses were up nearly 160% from 2018’s total of $1.74 billion. due to fraud and  in 2019 increased by more than five times\nLosses from cryptocurrency crime surged to $4.52 billion last year year’s losses were up nearly 160% from 2018’s total of $1.74 billion. due to fraud and  in 2019 increased by more than five times",
     "returned_document": "Gertrude Chavez-Dreyfuss, \"Cryptocurrency crime losses more than double to $4.5 billion in 2019, report finds | Reuters\", 2020, https://www.reuters.com/article/us-crypto-currencies-crime/cryptocurrency-crime-losses-more-than-double-to-4-5-billion-in-2019-report-finds-idUSKBN2051VT\nDreyfuss '20\nNEW YORK (Reuters) - Losses from cryptocurrency crime surged to $4.52 billion last year, as insider theft soared even as hacking losses declined, according to a report from blockchain forensics company CipherTrace seen by Reuters. Last year’s losses were up nearly 160% from 2018’s total of $1.74 billion. Blockchain, which first emerged as the system powering bitcoin, is a shared database maintained by a network of computers. Cryptocurrency user and investor losses due to fraud and misappropriation in 2019 increased by more than five times, while hacks and thefts fell by 66%, the report showed.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "78b3032139c00cb9629dd88e964689f952b84fb9bbab818858c7f7d738b4a10a",
+    "header": "Lipton ‘21",
+    "tag": "",
+    "cite_full": "Lipton, Eric, Ephrat Livni, and Jeanna Smialek. “Cryptocurrency regulators rush to create first major rules.” New York Times. 23 September 2021. https://www.nytimes.com/2021/09/23/us/politics/cryptocurrency-regulators-rules.html",
+    "author": "Lipton",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "nytimes.com",
+    "url": "https://www.nytimes.com/2021/09/23/us/politics/cryptocurrency-regulators-rules.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "picture that American executives painted for El Salvadoran officials and crypto fans all over the world ahead of the Central American nation’s recent adoption of Bitcoin as legal tender. If regulators severely restrict the growth of crypto through tight new regulations, industry executives say, the U.S. will drive innovation abroad, risk the dollar’s primacy and kill the promise of digital finance. “If we think back on the 20th century, first you had key innovations like aviation or automobiles,” said Tomicah Tillemann, a former Senate aide to President Biden who now works for Andreessen Horowitz, the venture capital firm, which is a major crypto investor. “And then you have investments in regulatory frameworks that helped to bring the benefits of those technologies to larger numbers of pe",
+    "read_spans": [
+      [
+        64,
+        532
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        185,
+        400
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "innovation",
+      "dollar primacy",
+      "regulatory frameworks",
+      "Bitcoin",
+      "El Salvador"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "body_truncated",
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      50,
+      51,
+      52
+    ],
+    "embedding_text": "Lipton ‘21\nials and crypto fans all over the world ahead of the Central American nation’s recent adoption of Bitcoin as legal tender. If regulators severely restrict the growth of crypto through tight new regulations, industry executives say, the U.S. will drive innovation abroad, risk the dollar’s primacy and kill the promise of digital finance. “If we think back on the 20th century, first you had key innovations like aviation or automobiles,” said Tomicah Tillemann, a form\n. If regulators severely restrict the growth of crypto through tight new regulations, industry executives say, the U.S. will drive innovation abroad, risk the dollar’s primacy and kill the promise of digital finance",
+    "returned_document": "Lipton, Eric, Ephrat Livni, and Jeanna Smialek. “Cryptocurrency regulators rush to create first major rules.” New York Times. 23 September 2021. https://www.nytimes.com/2021/09/23/us/politics/cryptocurrency-regulators-rules.html\nLipton ‘21\npicture that American executives painted for El Salvadoran officials and crypto fans all over the world ahead of the Central American nation’s recent adoption of Bitcoin as legal tender. If regulators severely restrict the growth of crypto through tight new regulations, industry executives say, the U.S. will drive innovation abroad, risk the dollar’s primacy and kill the promise of digital finance. “If we think back on the 20th century, first you had key innovations like aviation or automobiles,” said Tomicah Tillemann, a former Senate aide to President Biden who now works for Andreessen Horowitz, the venture capital firm, which is a major crypto investor. “And then you have investments in regulatory frameworks that helped to bring the benefits of those technologies to larger numbers of pe",
+    "explanation": "Card is missing a tag and the body is visibly cut off mid-sentence, consistent with the deterministic validation flags provided.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "7d3ea7bd9b3767d810cac0321060e242810944069ec63eb144c445e1d706204d",
+    "header": "MBA '2019",
+    "tag": "",
+    "cite_full": "MBA, \"Understanding Blockchain Technology: Saving Lives (The Opioid Epidemic) | Concordia University Texas\", 2019, https://www.concordia.edu/blog/blockchain-technology-saving-lives-opioid-epidemic.html",
+    "author": "MBA",
+    "author_type": "person",
+    "year": 2019,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.concordia.edu/blog/blockchain-technology-saving-lives-opioid-epidemic.html",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Today, patients can get prescriptions illegally filled by visiting multiple pharmacies across state lines. There is no universal prescription tracking system to prevent patients from getting their prescriptions illegally filled. In fact, it was only in 2017 that Texas and eight other states implemented a mandatory state tracking system for prescription medication. Before that, there was no need to cross state borders to abuse prescription drugs. With blockchain, each patient’s file comes through with a unique identifier, a hash, whenever the patient visits a healthcare facility. This would streamline information sharing and reduce the risk of overdose. It could reduce liability for prescription overdose, saving healthcare providers and pharmacies from expensive litigation and insurance fees. Most importantly, it could potentially save millions of lives. Fowler is convinced a blockchain tracked system would have prevented her family’s story. “It would have prevented it if we mitigated the problem from the beginning,” she says. “If they didn’t have access to get those drugs in the beginning, it wouldn’t have been a crisis.” Challenges To Implementation As with most applications of blockchain, privacy and security concerns are the main challenges to implementing the technology in the healthcare industry. Blockchain could actually increase security by requiring multiple layers of verification for healthcare data, and restricting variable levels of access to different portions of a patient’s healthcare record. However, the complex nature of healthcare, ever-changing roles, and the need for sometimes instantaneous access to health data, could make such a system more cumbersome to implement. It may be more practical to grant the same levels of access to patient information to all concerned healthcare agents. Such a system however, may grant too much access to too many actors, opening up the risk of insider breach of large levels of private health information. Fowler argues the privacy concerns are misguided, given the state of current information storage systems. “Instead of storing the information in private servers that can be breached at any time, the information is hashed through unique identifiers before being transferred to the blockchain. The information is encrypted so private health information would be more secure, not less.” Despite prevailing concerns, more than one-third of caregivers in a recent survey predicted blockchain would be implemented across all healthcare organizations in the next 5 years.",
+    "read_spans": [
+      [
+        449,
+        865
+      ],
+      [
+        2371,
+        2551
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "blockchain",
+      "opioid epidemic",
+      "prescription tracking",
+      "healthcare privacy",
+      "drug abuse prevention",
+      "implementation challenges"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      33,
+      34,
+      35
+    ],
+    "embedding_text": "MBA '2019\nWith blockchain, each patient’s file comes through with a unique identifier, a hash, whenever the patient visits a healthcare facility. This would streamline information sharing and reduce the risk of overdose. It could reduce liability for prescription overdose, saving healthcare providers and pharmacies from expensive litigation and insurance fees. Most importantly, it could potentially save millions of lives. Despite prevailing concerns, more than one-third of caregivers in a recent survey predicted blockchain would be implemented across all healthcare organizations in the next 5 years.",
+    "returned_document": "MBA, \"Understanding Blockchain Technology: Saving Lives (The Opioid Epidemic) | Concordia University Texas\", 2019, https://www.concordia.edu/blog/blockchain-technology-saving-lives-opioid-epidemic.html\nMBA '2019\nToday, patients can get prescriptions illegally filled by visiting multiple pharmacies across state lines. There is no universal prescription tracking system to prevent patients from getting their prescriptions illegally filled. In fact, it was only in 2017 that Texas and eight other states implemented a mandatory state tracking system for prescription medication. Before that, there was no need to cross state borders to abuse prescription drugs. With blockchain, each patient’s file comes through with a unique identifier, a hash, whenever the patient visits a healthcare facility. This would streamline information sharing and reduce the risk of overdose. It could reduce liability for prescription overdose, saving healthcare providers and pharmacies from expensive litigation and insurance fees. Most importantly, it could potentially save millions of lives. Fowler is convinced a blockchain tracked system would have prevented her family’s story. “It would have prevented it if we mitigated the problem from the beginning,” she says. “If they didn’t have access to get those drugs in the beginning, it wouldn’t have been a crisis.” Challenges To Implementation As with most applications of blockchain, privacy and security concerns are the main challenges to implementing the technology in the healthcare industry. Blockchain could actually increase security by requiring multiple layers of verification for healthcare data, and restricting variable levels of access to different portions of a patient’s healthcare record. However, the complex nature of healthcare, ever-changing roles, and the need for sometimes instantaneous access to health data, could make such a system more cumbersome to implement. It may be more practical to grant the same levels of access to patient information to all concerned healthcare agents. Such a system however, may grant too much access to too many actors, opening up the risk of insider breach of large levels of private health information. Fowler argues the privacy concerns are misguided, given the state of current information storage systems. “Instead of storing the information in private servers that can be breached at any time, the information is hashed through unique identifiers before being transferred to the blockchain. The information is encrypted so private health information would be more secure, not less.” Despite prevailing concerns, more than one-third of caregivers in a recent survey predicted blockchain would be implemented across all healthcare organizations in the next 5 years.",
+    "explanation": "Card contains direct quotes from named individuals and source text is present. No tag field provided, matching the deterministic validation flag.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -1312,6 +2021,65 @@
     ],
     "embedding_text": "and that is exactly what the blockchain and crypto sectors have been operating with since inception.  but resolving some of the tax and reporting ambiguity around crypto would go a long way to increasing business confidence.",
     "returned_document": "Smith, Sean Stein. “Crypto Regulation Needs Clarity, but Rushing It Is a Bad Idea.” Forbes, Forbes Magazine, 3 Aug. 2021, https://www.forbes.com/sites/seansteinsmith/2021/08/03/crypto-regulationneeds-clarity-but-rushing-it-is-a-bad-idea/?sh=24923ed67629. \nNo matter what sector is being analyzed, an underlying truth of business is that business dreads uncertainty, and that is exactly what the blockchain and crypto sectors have been operating with since inception. Despite this uncertainty, however, the ecosystem has continuously developed and grown in an array of new directions, but resolving some of the tax and reporting ambiguity around crypto would go a long way to increasing business confidence.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "8ec93a9969b18754ed0ff03eee0feeb50ebc99e18be8636608b83b19bce0cd37",
+    "header": "Hacker 15",
+    "tag": "",
+    "cite_full": "Jacob S. hacker, \"How Big Money Corrupts the Economy : Democracy Journal\", 2015, https://democracyjournal.org/magazine/27/how-big-money-corrupts-the-economy/",
+    "author": "Jacob S",
+    "author_type": "person",
+    "year": 2015,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://democracyjournal.org/magazine/27/how-big-money-corrupts-the-economy/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "After all, why do corporations and the super-rich pour money into campaigns and lobbying? Sometimes political convictions are at play. But far more so than small-scale donors, the biggest spenders are investing in favorable policy outcomes. Money doesn’t just give big spenders the chance to express a view or support a candidate; it gives them leverage to reshape the American economy in their favor.",
+    "read_spans": [
+      [
+        0,
+        240
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        90,
+        239
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "campaign finance",
+      "lobbying",
+      "corporate influence",
+      "wealth inequality",
+      "policy outcomes",
+      "political corruption"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      60,
+      61,
+      62
+    ],
+    "embedding_text": "Hacker 15\nAfter all, why do corporations and the super-rich pour money into campaigns and lobbying? Sometimes political convictions are at play. But far more so than small-scale donors, the biggest spenders are investing in favorable policy outcomes.\nSometimes political convictions are at play. But far more so than small-scale donors, the biggest spenders are investing in favorable policy outcomes",
+    "returned_document": "Jacob S. hacker, \"How Big Money Corrupts the Economy : Democracy Journal\", 2015, https://democracyjournal.org/magazine/27/how-big-money-corrupts-the-economy/\nHacker 15\nAfter all, why do corporations and the super-rich pour money into campaigns and lobbying? Sometimes political convictions are at play. But far more so than small-scale donors, the biggest spenders are investing in favorable policy outcomes. Money doesn’t just give big spenders the chance to express a view or support a candidate; it gives them leverage to reshape the American economy in their favor.",
+    "explanation": "Card is missing a tag. The body appears to be a direct quotation from the cited Hacker 2015 article.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -1609,30 +2377,305 @@
     "source_text_present": true,
     "resolution": "2026-09-CRYPTO",
     "resolution_confidence": "high",
-    "side": "pro",
+    "side": "con",
     "topic_tags": [
       "blockchain",
       "proof-of-work",
       "energy consumption",
       "consensus mechanism",
       "computing power",
-      "cryptocurrency"
+      "cryptocurrency infrastructure"
     ],
     "ingest_status": "flagged",
     "flags": [
-      "cite_is_bare_url",
-      "no_header",
       "no_marking",
-      "tag_merged_into_cite"
+      "no_tag"
     ],
-    "source_file": "Pro-Cards---Crypto-copy.docx",
+    "source_file": "Con-Cards---Crypto.docx",
     "source_paragraphs": [
-      165,
-      166,
-      167
+      77,
+      78,
+      79
     ],
     "embedding_text": "Meijer '20\nMost of the blockchain technology follow bitcoins infrastructure and use Proof of Proof-of-work (PoW) as consensus mechanism for validating transactions. These protocols require users to solve complex mathematical puzzles, and require tremendous computing power to verify and process transactions and to secure the network.",
     "returned_document": "Meijer, \"Remaining challenges of blockchain adoption and possible solutions\", 2020, https://www.finextra.com/blogposting/18496/remaining-challenges-of-blockchain-adoption-and-possible-solutions\nMeijer '20\nMost of the blockchain technology follow bitcoins infrastructure and use Proof of Proof-of-work (PoW) as consensus mechanism for validating transactions. These protocols require users to solve complex mathematical puzzles, and require tremendous computing power to verify and process transactions and to secure the network.",
+    "explanation": "Tag field is empty and card has no highlighting or underlining marks. Card appears to be a direct quote from the cited blog post about PoW energy demands.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "baf852120125c4a7d6a71abe24d61804acb4b2a145dec8b60ce9f3d76190451a",
+    "header": "---Finextra ‘19",
+    "tag": "",
+    "cite_full": "“How cryptocurrencies can help global economy and build a better future.” Finextra. 21 November 2019. https://www.finextra.com/blogposting/18159/how-cryptocurrencies-canhelp-global-economy-and-build-a-better-future Cryptocurrencies have long been discussed and debated, but they’re only now coming to light as financial tools that can be accessible and useful to more than only die-hard connoisseurs. Cryptocurrencies have the potential to enable social and economic growth throughout the world, including in developing countries, by offering easier access to capital and financial services. Cryptocurrencies and Bitcoin in particular have a highly utilitarian, yet also disrupting quality that has slowly, but steadily started to interfere with the way the traditional financial system works. There is already an entire industry built around cryptocurrencies and it’s held by institutions dedicated to supervising all the digital coin exchanges taking place throughout the world. The rate at which the cryptocurrency industry is growing is earth-shattering and this can be confirmed by early adopters that became rich overnight and found opportunities to grow financially. Bitcoin, the most famous of these cryptocurrencies, has already permitted many people and companies to develop and flourish, while many also rely on trading as their source of income. The economy is slowly shifting to adapt to these needs and cryptocurrencies have a great potential in satisfying them. More than a third of the world population does not have access to basic banking services that can help them out in case of a personal financial crisis - loans, checking accounts and the list can go on. These people that in most cases are already financially disadvantaged typically resort to doubtful and dangerous lending practices. The interest rate of these practices is anything but fair, which consequently leads to more instability among the people who requested the loan. This is where cryptocurrencies come in with their high volatility and ease-of-use. There are now many apps and programs that facilitate the use of cryptocurrencies and bring them closer to the wider audience. An added benefit of cryptocurrency use is that it’s completely decentralized, so trading can be done freely across borders. The use of technology will facilitate a financial revolution that will leave everyone more financially connected, empowered and enabled. Because cryptocurrencies and blockchain don’t need an actual brick-and-mortar building to exist, the costs associated with their transactioning are minimal. There is no need for employee wages, utility bills or rent to be paid, so these savings naturally morph into low transaction fees. This in turn encourages more and more people to trust these new financial tools and start transactioning, allowing for the global economy to be more closely intertwined. And depending on the broker you choose, you can even trade with no minimum deposit requirements - as offered by CryptoRocket, for example. Since all blockchain and cryptocurrencies transactions are automated and digitized, they are all tracked in a distributed ledger. The best part about it is that it cannot be manipulated by either people or companies, which greatly diminishes the risk of fraud and corruption. This means that underdeveloped countries also have a greater chance of entering the financial transactions game and boost their own economy and social prospects",
+    "author": "“How cryptocurrencies can help global economy and build a better future",
+    "author_type": "organization",
+    "year": 2019,
+    "date_raw": "",
+    "source": "but they’re only now coming to light as financial tools that can be accessible and useful to more than only die-hard connoisseurs. Cryptocurrencies have the potential to enable social and economic growth throughout the world",
+    "url": "https://www.finextra.com/blogposting/18159/how-cryptocurrencies-canhelp-global-economy-and-build-a-better-future",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "",
+    "read_spans": [],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "cryptocurrency economic benefits",
+      "financial inclusion",
+      "developing countries",
+      "decentralization",
+      "low transaction costs",
+      "blockchain fraud prevention"
+    ],
+    "ingest_status": "incomplete",
+    "flags": [
+      "cite_body_same_paragraph",
+      "do_not_ingest",
+      "no_body",
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      43,
+      44
+    ],
+    "embedding_text": "---Finextra ‘19",
+    "returned_document": "“How cryptocurrencies can help global economy and build a better future.” Finextra. 21 November 2019. https://www.finextra.com/blogposting/18159/how-cryptocurrencies-canhelp-global-economy-and-build-a-better-future Cryptocurrencies have long been discussed and debated, but they’re only now coming to light as financial tools that can be accessible and useful to more than only die-hard connoisseurs. Cryptocurrencies have the potential to enable social and economic growth throughout the world, including in developing countries, by offering easier access to capital and financial services. Cryptocurrencies and Bitcoin in particular have a highly utilitarian, yet also disrupting quality that has slowly, but steadily started to interfere with the way the traditional financial system works. There is already an entire industry built around cryptocurrencies and it’s held by institutions dedicated to supervising all the digital coin exchanges taking place throughout the world. The rate at which the cryptocurrency industry is growing is earth-shattering and this can be confirmed by early adopters that became rich overnight and found opportunities to grow financially. Bitcoin, the most famous of these cryptocurrencies, has already permitted many people and companies to develop and flourish, while many also rely on trading as their source of income. The economy is slowly shifting to adapt to these needs and cryptocurrencies have a great potential in satisfying them. More than a third of the world population does not have access to basic banking services that can help them out in case of a personal financial crisis - loans, checking accounts and the list can go on. These people that in most cases are already financially disadvantaged typically resort to doubtful and dangerous lending practices. The interest rate of these practices is anything but fair, which consequently leads to more instability among the people who requested the loan. This is where cryptocurrencies come in with their high volatility and ease-of-use. There are now many apps and programs that facilitate the use of cryptocurrencies and bring them closer to the wider audience. An added benefit of cryptocurrency use is that it’s completely decentralized, so trading can be done freely across borders. The use of technology will facilitate a financial revolution that will leave everyone more financially connected, empowered and enabled. Because cryptocurrencies and blockchain don’t need an actual brick-and-mortar building to exist, the costs associated with their transactioning are minimal. There is no need for employee wages, utility bills or rent to be paid, so these savings naturally morph into low transaction fees. This in turn encourages more and more people to trust these new financial tools and start transactioning, allowing for the global economy to be more closely intertwined. And depending on the broker you choose, you can even trade with no minimum deposit requirements - as offered by CryptoRocket, for example. Since all blockchain and cryptocurrencies transactions are automated and digitized, they are all tracked in a distributed ledger. The best part about it is that it cannot be manipulated by either people or companies, which greatly diminishes the risk of fraud and corruption. This means that underdeveloped countries also have a greater chance of entering the financial transactions game and boost their own economy and social prospects\n---Finextra ‘19",
+    "explanation": "The card body text is merged into the citation field rather than appearing in a separate body field, consistent with the deterministic flags cite_body_same_paragraph and no_body. No tag is present. Despite being sourced from a con file, the content argues affirmatively for cryptocurrency's benefits to the global economy and developing nations, making the side pro rather than con. do_not_ingest flagged due to no_body and cite_body_same_paragraph structural issues making the card malformed.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "bdfe9681ada54d0837a0700cf61a884ffb72844275fcc2ba4f418415f849b5c5",
+    "header": "Anna of WSJ",
+    "tag": "",
+    "cite_full": "Anna Hirtenstein, \"Bitcoin Price Briefly Drops Below $60,000 as Strong Dollar Weighs on Crypto - WSJ\", 2021, https://www.wsj.com/articles/bitcoin-price-briefly-drops-below-60-000-as-strong-dollar-weighs-on-crypto-11637064729",
+    "author": "Anna Hirtenstein",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.wsj.com/articles/bitcoin-price-briefly-drops-below-60-000-as-strong-dollar-weighs-on-crypto-11637064729",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Cryptocurrencies slid in overnight trading, with some of the most popular digital tokens losing more than 10% from recent highs. Bitcoin briefly fell below $59,000 on Tuesday, tumbling to its lowest price this month, before edging up to trade around $60,550. The selloff began Monday and extended into a second day, with the digital asset down more than 5% since Monday at 5 p.m. ET. Ether slid for a fifth consecutive day, also declining another 7% to around $4,260. It is down more than 10% from its latest record. “A lot of people view crypto as a risk-on investment,” said Martha Reyes, head of research at Bequant, a digital-asset brokerage and exchange. In times of stress, “people will be looking to raise cash and they will raise cash where they’ve maybe had the most profits.” The slide comes after a rally that powered bitcoin last week to a record of $68,990.90.",
+    "read_spans": [
+      [
+        0,
+        128
+      ],
+      [
+        468,
+        873
+      ]
+    ],
+    "emphasis_spans": [],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "bitcoin price volatility",
+      "cryptocurrency selloff",
+      "risk-on investment",
+      "dollar strength",
+      "ether decline",
+      "crypto market"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      83,
+      84,
+      85
+    ],
+    "embedding_text": "Anna of WSJ\nCryptocurrencies slid in overnight trading, with some of the most popular digital tokens losing more than 10% from recent highs. It is down more than 10% from its latest record. “A lot of people view crypto as a risk-on investment,” said Martha Reyes, head of research at Bequant, a digital-asset brokerage and exchange. In times of stress, “people will be looking to raise cash and they will raise cash where they’ve maybe had the most profits.” The slide comes after a rally that powered bitcoin last week to a record of $68,990.90.",
+    "returned_document": "Anna Hirtenstein, \"Bitcoin Price Briefly Drops Below $60,000 as Strong Dollar Weighs on Crypto - WSJ\", 2021, https://www.wsj.com/articles/bitcoin-price-briefly-drops-below-60-000-as-strong-dollar-weighs-on-crypto-11637064729\nAnna of WSJ\nCryptocurrencies slid in overnight trading, with some of the most popular digital tokens losing more than 10% from recent highs. Bitcoin briefly fell below $59,000 on Tuesday, tumbling to its lowest price this month, before edging up to trade around $60,550. The selloff began Monday and extended into a second day, with the digital asset down more than 5% since Monday at 5 p.m. ET. Ether slid for a fifth consecutive day, also declining another 7% to around $4,260. It is down more than 10% from its latest record. “A lot of people view crypto as a risk-on investment,” said Martha Reyes, head of research at Bequant, a digital-asset brokerage and exchange. In times of stress, “people will be looking to raise cash and they will raise cash where they’ve maybe had the most profits.” The slide comes after a rally that powered bitcoin last week to a record of $68,990.90.",
+    "explanation": "Card is missing a tag field. Body contains direct quoted text from the WSJ article with quotation marks and attributed statements, confirming it is quoted evidence.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "c8145a4ebf23de76a1ee38e81013f5af41decce569d6552ae286a48543dc980e",
+    "header": "Daley ‘21",
+    "tag": "",
+    "cite_full": "Daley, Sam. “How using blockchain in healthcare is reviving the industry’s capabilities.” Built in. 30 July 2021. https://builtin.com/blockchain/blockchain-healthcare-applicationscompanies ",
+    "author": "Daley",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "builtin.com",
+    "url": "https://builtin.com/blockchain/blockchain-healthcare-applicationscompanies",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "The U.S. is poised to spend 20% of its GDP on healthcare in the near future. If that stat wasn't jarring enough, consider the industry continues to be plagued by skyrocketing hospital costs, inefficient practices and constant data breaches. These (very expensive) problems are spurring a drive for greater efficiency and innovation. With its ability to deflate the current spending bubble, protect patient data and improve overall experience, using blockchain in healthcare may help ease the pain. The technology is already being used to do everything from securely encrypt patient data to manage the outbreak of harmful diseases. And at least one country is big on the potential of blockchain healthcare: Estonia. The size of Tennessee with the population of Maine, Estonia began using blockchain technology in 2012 to secure healthcare data and process transactions. Now all of the country's healthcare billing is handled on a blockchain, 95% of health information is ledger-based and 99% of all prescription information is digital. Keeping our important medical data safe and secure is the most popular blockchain healthcare application at the moment, which isn't surprising. Security is a major issue in the healthcare industry. Between 2009 and 2017, more than 176 million patient records were exposed in data breaches. The perpetrators stole credit card and banking information, as well as health and genomic testing records. Blockchain's ability to keep an incorruptible, decentralized and transparent log of all patient data makes it a technology rife for security applications. Additionally, while blockchain is transparent it is also private, concealing the identity of any individual with complex and secure codes that can protect the sensitivity of medical data. The decentralized nature of the technology also allows patients, doctors and healthcare providers to share the same information quickly and safely.",
+    "read_spans": [
+      [
+        28,
+        76
+      ],
+      [
+        333,
+        496
+      ],
+      [
+        766,
+        1034
+      ],
+      [
+        1177,
+        1324
+      ],
+      [
+        1432,
+        1922
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        767,
+        1034
+      ],
+      [
+        1587,
+        1922
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "blockchain healthcare",
+      "data security",
+      "patient data",
+      "healthcare spending",
+      "Estonia",
+      "data breaches"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      10,
+      11,
+      12
+    ],
+    "embedding_text": "Daley ‘21\n20% of its GDP on healthcare in the near future. With its ability to deflate the current spending bubble, protect patient data and improve overall experience, using blockchain in healthcare may help ease the pain  Estonia began using blockchain technology in 2012 to secure healthcare data and process transactions. Now all of the country's healthcare billing is handled on a blockchain, 95% of health information is ledger-based and 99% of all prescription information is digital. . Security is a major issue in the healthcare industry. Between 2009 and 2017, more than 176 million patient records were exposed in data breaches. Blockchain's ability to keep an incorruptible, decentralized and transparent log of all patient data makes it a technology rife for security applications. Additionally, while blockchain is transparent it is also private, concealing the identity of any individual with complex and secure codes that can protect the sensitivity of medical data. The decentralized nature of the technology also allows patients, doctors and healthcare providers to share the same information quickly and safely.\nEstonia began using blockchain technology in 2012 to secure healthcare data and process transactions. Now all of the country's healthcare billing is handled on a blockchain, 95% of health information is ledger-based and 99% of all prescription information is digital. Additionally, while blockchain is transparent it is also private, concealing the identity of any individual with complex and secure codes that can protect the sensitivity of medical data. The decentralized nature of the technology also allows patients, doctors and healthcare providers to share the same information quickly and safely.",
+    "returned_document": "Daley, Sam. “How using blockchain in healthcare is reviving the industry’s capabilities.” Built in. 30 July 2021. https://builtin.com/blockchain/blockchain-healthcare-applicationscompanies \nDaley ‘21\nThe U.S. is poised to spend 20% of its GDP on healthcare in the near future. If that stat wasn't jarring enough, consider the industry continues to be plagued by skyrocketing hospital costs, inefficient practices and constant data breaches. These (very expensive) problems are spurring a drive for greater efficiency and innovation. With its ability to deflate the current spending bubble, protect patient data and improve overall experience, using blockchain in healthcare may help ease the pain. The technology is already being used to do everything from securely encrypt patient data to manage the outbreak of harmful diseases. And at least one country is big on the potential of blockchain healthcare: Estonia. The size of Tennessee with the population of Maine, Estonia began using blockchain technology in 2012 to secure healthcare data and process transactions. Now all of the country's healthcare billing is handled on a blockchain, 95% of health information is ledger-based and 99% of all prescription information is digital. Keeping our important medical data safe and secure is the most popular blockchain healthcare application at the moment, which isn't surprising. Security is a major issue in the healthcare industry. Between 2009 and 2017, more than 176 million patient records were exposed in data breaches. The perpetrators stole credit card and banking information, as well as health and genomic testing records. Blockchain's ability to keep an incorruptible, decentralized and transparent log of all patient data makes it a technology rife for security applications. Additionally, while blockchain is transparent it is also private, concealing the identity of any individual with complex and secure codes that can protect the sensitivity of medical data. The decentralized nature of the technology also allows patients, doctors and healthcare providers to share the same information quickly and safely.",
+    "explanation": "No tag is present for this card. The body appears to be directly quoted from the cited Built In article. Card argues for blockchain's benefits in healthcare, fitting a con-side file on crypto by showing legitimate non-speculative use cases.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "cb2dff694ad478421d38616de7ba22f5fb8f863db3b0745f4377b00693d2d0b0",
+    "header": "Actuary '20",
+    "tag": "",
+    "cite_full": "Actuary, \"Blockchain 'tipping point' forecast in 2025 | The Actuary\", 2020, https://www.theactuary.com/2020/10/14/blockchain-tipping-point-forecast-2025",
+    "author": "Actuary",
+    "author_type": "person",
+    "year": 2025,
+    "date_raw": "",
+    "source": "\"",
+    "url": "https://www.theactuary.com/2020/10/14/blockchain-tipping-point-forecast-2025",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "Blockchain technologies will reach a tipping point in 2025 and be adopted at scale across the global economy, boosting GDP by nearly $2trn (£1.5trn) over the next decade, forecasts by PricewaterhouseCoopers (PwC) suggest. In a report published yesterday, PwC said that blockchain has the potential to increase global GDP by $1.76trn over the next 10 years, with the tracking and tracing of products and services having the largest economic impact, providing $962bn. Payments and financial services – including the use of digital currencies and supporting financial inclusion – have the next highest economic potential, providing $433bn, followed by identity management on $224bn. Steve Davies, global leader for blockchain at PwC UK, highlighted how the COVID-19 crisis has accelerated many disruptive trends as companies look to build back from the pandemic. “Blockchain technology has long been associated with cryptocurrencies such as Bitcoin, but there is so much more that it has to offer, particularly in how public and private organisations secure, share and use data,” he continued. “The analysis shows the potential for blockchain to support organisations in how they rebuild and reconfigure their operations underpinned by improvements in trust, transparency and efficiency across organisations and society.” The report gauges the technology’s potential to create value across industry, from healthcare, government and public services, to manufacturing, finance, logistics and retail. In terms of individual countries, the analysis suggests that blockchain could have the highest potential net benefit in China ($440bn) and the US($407bn), although Germany, Japan, the UK, India, and France are also estimated to have potential benefits of over $50bn",
+    "read_spans": [
+      [
+        0,
+        58
+      ],
+      [
+        110,
+        148
+      ],
+      [
+        734,
+        859
+      ],
+      [
+        861,
+        1077
+      ],
+      [
+        1320,
+        1494
+      ],
+      [
+        1635,
+        1653
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        0,
+        58
+      ],
+      [
+        734,
+        859
+      ],
+      [
+        1635,
+        1653
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "paraphrased",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "pro",
+    "topic_tags": [
+      "blockchain adoption",
+      "GDP growth",
+      "PwC forecast",
+      "economic impact",
+      "digital currencies",
+      "global economy"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag",
+      "paraphrase_no_source"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      17,
+      18,
+      19
+    ],
+    "embedding_text": "Actuary '20\nBlockchain technologies will reach a tipping point in 2025 boosting GDP by nearly $2trn (£1.5trn) highlighted how the COVID-19 crisis has accelerated many disruptive trends as companies look to build back from the pandemic. Blockchain technology has long been associated with cryptocurrencies such as Bitcoin, but there is so much more that it has to offer, particularly in how public and private organisations secure, share and use data,”  he report gauges the technology’s potential to create value across industry, from healthcare, government and public services, to manufacturing, finance, logistics and retail. he US($407bn), alt\nBlockchain technologies will reach a tipping point in 2025 highlighted how the COVID-19 crisis has accelerated many disruptive trends as companies look to build back from the pandemic. he US($407bn), alt",
+    "returned_document": "Actuary, \"Blockchain 'tipping point' forecast in 2025 | The Actuary\", 2020, https://www.theactuary.com/2020/10/14/blockchain-tipping-point-forecast-2025\nActuary '20\nBlockchain technologies will reach a tipping point in 2025 and be adopted at scale across the global economy, boosting GDP by nearly $2trn (£1.5trn) over the next decade, forecasts by PricewaterhouseCoopers (PwC) suggest. In a report published yesterday, PwC said that blockchain has the potential to increase global GDP by $1.76trn over the next 10 years, with the tracking and tracing of products and services having the largest economic impact, providing $962bn. Payments and financial services – including the use of digital currencies and supporting financial inclusion – have the next highest economic potential, providing $433bn, followed by identity management on $224bn. Steve Davies, global leader for blockchain at PwC UK, highlighted how the COVID-19 crisis has accelerated many disruptive trends as companies look to build back from the pandemic. “Blockchain technology has long been associated with cryptocurrencies such as Bitcoin, but there is so much more that it has to offer, particularly in how public and private organisations secure, share and use data,” he continued. “The analysis shows the potential for blockchain to support organisations in how they rebuild and reconfigure their operations underpinned by improvements in trust, transparency and efficiency across organisations and society.” The report gauges the technology’s potential to create value across industry, from healthcare, government and public services, to manufacturing, finance, logistics and retail. In terms of individual countries, the analysis suggests that blockchain could have the highest potential net benefit in China ($440bn) and the US($407bn), although Germany, Japan, the UK, India, and France are also estimated to have potential benefits of over $50bn",
+    "explanation": "Card has no tag as flagged by deterministic validation. The body mixes paraphrase with some quoted material (Davies quotes) but is primarily a paraphrased summary of a PwC report as reported by The Actuary; the original PwC report is not directly cited as the source. The card argues for positive economic benefits of blockchain/crypto, making it pro despite being filed in a con document.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -1789,6 +2832,73 @@
     ],
     "embedding_text": "Ore’20 - Success\nbut the bitcoin he is suspected of using to help launder the proceeds of his operations Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users.\nSantoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users.",
     "returned_document": "Oré, Diego. “Latin American crime cartels turn to cryptocurrencies for money laundering.” Reuters. 8 December 2020. https://www.reuters.com/article/mexico-bitcoin-insight/latinamerican-crime-cartels-turn-to-cryptocurrencies-for-money-laundering-idUSKBN28I1KD\nOre’20 - Success\n In April 2019, Mexican police arrested suspected human trafficker Ignacio Santoyo in a plush area of the Caribbean resort of Playa del Carmen after linking him to a prostitution racket extending across Latin America. Yet it was not the 2,000 women Santoyo is alleged to have blackmailed and sexually exploited that ultimately led to his capture, but the bitcoin he is suspected of using to help launder the proceeds of his operations, officials said. The cryptocurrency is emerging as a new front in Latin America’s struggle against gangs battling for control of vast criminal markets for sex, drugs, guns and people, according to law enforcement authorities. “There’s a transition to committing crimes in cyberspace, like acquiring cryptocurrencies to launder money ... and the pandemic is accelerating it,” said Santiago Nieto, head of the Mexican finance ministry’s financial intelligence unit (UIF). Neither Santoyo, who is in custody, nor lawyers representing him could be reached for comment, and they have not commented publicly on the case in the past. The Mexican attorney general’s office declined to comment while the case remained open. Santoyo’s arrest represented an early success for a new law in Mexico - one of only two nations in Latin America, with Brazil, to enact such legislation - that seeks to tackle the intractable problem of how law agencies can track the use of bitcoin and other cryptocurrencies designed to anonymize users. ",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "d8d2db98b1a51c429725e2c91b053bfac59501f3564d69887725f204fdd48024",
+    "header": "Thierer ‘19",
+    "tag": "",
+    "cite_full": "Thierer, Adam. “How regulation wrecks innovation.” American Institute for Economic Research. 11 July 2019. https://www.aier.org/article/how-regulation-wrecks-innovation/ ",
+    "author": "Thierer",
+    "author_type": "person",
+    "year": 2019,
+    "date_raw": "",
+    "source": "aier.org",
+    "url": "https://www.aier.org/article/how-regulation-wrecks-innovation/",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "This has troubling implications for the innovative capacity of business as well as the overall competitiveness of the entire economy. These acts of political favoritism “not only misallocate resources in the short term but they also discourage dynamism and growth over the long term,” note Brink Lindsey and Steven Teles in their recent book, The Captured Economy: How the Powerful Enrich Themselves, Slow Down Growth, and Increase Inequality. Indeed, as additional Mercatus Center research shows, “[e]conomic growth in the United States has, on average, been slowed by 0.8 percent per year since 1980 owing to the cumulative effects of regulation.” This means that “the U.S. economy would have been about 25 percent larger than it actually was as of 2012” if regulation had been held to roughly the same aggregate level as it stood at in 1980. Moreover, another Mercatus study found that, “a 10 percent increase in regulatory restrictions on a particular industry is associated with a reduction in the total number of small firms within that industry by about 0.5 percent.” And a 2016 study by Boston University economist James Bessen also found that, since 2000, growing regulation and political activity accounted for a large share of the rise in valuations and profits among established corporations. Excessive lobbying and rent-seeking also make efficient government impossible and lead to what Jonathan Rauch has labeled “demosclerosis,” or “government’s progressive loss of the ability to adapt.” “[A]s layer is dropped upon layer,” he notes, “the accumulated mass becomes gradually less rational and less flexible,” he argues.",
+    "read_spans": [
+      [
+        134,
+        284
+      ],
+      [
+        552,
+        649
+      ],
+      [
+        889,
+        1074
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        134,
+        283
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "regulation harms innovation",
+      "economic growth",
+      "regulatory burden",
+      "rent-seeking",
+      "small business impact",
+      "regulatory capture"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      21,
+      22,
+      24
+    ],
+    "embedding_text": "Thierer ‘19\nThese acts of political favoritism “not only misallocate resources in the short term but they also discourage dynamism and growth over the long term,” e, been slowed by 0.8 percent per year since 1980 owing to the cumulative effects of regulation.”  “a 10 percent increase in regulatory restrictions on a particular industry is associated with a reduction in the total number of small firms within that industry by about 0.5 percent.”\nThese acts of political favoritism “not only misallocate resources in the short term but they also discourage dynamism and growth over the long term,",
+    "returned_document": "Thierer, Adam. “How regulation wrecks innovation.” American Institute for Economic Research. 11 July 2019. https://www.aier.org/article/how-regulation-wrecks-innovation/ \nThierer ‘19\nThis has troubling implications for the innovative capacity of business as well as the overall competitiveness of the entire economy. These acts of political favoritism “not only misallocate resources in the short term but they also discourage dynamism and growth over the long term,” note Brink Lindsey and Steven Teles in their recent book, The Captured Economy: How the Powerful Enrich Themselves, Slow Down Growth, and Increase Inequality. Indeed, as additional Mercatus Center research shows, “[e]conomic growth in the United States has, on average, been slowed by 0.8 percent per year since 1980 owing to the cumulative effects of regulation.” This means that “the U.S. economy would have been about 25 percent larger than it actually was as of 2012” if regulation had been held to roughly the same aggregate level as it stood at in 1980. Moreover, another Mercatus study found that, “a 10 percent increase in regulatory restrictions on a particular industry is associated with a reduction in the total number of small firms within that industry by about 0.5 percent.” And a 2016 study by Boston University economist James Bessen also found that, since 2000, growing regulation and political activity accounted for a large share of the rise in valuations and profits among established corporations. Excessive lobbying and rent-seeking also make efficient government impossible and lead to what Jonathan Rauch has labeled “demosclerosis,” or “government’s progressive loss of the ability to adapt.” “[A]s layer is dropped upon layer,” he notes, “the accumulated mass becomes gradually less rational and less flexible,” he argues.",
+    "explanation": "No tag is present in the card. The body contains direct quotations from multiple sources, confirming quoted evidence type. Side is con per default and context of arguing regulation harms innovation/economy.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],
@@ -1978,6 +3088,141 @@
     ],
     "embedding_text": "Reuters ‘21\n4,000-5,000 cryptocurrencies in circulation without any form of real regulation.  the currencies could be a shield for criminal activity such as tax evasion, money laundering, funding terrorism and kidnapping.\n4,000-5,000 cryptocurrencies in circulation",
     "returned_document": " “Unregulated Spread of Cryptocurrencies a Concern, Says Italian Regulator.” Reuters, Thomson Reuters, 14 June 2021, \nhttps://www.reuters.com/business/unregulated-spread-cryptocurrencies-concern-says-italian-regulator-2021-06-14/#:~:text=Savona%20said%20there%20were%20some,is%20worrying%2C\"%2\nReuters ‘21\n Savona said there were some 4,000-5,000 cryptocurrencies in circulation without any form of real regulation. \"If we add to this Consob's recent own experience in closing down in Italy hundreds of websites illegally gathering savings, the picture that emerges is worrying,\" Savona said. He warned that the currencies could be a shield for criminal activity such as tax evasion, money laundering, funding terrorism and kidnapping.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "eb170138b0415c4e287dbd5e7ea43c4b4164b8e2aaf43f51d1bea56d77b609b0",
+    "header": "Werschekel 21",
+    "tag": "",
+    "cite_full": "(2021). Lack of Crypto Knowledge in Congress. Yahoo Finance. https://news.yahoo.com/congressman-most-of-my-colleagues-dont-have-adeep-understanding-of-cryptocurrencies-192630884.html?\\ “",
+    "author": "(2021)",
+    "author_type": "person",
+    "year": 2021,
+    "date_raw": "",
+    "source": "news.yahoo.com",
+    "url": "https://news.yahoo.com/congressman-most-of-my-colleagues-dont-have-adeep-understanding-of-cryptocurrencies-192630884.html?\\",
+    "date_accessed": "",
+    "cutter": "",
+    "body": "With the incredible volatility in cryptocurrency markets in recent weeks, lawmakers might be watching the price moves like everyone else, but aren’t likely to act anytime soon, predicts one Representative. “Most of my colleagues don't have a deep understanding of cryptocurrencies,” Rep. Jim Himes (D., Conn.) said diplomatically in an interview with Yahoo Finance Friday. “So, for better or for worse, there's not going to be legislation passed out of the United States Congress anytime soon,” he said. Himes likely has one of the best grasps of the ins and outs of cryptocurrency on Capitol Hill. In addition to being a current member of the House Financial Services committee, the Connecticut Congressman (whose district includes towns like Greenwich, arguably the U.S. hedge fund capital) was a Rhodes Scholar and worked at Goldman Sachs for 12 years. He rose to the head of the bank’s telecommunications technology group before entering politics.”",
+    "read_spans": [
+      [
+        206,
+        373
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        206,
+        373
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "cryptocurrency regulation",
+      "congressional knowledge gap",
+      "legislation delay",
+      "Rep. Jim Himes",
+      "crypto markets",
+      "Congress"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      1,
+      2,
+      3
+    ],
+    "embedding_text": "Werschekel 21\n“Most of my colleagues don't have a deep understanding of cryptocurrencies,” Rep. Jim Himes (D., Conn.) said diplomatically in an interview with Yahoo Finance Friday.\n“Most of my colleagues don't have a deep understanding of cryptocurrencies,” Rep. Jim Himes (D., Conn.) said diplomatically in an interview with Yahoo Finance Friday.",
+    "returned_document": "(2021). Lack of Crypto Knowledge in Congress. Yahoo Finance. https://news.yahoo.com/congressman-most-of-my-colleagues-dont-have-adeep-understanding-of-cryptocurrencies-192630884.html?\\ “\nWerschekel 21\nWith the incredible volatility in cryptocurrency markets in recent weeks, lawmakers might be watching the price moves like everyone else, but aren’t likely to act anytime soon, predicts one Representative. “Most of my colleagues don't have a deep understanding of cryptocurrencies,” Rep. Jim Himes (D., Conn.) said diplomatically in an interview with Yahoo Finance Friday. “So, for better or for worse, there's not going to be legislation passed out of the United States Congress anytime soon,” he said. Himes likely has one of the best grasps of the ins and outs of cryptocurrency on Capitol Hill. In addition to being a current member of the House Financial Services committee, the Connecticut Congressman (whose district includes towns like Greenwich, arguably the U.S. hedge fund capital) was a Rhodes Scholar and worked at Goldman Sachs for 12 years. He rose to the head of the bank’s telecommunications technology group before entering politics.”",
+    "explanation": "Card is missing a tag as flagged by deterministic validation. The body contains direct quotations from Rep. Jim Himes, confirming quoted evidence type. Side is con, consistent with the default and the source filename.",
+    "content_trust": "untrusted_document",
+    "injection_risk": "low",
+    "injection_signals": [],
+    "model_processing_skipped": false,
+    "injection_approved": false
+  },
+  {
+    "id": "eb1ab89b8f3584be88c29802ae4a85e4a17e3b3f15c600b450111dac9f6ad12b",
+    "header": "Aghion ‘20",
+    "tag": "",
+    "cite_full": "Aghion, Philippe, Antonin Bergeaud, John Van Reenen. “The impact of regulation on innovation.” Boston College. September 2020. https://www.bc.edu/content/dam/bc1/schools/mcas/economics/pdf/seminars/ABV_septem ber_version.pdf",
+    "author": "Aghion",
+    "author_type": "person",
+    "year": 2020,
+    "date_raw": "",
+    "source": "bc.edu",
+    "url": "https://www.bc.edu/content/dam/bc1/schools/mcas/economics/pdf/seminars/ABV_septem",
+    "date_accessed": "",
+    "cutter": "",
+    "body": " There is a considerable literature on the economic impacts of regulations, but relatively few studies on their impact on technological innovation. Most analyses focus on the static costs (and benefits) of regulation rather than on its dynamic effects. Yet these potential growth effects are likely to be much more important in the long-run. Harberger triangles may be small, but rectangles can be very large. Many scholars have been concerned that slower growth in countries with heavy labor regulation, could be due to firms being reluctant to innovate due to the burden of red tape. The slower growth of Southern European countries and parts of Latin America have often be blamed on onerous labor laws. But when firms are choosing whether or not to invest in innovation, regulations are also likely to matter. Intuitively, firms may invest less in R&D as there is a very high cost to growing if the firm crosses the regulatory threshold. In the first part of the paper we formalize this intuition using a simple version of the Klette and Kortum (2004) model of growth and firm dynamics, with discrete time and two-period lived individuals and firms. Our model delivers a number of predictions regarding the shape of the equilibrium relationship between innovation and firm size and the overall firm size distribution. In particular we obtain the intuitive prediction that the regulatory threshold discourages innovation most strongly for firms just below the threshold, although it also discourages and shallows the innovation-size gradient for all firms larger than the threshold. This is because the growth benefits of innovation are lower due to the regulatory implicit tax. Our paper relates to several strands of literature. More closely related to our analysis are papers that look at the effects of labor laws regulations on innovation. Acharya et al. (2013a) higher firing costs reduce the risk that firms would use the threat of dismissal to hold their employees’s innovative investments up. They find evidence in favor of this using macro time series variation on Employment Protection Law (EPL) for four OECD countries. Acharya et al. (2013b) also finds positive effects using staggered roll out of employment protection across US states.4 Griffith and Macartney (2014) use multinational firms patenting activity across subsidiaries located in different countries with various levels of EPL.5 Using this cross sectional identification, they find that radical innovation 4This is the same empirical variation used by Autor et al. (2007) who actually found falls in TFP and employment from EPL. 5See also Cette et al. (2016) who document a negative effect 62 of \nEPL on capital intensity, R&D expenditures and hiring of high skill workers. More generally, Porter and Van der Linde (1995) argue that some 3 was negatively effected by EPL, but incremental innovation was, if anything, boosted.6 By contrast, Alesina et al. (2018) find that less regulated countries have larger high tech sectors. All of these papers use macro (or at best, state-level) variation whereas we focus on cross firm variation. Garcia-Vega et al. (2019) analyze a reform that relaxed a size contingent labor regulation in Spain and find an increase innovation. Our empirical results are consistent with this, but we go beyond the analysis in this paper by developing a model of labor regulation and innovation with endogenous firm size distribution, that is matched with the data to obtain structural parameters, enabling us to perform aggregate counterfactuals",
+    "read_spans": [
+      [
+        253,
+        704
+      ],
+      [
+        826,
+        940
+      ],
+      [
+        2800,
+        3007
+      ],
+      [
+        3133,
+        3246
+      ]
+    ],
+    "emphasis_spans": [
+      [
+        408,
+        586
+      ],
+      [
+        2903,
+        3004
+      ]
+    ],
+    "marking_convention": "bold",
+    "evidence_type": "quoted",
+    "source_text_present": true,
+    "resolution": "2026-09-CRYPTO",
+    "resolution_confidence": "high",
+    "side": "con",
+    "topic_tags": [
+      "regulation",
+      "innovation",
+      "labor law",
+      "firm size",
+      "R&D investment",
+      "economic growth"
+    ],
+    "ingest_status": "flagged",
+    "flags": [
+      "no_tag"
+    ],
+    "source_file": "Con-Cards---Crypto.docx",
+    "source_paragraphs": [
+      26,
+      27,
+      29,
+      30
+    ],
+    "embedding_text": "Aghion ‘20\nYet these potential growth effects are likely to be much more important in the long-run. Harberger triangles may be small, but rectangles can be very large. Many scholars have been concerned that slower growth in countries with heavy labor regulation, could be due to firms being reluctant to innovate due to the burden of red tape. The slower growth of Southern European countries and parts of Latin America have often be blamed on onerous labor laws firms may invest less in R&D as there is a very high cost to growing if the firm crosses the regulatory threshold. argue that some 3 was negatively effected by EPL, but incremental innovation was, if anything, boosted.6 By contrast, Alesina et al. (2018) find that less regulated countries have larger high tech sectors. A (2019) analyze a reform that relaxed a size contingent labor regulation in Spain and find an increase innovation.\n. Many scholars have been concerned that slower growth in countries with heavy labor regulation, could be due to firms being reluctant to innovate due to the burden of red tape.  6 By contrast, Alesina et al. (2018) find that less regulated countries have larger high tech sectors",
+    "returned_document": "Aghion, Philippe, Antonin Bergeaud, John Van Reenen. “The impact of regulation on innovation.” Boston College. September 2020. https://www.bc.edu/content/dam/bc1/schools/mcas/economics/pdf/seminars/ABV_septem ber_version.pdf\nAghion ‘20\n There is a considerable literature on the economic impacts of regulations, but relatively few studies on their impact on technological innovation. Most analyses focus on the static costs (and benefits) of regulation rather than on its dynamic effects. Yet these potential growth effects are likely to be much more important in the long-run. Harberger triangles may be small, but rectangles can be very large. Many scholars have been concerned that slower growth in countries with heavy labor regulation, could be due to firms being reluctant to innovate due to the burden of red tape. The slower growth of Southern European countries and parts of Latin America have often be blamed on onerous labor laws. But when firms are choosing whether or not to invest in innovation, regulations are also likely to matter. Intuitively, firms may invest less in R&D as there is a very high cost to growing if the firm crosses the regulatory threshold. In the first part of the paper we formalize this intuition using a simple version of the Klette and Kortum (2004) model of growth and firm dynamics, with discrete time and two-period lived individuals and firms. Our model delivers a number of predictions regarding the shape of the equilibrium relationship between innovation and firm size and the overall firm size distribution. In particular we obtain the intuitive prediction that the regulatory threshold discourages innovation most strongly for firms just below the threshold, although it also discourages and shallows the innovation-size gradient for all firms larger than the threshold. This is because the growth benefits of innovation are lower due to the regulatory implicit tax. Our paper relates to several strands of literature. More closely related to our analysis are papers that look at the effects of labor laws regulations on innovation. Acharya et al. (2013a) higher firing costs reduce the risk that firms would use the threat of dismissal to hold their employees’s innovative investments up. They find evidence in favor of this using macro time series variation on Employment Protection Law (EPL) for four OECD countries. Acharya et al. (2013b) also finds positive effects using staggered roll out of employment protection across US states.4 Griffith and Macartney (2014) use multinational firms patenting activity across subsidiaries located in different countries with various levels of EPL.5 Using this cross sectional identification, they find that radical innovation 4This is the same empirical variation used by Autor et al. (2007) who actually found falls in TFP and employment from EPL. 5See also Cette et al. (2016) who document a negative effect 62 of \nEPL on capital intensity, R&D expenditures and hiring of high skill workers. More generally, Porter and Van der Linde (1995) argue that some 3 was negatively effected by EPL, but incremental innovation was, if anything, boosted.6 By contrast, Alesina et al. (2018) find that less regulated countries have larger high tech sectors. All of these papers use macro (or at best, state-level) variation whereas we focus on cross firm variation. Garcia-Vega et al. (2019) analyze a reform that relaxed a size contingent labor regulation in Spain and find an increase innovation. Our empirical results are consistent with this, but we go beyond the analysis in this paper by developing a model of labor regulation and innovation with endogenous firm size distribution, that is matched with the data to obtain structural parameters, enabling us to perform aggregate counterfactuals",
+    "explanation": "No tag is present, consistent with the deterministic validation flag. The body appears to be directly quoted academic text from the Aghion et al. paper discussing how regulation discourages innovation, particularly for firms near regulatory thresholds.",
     "content_trust": "untrusted_document",
     "injection_risk": "low",
     "injection_signals": [],

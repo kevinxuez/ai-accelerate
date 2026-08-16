@@ -133,7 +133,11 @@ def _latest_assistant_response(state: CaseFileState) -> str:
     )
 
 
-def _state_response(state: CaseFileState) -> JSONResponse:
+def _state_response(
+    state: CaseFileState,
+    *,
+    previous_artifact_count: int = 0,
+) -> JSONResponse:
     headers = {"X-Request-ID": state.request.request_id}
     if state.status == "failed":
         if state.error is None:
@@ -165,7 +169,7 @@ def _state_response(state: CaseFileState) -> JSONResponse:
         active_goal=state.active_goal,
         awaiting_input=state.status == "needs_input",
         awaiting_confirmation=state.status == "needs_confirmation",
-        artifacts=state.artifacts,
+        artifacts=state.artifacts[previous_artifact_count:],
         agent_trace=state.agent_trace,
         tool_trace=state.tool_trace,
         model_trace=state.model_trace,
@@ -175,6 +179,34 @@ def _state_response(state: CaseFileState) -> JSONResponse:
         content=success.model_dump(mode="json"),
         headers=headers,
     )
+
+
+def _previous_artifact_count(
+    runtime: CaseFileRuntime,
+    *,
+    session_id: str | None,
+    role: str,
+    user_id: str,
+    resolution: str,
+) -> int:
+    """Count artifacts already in a session before this turn runs.
+
+    The turn's response should only surface artifacts this turn produced —
+    state.artifacts accumulates for the life of the session (so revisions and
+    multi-turn flows can reference earlier work), and returning the whole
+    list every turn resurfaces unrelated prior artifacts (e.g. an old
+    EvidencePacket) alongside a reply that has nothing to do with them.
+    """
+
+    if not session_id:
+        return 0
+    existing = runtime.sessions.load(
+        session_id,
+        role=role,
+        user_id=user_id,
+        resolution=resolution,
+    )
+    return len(existing.artifacts) if existing is not None else 0
 
 
 def _bind_request_context(
@@ -203,7 +235,7 @@ def health_ready() -> dict[str, str]:
         "graph": runtime.backend,
         "model": settings.model,
         "retrieval": runtime.tools.index.backend,
-        "retrieval_collections": "cards,rules",
+        "retrieval_sources": "cards,rules",
         "embedding_model": runtime.tools.index.embedding_model,
         "storage": "ready",
         "calendar": settings.calendar_provider,
@@ -217,7 +249,15 @@ def chat(request: ChatRequest, http_request: Request) -> JSONResponse:
         http_request,
         session_id=request.session_id,
     )
-    state = get_runtime().ask(
+    runtime = get_runtime()
+    previous_artifact_count = _previous_artifact_count(
+        runtime,
+        session_id=request.session_id,
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+    )
+    state = runtime.ask(
         request.message,
         role=request.role,
         user_id=request.user_id,
@@ -226,7 +266,7 @@ def chat(request: ChatRequest, http_request: Request) -> JSONResponse:
         session_id=request.session_id,
     )
     http_request.state.session_id = state.request.session_id
-    return _state_response(state)
+    return _state_response(state, previous_artifact_count=previous_artifact_count)
 
 
 @app.post("/chat/with-attachment")
@@ -294,6 +334,13 @@ async def chat_with_attachment(
         size_bytes=len(payload),
         sha256=hashlib.sha256(payload).hexdigest(),
     )
+    previous_artifact_count = _previous_artifact_count(
+        runtime,
+        session_id=request.session_id,
+        role=request.role,
+        user_id=request.user_id,
+        resolution=request.resolution,
+    )
     retain_upload = False
     try:
         state = runtime.ask(
@@ -306,11 +353,12 @@ async def chat_with_attachment(
             attachments=[handle],
         )
         http_request.state.session_id = state.request.session_id
+        new_artifacts = state.artifacts[previous_artifact_count:]
         retain_upload = state.status in {"needs_input", "needs_confirmation"} or any(
             artifact.artifact_type in {"ingestion_preview", "ingestion_commit_result"}
-            for artifact in state.artifacts
+            for artifact in new_artifacts
         )
-        return _state_response(state)
+        return _state_response(state, previous_artifact_count=previous_artifact_count)
     finally:
         if not retain_upload:
             _remove_upload(upload_path)

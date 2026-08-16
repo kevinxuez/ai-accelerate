@@ -109,7 +109,7 @@ class CaseFileSessionStore:
                 },
             )
         try:
-            state = CaseFileState.model_validate(raw_state)
+            state = CaseFileState.model_validate_json(json.dumps(raw_state))
         except ValidationError as exc:
             raise CaseFileError(
                 ErrorCode.SESSION_CORRUPT,

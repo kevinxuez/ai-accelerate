@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import uuid
 from collections.abc import Callable
 from datetime import datetime
@@ -518,6 +519,7 @@ class FourAgentGraphNodes:
             )
         tool_trace = self._tool_traces(state, tool_records)
         model_trace = self._new_model_traces(state, model_start)
+        pending_artifacts: list[Artifact] = extra.pop("pending_artifacts", [])
         returned = self._returned_event(
             state,
             "skills_coach",
@@ -567,7 +569,12 @@ class FourAgentGraphNodes:
             update["progress_context"] = progress
             return update
         try:
-            update["artifacts"] = self._append_artifact(state, result)
+            working_state = state
+            for pending in pending_artifacts:
+                working_state = working_state.model_copy(
+                    update={"artifacts": self._append_artifact(working_state, pending)}
+                )
+            update["artifacts"] = self._append_artifact(working_state, result)
         except CaseFileError as error:
             return self._failure_update(
                 state,
@@ -723,7 +730,11 @@ class FourAgentGraphNodes:
     ) -> Artifact | ClarificationRequest:
         if artifact == "evidence_packet":
             evidence_request = state.evidence_request
-            requested_side = None
+            requested_side = (
+                state.coaching_state.side
+                if state.coaching_state is not None
+                else self._explicit_side(self._latest_user_message(state))
+            )
             request = task
             if isinstance(evidence_request, (EvidenceRequest, EvidenceQueryPlan)) and (
                 state.evidence_packet is None
@@ -838,13 +849,23 @@ class FourAgentGraphNodes:
                 evidence_packet=state.evidence_packet,
             )
 
+        effective_side = task.side or (coaching_state.side if coaching_state else None)
+        if artifact in {"drill_plan", "coach_turn"} and effective_side is None:
+            raise CaseFileError(
+                ErrorCode.AGENT_OUTPUT_INVALID,
+                "The Skills Coach handoff is missing a side for a side-specific artifact.",
+                stage="skills_coach.handoff",
+                agent="skills_coach",
+                request_id=state.request.request_id,
+            )
+
         if artifact in {"drill_plan", "coach_turn"} and task.needs_evidence:
             if state.evidence_packet is None:
                 request = self.skills_coach_agent.request_evidence(
                     context,
                     student_id=task.student_id,
                     speech_position=task.speech_position or "general",
-                    side=task.side or "pro",
+                    side=effective_side,
                     focus=task.focus or "debate technique",
                     intended_use="drill" if artifact == "drill_plan" else "coaching",
                     source_files=task.source_files,
@@ -852,6 +873,13 @@ class FourAgentGraphNodes:
                 return request, {"coaching_state": coaching_state}
 
         progress = self._latest_artifact(state, ProgressSummary)
+        pending_artifacts: list[Artifact] = []
+        if progress is None and artifact in {"drill_plan", "coach_turn"}:
+            progress = self.skills_coach_agent.summarize_progress(
+                context,
+                student_id=task.student_id,
+            )
+            pending_artifacts = [progress]
         if artifact == "progress_summary":
             result = self.skills_coach_agent.summarize_progress(
                 context,
@@ -863,12 +891,15 @@ class FourAgentGraphNodes:
                 context,
                 student_id=task.student_id,
                 speech_position=task.speech_position or "general",
-                side=task.side or "pro",
+                side=effective_side,
                 focus=task.focus or "debate technique",
                 progress_summary=progress,
                 evidence_packet=state.evidence_packet,
             )
-            return result, {"coaching_state": coaching_state}
+            return result, {
+                "coaching_state": coaching_state,
+                "pending_artifacts": pending_artifacts,
+            }
         if artifact == "coach_turn":
             if coaching_state is None:
                 raise CaseFileError(
@@ -907,7 +938,8 @@ class FourAgentGraphNodes:
             return result, {
                 "coaching_state": coaching_state.model_copy(
                     update={"turns": turns, "evidence_packet": state.evidence_packet}
-                )
+                ),
+                "pending_artifacts": pending_artifacts,
             }
         if artifact == "assessment_proposal":
             if coaching_state is None:
@@ -1169,6 +1201,15 @@ class FourAgentGraphNodes:
             stage="runtime.message",
             request_id=state.request.request_id,
         )
+
+    @staticmethod
+    def _explicit_side(message: str) -> str | None:
+        words = set(re.findall(r"[a-z]+", message.lower()))
+        pro = bool(words & {"pro", "affirmative", "aff"})
+        con = bool(words & {"con", "negative", "neg"})
+        if pro == con:
+            return None
+        return "pro" if pro else "con"
 
     @staticmethod
     def _append_message(

@@ -98,6 +98,8 @@ def boundary_flags(
     flags = set(boundary.flags)
     if boundary.header is None:
         flags.add("no_header")
+    if not boundary.tag:
+        flags.add("no_tag")
     if not boundary.body or not body.strip():
         flags.add("no_body")
     if BARE_URL.fullmatch(citation.strip()):

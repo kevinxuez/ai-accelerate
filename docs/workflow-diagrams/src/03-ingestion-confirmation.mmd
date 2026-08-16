@@ -10,11 +10,10 @@ flowchart TD
     H --> I["Deterministic flags, spans, IDs, provenance"]
     I --> J["Stage IngestionPreview + confirmation token"]
     J --> K{"Explicit confirmation?"}
-    K -->|"no"| L["No ledger or index write"]
+    K -->|"no"| L["No ledger write"]
     K -->|"yes"| M["Verify token and unchanged source hash"]
     M --> N["Atomic versioned ledger write"]
-    N --> O["Required Chroma rebuild"]
-    O --> P["Retire token + remove staged upload"]
+    N --> P["Retire token + remove staged upload"]
     P --> Q["IngestionCommitResult"]
 
     classDef failure fill:#f7e2de,color:#6d271f,stroke:#9b3b32,stroke-width:2px;

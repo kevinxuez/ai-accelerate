@@ -11,10 +11,13 @@ from casefile.agents.contracts import (
     ActiveGoal,
     ArgumentDraft,
     ArgumentSection,
+    CoachingTask,
     ConversationMessage,
     EvidenceCard,
     EvidencePacket,
     EvidenceProvenance,
+    EvidenceQueryPlan,
+    ModelContract,
     RequestContext,
     StrictContract,
     SupervisorDecision,
@@ -26,6 +29,7 @@ from casefile.agents.errors import (
     ErrorCode,
 )
 from casefile.agents.state import CaseFileState
+from casefile.agents.supervisor import Supervisor
 from casefile.api.contracts import ChatSuccessResponse
 
 
@@ -61,7 +65,7 @@ def _evidence_packet() -> EvidencePacket:
         empty_result=False,
         provenance=EvidenceProvenance(
             ledger_schema_version=1,
-            retrieval_backend="chroma",
+            retrieval_backend="in_memory",
             embedding_model="sentence-transformers/all-MiniLM-L6-v2",
             confirmed_only=True,
         ),
@@ -72,11 +76,15 @@ def _unsupported(text: str) -> ArgumentSection:
     return ArgumentSection(text=text, support="unsupported", card_ids=[])
 
 
-def test_all_four_agent_contracts_are_strict_and_forbid_extra_fields() -> None:
+def test_internal_contracts_stay_strict_while_model_outputs_are_tolerant() -> None:
     models = _subclasses(StrictContract)
     assert models
-    assert all(model.model_config.get("strict") is True for model in models)
-    assert all(model.model_config.get("extra") == "forbid" for model in models)
+    model_outputs = _subclasses(ModelContract)
+    internal = models - model_outputs - {ModelContract}
+    assert all(model.model_config.get("strict") is True for model in internal)
+    assert all(model.model_config.get("extra") == "forbid" for model in internal)
+    assert all(model.model_config.get("strict") is False for model in model_outputs)
+    assert all(model.model_config.get("extra") == "ignore" for model in model_outputs)
 
     with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
         ActiveGoal(
@@ -84,6 +92,27 @@ def test_all_four_agent_contracts_are_strict_and_forbid_extra_fields() -> None:
             completion_criteria=["Return evidence."],
             unexpected=True,
         )
+
+    plan = EvidenceQueryPlan(
+        resolution="Resolved: Example",
+        side="Affirmative",
+        clarification_needed=False,
+        result_limit="5",
+        unexpected="ignored",
+    )
+    assert plan.side == "pro"
+    assert plan.result_limit == 5
+    assert plan.clarification_question is None
+
+    task = CoachingTask(
+        operation="any model wording is accepted",
+        student_id="student-1",
+        speech_position="First affirmative",
+        side="Pro",
+        focus="Argument construction",
+    )
+    assert task.operation == "any model wording is accepted"
+    assert task.side == "pro"
 
 
 def test_supervisor_decision_enforces_typed_handoff_fields() -> None:
@@ -109,6 +138,14 @@ def test_supervisor_decision_enforces_typed_handoff_fields() -> None:
             reason_code="invalid_handoff",
         )
 
+    clarification = SupervisorDecision(
+        action="ask_clarification",
+        clarification_question="Which speech position and side are you practicing?",
+    )
+    assert clarification.task is None
+    assert clarification.goal is None
+    assert clarification.reason_code == "model_decision"
+
 
 def test_evidence_packet_enforces_provenance_scope_and_empty_semantics() -> None:
     packet = _evidence_packet()
@@ -130,6 +167,16 @@ def test_evidence_packet_enforces_provenance_scope_and_empty_semantics() -> None
                 "read_spans": [{"start": 0, "end": 999}],
             }
         )
+
+    preserved = EvidenceCard(
+        **{
+            **packet.cards[0].model_dump(mode="python"),
+            "body": "Preserved source body. ",
+            "read_spans": [{"start": 0, "end": 23}],
+        }
+    )
+    assert preserved.body.endswith(" ")
+    assert preserved.read_spans[0].end == len(preserved.body)
 
 
 def test_argument_contract_enforces_support_and_exact_citation_union() -> None:
@@ -213,6 +260,28 @@ def test_state_and_api_contracts_are_bounded_and_artifact_typed() -> None:
         )
     with pytest.raises(ValidationError):
         CaseFileState(request=request, step_count=MAX_GRAPH_STEPS + 1)
+
+
+def test_supervisor_routes_with_compact_evidence_without_mutating_state() -> None:
+    packet = _evidence_packet()
+    state = CaseFileState(
+        request=RequestContext(
+            request_id="request-1",
+            session_id="session-123456789",
+            role="student",
+            user_id="student-1",
+            active_resolution="Resolved: Example",
+        ),
+        evidence_packet=packet,
+        artifacts=[packet],
+    )
+
+    public = Supervisor._public_state(state)
+
+    assert public["evidence_packet"]["cards"][0]["card_id"] == "a" * 64
+    assert "body" not in public["evidence_packet"]["cards"][0]
+    assert "citation" not in public["artifacts"][0]["cards"][0]
+    assert state.evidence_packet.cards[0].body == "Preserved source body."
 
 
 def test_error_codes_have_http_mappings_and_never_expose_causes() -> None:

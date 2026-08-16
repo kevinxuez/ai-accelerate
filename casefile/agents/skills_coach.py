@@ -191,7 +191,7 @@ class SkillsCoach:
                     else None
                 ),
             },
-            max_tokens=2_500,
+            max_tokens=6_000,
         )
         invalid_field: str | None = None
         if drill.student_id != student_id:
@@ -276,7 +276,7 @@ class SkillsCoach:
                     else None
                 ),
             },
-            max_tokens=1_500,
+            max_tokens=3_000,
         )
         invalid_field: str | None = None
         if turn.student_id != student_id:
@@ -339,7 +339,7 @@ class SkillsCoach:
                 "active_resolution": context.resolution,
                 "coaching_turns": [item.model_dump(mode="json") for item in turns],
             },
-            max_tokens=1_500,
+            max_tokens=3_000,
         )
         invalid_field: str | None = None
         if proposal.student_id != student_id:
@@ -412,7 +412,7 @@ class SkillsCoach:
         schema: type[ContractT],
         operation: str,
         payload: dict[str, Any],
-        max_tokens: int = 1_500,
+        max_tokens: int = 3_000,
     ) -> ContractT:
         prompt = load_prompt("skills_coach")
         try:

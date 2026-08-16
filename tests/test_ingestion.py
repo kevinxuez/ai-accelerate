@@ -70,4 +70,4 @@ def test_invalid_model_output_fails_without_substitution(
             default_side="pro",
             stage=False,
         )
-    assert caught.value.code == ErrorCode.MODEL_OUTPUT_INVALID
+    assert caught.value.code == ErrorCode.INGESTION_BOUNDARY_INVALID

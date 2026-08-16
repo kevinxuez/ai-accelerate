@@ -26,7 +26,7 @@ CARD = {
 
 
 class StubIndex:
-    backend = "chroma"
+    backend = "in_memory"
     embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
 
 

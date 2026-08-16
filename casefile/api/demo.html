@@ -112,22 +112,6 @@
       border-color: var(--green);
       box-shadow: 0 0 0 3px rgba(47, 109, 92, .13);
     }
-    .divider { height: 1px; margin: 20px 0; background: var(--line); }
-    .scenario-list { display: grid; gap: 8px; }
-    .scenario {
-      width: 100%;
-      padding: 10px 11px;
-      color: var(--ink);
-      text-align: left;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      transition: transform .12s, border-color .12s, background .12s;
-    }
-    .scenario:hover { transform: translateX(2px); border-color: var(--green); background: #f7fbf8; }
-    .scenario strong { display: block; font-size: 13px; }
-    .scenario span { color: var(--muted); font-size: 11px; }
-
     .composer { padding: 22px 24px 20px; border-bottom: 1px solid var(--line); }
     .section-head { justify-content: space-between; gap: 16px; margin-bottom: 12px; }
     .section-head > * { min-width: 0; }
@@ -422,24 +406,13 @@
         </select>
       </div>
       <div class="field">
-        <label for="side">Preset side</label>
+        <label for="side">DOCX side</label>
         <select id="side" data-testid="side-select">
           <option value="pro">Pro</option>
           <option value="con">Con</option>
         </select>
       </div>
-      <p class="field-hint">Side is inserted into preset prompts. Custom prompts remain unchanged.</p>
-
-      <div class="divider"></div>
-      <p class="section-label">Quick scenarios</p>
-      <div class="scenario-list">
-        <button class="scenario" type="button" data-scenario="evidence" data-testid="scenario-evidence"><strong>Research confirmed evidence</strong><span>Librarian retrieval with provenance</span></button>
-        <button class="scenario" type="button" data-scenario="argument" data-testid="scenario-argument"><strong>Build or revise an argument</strong><span>Strategist draft with support badges</span></button>
-        <button class="scenario" type="button" data-scenario="ingest" data-testid="scenario-ingest"><strong>Ingest a DOCX</strong><span>Librarian preview and confirmation</span></button>
-        <button class="scenario" type="button" data-scenario="coaching" data-testid="scenario-coaching"><strong>Practice with Skills Coach</strong><span>Interactive simulated coaching</span></button>
-        <button class="scenario" type="button" data-scenario="progress" data-testid="scenario-progress"><strong>Progress and human coaching</strong><span>Summary followed by scheduling</span></button>
-        <button class="scenario" type="button" data-scenario="error" data-testid="scenario-error"><strong>Inspect a visible failure</strong><span>Controlled typed tool error</span></button>
-      </div>
+      <p class="field-hint">Used to prepare an ingestion request when you attach a DOCX without entering a prompt.</p>
     </aside>
 
     <section class="panel main-panel" aria-label="Request and result">
@@ -476,7 +449,7 @@
           <pre id="prompt-entered" data-testid="prompt-entered"></pre>
         </div>
         <div id="result" data-testid="result">
-          <div class="empty-state"><div><strong>Ready for a scenario</strong>Choose a preset or write a request. Tool output and safety decisions will appear here.</div></div>
+          <div class="empty-state"><div><strong>Ready for a request</strong>Write a request above. Tool output and safety decisions will appear here.</div></div>
         </div>
         <details id="raw-details" hidden>
           <summary>Show raw response JSON</summary>

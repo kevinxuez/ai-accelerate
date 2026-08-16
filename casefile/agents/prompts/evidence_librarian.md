@@ -24,11 +24,19 @@ Return JSON only with exactly these keys:
 - entities: a list of important named actors, places, institutions, or concepts
 - source_files: exact confirmed filenames to constrain retrieval, or an empty list
 - queries: one to six bounded semantic searches
-- result_limit: integer from 1 through 25
+- result_limit: integer from 1 through 25, never null; use 10 when the user did not
+  request a specific number of results
 - clarification_needed: boolean
 - clarification_question: concise string or null
 
 For plan_ingestion_metadata, return exactly resolution, side, clarification_needed, and
-clarification_question. Copy active_resolution exactly. Set side only when the request
-explicitly and unambiguously says Pro/Affirmative or Con/Negative. Otherwise ask one
-concise clarification. Do not segment, label, or reproduce document text in this call.
+clarification_question. This call has exactly one job: read the request text and decide
+resolution and side. Nothing else. The request may also describe what the eventual
+ingestion preview should contain — cards, flags, exclusion reasons, marked spans,
+provenance, confirmed-file boundaries. That describes a later, fully deterministic step
+that this call never performs and is never responsible for; it is not a reason to ask for
+clarification or to decline. Ignore that framing entirely and extract only resolution and
+side from it. Copy active_resolution exactly. Set side only when the request explicitly
+and unambiguously says Pro/Affirmative or Con/Negative (e.g. "as pro evidence" means
+side is pro); only ask a clarification when the side truly cannot be determined this way.
+Do not segment, label, or reproduce document text in this call.

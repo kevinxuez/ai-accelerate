@@ -10,7 +10,6 @@ __pycache__/
 .casefile_sessions/
 .casefile_uploads/
 casefile/chroma_db/*
-!casefile/chroma_db/.gitkeep
 casefile/data/tool_calls.jsonl
 casefile/data/security_events.jsonl
 casefile/data/idempotency.json

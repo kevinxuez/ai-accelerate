@@ -12,7 +12,7 @@ from typing import Any
 from casefile.agents.contracts import IngestionCommitResult
 from casefile.agents.errors import CaseFileError, ErrorCode
 from casefile.config import Settings
-from casefile.retrieval import COLLECTION_SCHEMA_VERSION, CaseFileIndex
+from casefile.retrieval import LEDGER_SCHEMA_VERSION
 from casefile.security.audit import SecurityAuditor
 
 from .extract import sha256_file
@@ -147,32 +147,6 @@ def commit_ingestion(
     atomic_json(settings.cards_path, saved)
 
     try:
-        CaseFileIndex(settings).rebuild_cards(saved)
-    except Exception as exc:
-        try:
-            atomic_json(
-                settings.data_dir / "index_inconsistency.json",
-                {
-                    "job_id": staged.job_id,
-                    "source_filename": staged.source_filename,
-                    "ledger_committed": True,
-                    "index_rebuilt": False,
-                    "cause_type": type(exc).__name__,
-                },
-            )
-        except CaseFileError:
-            pass
-        raise CaseFileError(
-            ErrorCode.INDEX_REBUILD_FAILED,
-            "The evidence ledger was committed but its Chroma index rebuild failed.",
-            stage="ingestion.rebuild_index",
-            agent="evidence_librarian",
-            retryable=False,
-            safe_details={"ledger_committed": True, "job_id": staged.job_id},
-            cause=exc,
-        ) from exc
-
-    try:
         (settings.pending_dir / f"{token}.json").unlink()
     except OSError as exc:
         raise CaseFileError(
@@ -187,7 +161,7 @@ def commit_ingestion(
         source_filename=staged.source_filename,
         written_cards=len(staged.cards),
         searchable_cards=sum(is_indexable(card) for card in staged.cards),
-        ledger_schema_version=COLLECTION_SCHEMA_VERSION,
+        ledger_schema_version=LEDGER_SCHEMA_VERSION,
         index_rebuilt=True,
     )
 
@@ -215,7 +189,7 @@ def approve_quarantined_card(
     if not found:
         raise FileNotFoundError("Card id was not found")
     atomic_json(settings.cards_path, loaded)
-    searchable = CaseFileIndex(settings).rebuild_cards(loaded)
+    searchable = sum(is_indexable(card) for card in loaded)
     audit.record(
         "quarantined_card_approved",
         details={"card_id": card_id, "searchable_records": searchable},

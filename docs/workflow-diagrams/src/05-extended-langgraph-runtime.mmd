@@ -1,0 +1,61 @@
+flowchart TD
+    User["Student or coach"] --> API["Chat API · browser demo · CLI"]
+    API --> Session["Create or resume<br/>versioned CaseFileState"]
+    Session --> Start(("START"))
+
+    subgraph Graph["Four-agent LangGraph"]
+        Start --> Screen["Security screen<br/>prompt guard · rate limit · step limit"]
+        Screen -->|"allowed"| Supervisor["Supervisor<br/>chooses the next typed action"]
+        Screen -->|"blocked"| Failed["failed<br/>typed error"]
+
+        Supervisor --> Route{"Next action"}
+        Route -->|"clarify"| Input["needs_input"]
+        Route -->|"finish / refuse"| Complete["completed"]
+        Route -->|"schedule"| Schedule["Schedule tool"]
+        Route -->|"delegate"| Specialist{"Specialist handoff"}
+
+        Specialist --> Librarian["Evidence Librarian<br/>evidence · rules · topics · ingestion"]
+        Specialist --> Strategist["Argument Strategist<br/>create or revise arguments"]
+        Specialist --> Coach["Skills Coach<br/>drills · coaching · progress"]
+
+        Librarian -->|"typed artifact"| Supervisor
+        Strategist -->|"ArgumentDraft"| Supervisor
+        Coach -->|"coaching artifact"| Supervisor
+
+        Coach -->|"needs evidence"| EvidenceRequest["EvidenceRequest"]
+        EvidenceRequest --> Supervisor
+
+        Librarian -->|"ingestion preview"| Confirm["needs_confirmation"]
+        Coach -->|"assessment proposal"| Confirm
+        Schedule -->|"calendar write"| Confirm
+        Schedule -->|"CalendarEvent"| Supervisor
+
+        Supervisor -. "any model, tool, validation,<br/>authorization, or limit error" .-> Failed
+
+        Input --> End(("END"))
+        Confirm --> End
+        Complete --> End
+        Failed --> End
+    end
+
+    End --> Persist["Persist messages, artifacts,<br/>pending actions, and traces"]
+    Persist --> Response["Return response +<br/>agent · tool · model traces"]
+    Response --> User
+
+    SessionNote["Replies and confirmations<br/>reuse the same session_id"] -.-> Session
+
+    classDef entry fill:#EAF2FF,color:#172033,stroke:#5579B7,stroke-width:2px;
+    classDef owner fill:#173D42,color:#FFFFFF,stroke:#C89B48,stroke-width:2px;
+    classDef decision fill:#FFF3D6,color:#172033,stroke:#C89B48,stroke-width:2px;
+    classDef wait fill:#F5EDFF,color:#332255,stroke:#7B61FF,stroke-width:2px;
+    classDef success fill:#EAF8F0,color:#173D2B,stroke:#43A36B,stroke-width:2px;
+    classDef failure fill:#F7E2DE,color:#6D271F,stroke:#9B3B32,stroke-width:2px;
+    classDef store fill:#EEF2F7,color:#172033,stroke:#78879B,stroke-width:2px;
+
+    class User,API,Session entry;
+    class Supervisor,Librarian,Strategist,Coach,Schedule owner;
+    class Route,Specialist decision;
+    class Input,Confirm wait;
+    class Complete,Response success;
+    class Failed failure;
+    class Screen,EvidenceRequest,Persist,SessionNote store;

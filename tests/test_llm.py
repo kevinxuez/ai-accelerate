@@ -5,6 +5,7 @@ import json
 from dataclasses import replace
 
 import pytest
+from pydantic import BaseModel, ConfigDict
 
 from casefile.agents.errors import CaseFileError, ErrorCode
 from casefile.config import get_settings
@@ -20,6 +21,12 @@ class _Response(io.BytesIO):
 
     def __exit__(self, *args):
         self.close()
+
+
+class _StrictStatus(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+
+    status: str
 
 
 def test_complete_json_uses_configured_anthropic_base_url(monkeypatch) -> None:
@@ -70,6 +77,81 @@ def test_complete_json_uses_configured_anthropic_base_url(monkeypatch) -> None:
     assert (trace.input_tokens, trace.output_tokens) == (12, 5)
     assert trace.status == "completed"
     assert trace.prompt_sha256 and trace.response_sha256
+
+
+def test_failed_schema_validation_records_a_valid_failed_trace(monkeypatch) -> None:
+    def fake_urlopen(request, *, timeout):
+        response = {
+            "content": [{"type": "text", "text": '{"unexpected": true}'}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 8, "output_tokens": 4},
+        }
+        return _Response(json.dumps(response).encode("utf-8"))
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    client = AnthropicJSONClient(api_key="test-key")
+
+    with pytest.raises(CaseFileError) as caught:
+        client.complete_json(
+            system="Return JSON.",
+            user="Report status.",
+            schema=_StrictStatus,
+            agent="supervisor",
+        )
+
+    assert caught.value.code == ErrorCode.MODEL_OUTPUT_INVALID
+    assert caught.value.safe_details == {
+        "schema": "_StrictStatus",
+        "invalid_fields": ["status", "unexpected"],
+        "invalid_values": {"unexpected": True},
+    }
+    trace = client.calls[0]
+    assert trace.status == "failed"
+    assert trace.error_code == ErrorCode.MODEL_OUTPUT_INVALID.value
+    assert trace.response_sha256 is None
+
+
+def test_complete_json_accepts_an_object_wrapped_in_model_commentary(monkeypatch) -> None:
+    def fake_urlopen(request, *, timeout):
+        response = {
+            "content": [
+                {
+                    "type": "text",
+                    "text": 'Here is the result:\n```json\n{"status": "ready"}\n```',
+                }
+            ]
+        }
+        return _Response(json.dumps(response).encode("utf-8"))
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    client = AnthropicJSONClient(api_key="test-key")
+
+    result = client.complete_json(
+        system="Return JSON.",
+        user="Report status.",
+        schema=_StrictStatus,
+    )
+
+    assert result == {"status": "ready"}
+
+
+def test_complete_json_accepts_compatible_text_block_labels(monkeypatch) -> None:
+    def fake_urlopen(request, *, timeout):
+        response = {
+            "content": [{"type": "output_text", "text": '{"status": "ready"}'}]
+        }
+        return _Response(json.dumps(response).encode("utf-8"))
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    client = AnthropicJSONClient(api_key="test-key")
+
+    result = client.complete_json(
+        system="Return JSON.",
+        user="Report status.",
+        schema=_StrictStatus,
+    )
+
+    assert result == {"status": "ready"}
 
 
 def test_anthropic_base_url_rejects_non_https_or_markdown() -> None:

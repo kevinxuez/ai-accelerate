@@ -1,9 +1,10 @@
-"""Required Chroma retrieval over the confirmed evidence and rules ledgers."""
+"""In-memory semantic retrieval over confirmed evidence and rules ledgers."""
 
 from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import threading
 from dataclasses import asdict, dataclass, field
@@ -21,7 +22,7 @@ from casefile.ingest.validate import is_indexable
 from casefile.security.prompt_guard import inspect_text
 
 
-COLLECTION_SCHEMA_VERSION = 1
+LEDGER_SCHEMA_VERSION = 1
 _UNSET = object()
 
 
@@ -73,11 +74,13 @@ class SentenceTransformerEmbedder:
                 cause=exc,
             ) from exc
         try:
-            self._model = SentenceTransformer(
-                str(path),
-                local_files_only=True,
+            self._model = SentenceTransformer(str(path), local_files_only=True)
+            get_dimensions = getattr(self._model, "get_embedding_dimension", None)
+            actual = (
+                get_dimensions()
+                if get_dimensions is not None
+                else self._model.get_sentence_embedding_dimension()
             )
-            actual = self._model.get_sentence_embedding_dimension()
         except Exception as exc:
             raise CaseFileError(
                 ErrorCode.CONFIGURATION_ERROR,
@@ -121,28 +124,6 @@ def build_embedder(settings: Settings) -> Embedder:
     return SentenceTransformerEmbedder(settings)
 
 
-def build_chroma_client(settings: Settings) -> Any:
-    try:
-        import chromadb
-    except ImportError as exc:
-        raise CaseFileError(
-            ErrorCode.CONFIGURATION_ERROR,
-            "Chroma is required but is not installed.",
-            stage="retrieval.chroma.startup",
-            cause=exc,
-        ) from exc
-    try:
-        return chromadb.PersistentClient(path=str(settings.chroma_dir))
-    except Exception as exc:
-        raise CaseFileError(
-            ErrorCode.RETRIEVAL_UNAVAILABLE,
-            "The configured Chroma store is unavailable.",
-            stage="retrieval.chroma.startup",
-            retryable=True,
-            cause=exc,
-        ) from exc
-
-
 def chunk_rules(path: str | Path) -> list[RuleChunk]:
     source = Path(path)
     text = source.read_text(encoding="utf-8")
@@ -184,11 +165,12 @@ def chunk_rules(path: str | Path) -> list[RuleChunk]:
 
 
 class CaseFileIndex:
+    """Rank the small committed ledgers directly without a persistent vector DB."""
+
     def __init__(
         self,
         settings: Settings | None = None,
         *,
-        client: Any = _UNSET,
         embedder: Embedder | object = _UNSET,
     ) -> None:
         self.settings = settings or get_settings()
@@ -197,62 +179,37 @@ class CaseFileIndex:
         self._embedder = (
             build_embedder(self.settings) if embedder is _UNSET else embedder
         )
-        self._client = (
-            build_chroma_client(self.settings) if client is _UNSET else client
-        )
         if not hasattr(self._embedder, "embed"):
             raise TypeError("embedder test double must implement embed(texts)")
-        self._ensure_collection("cards")
-        self._ensure_collection("rules")
 
     @property
     def backend(self) -> str:
-        return "chroma"
+        return "in_memory"
 
     @property
     def embedding_model(self) -> str:
         return str(self._embedder.name)
 
     def validate_ready(self) -> None:
-        self._ensure_collection("cards")
-        self._ensure_collection("rules")
+        self.rebuild_cards()
+        chunks = self._load_rule_chunks()
+        searchable = [
+            chunk
+            for chunk in chunks
+            if chunk.get("injection_risk", "low") != "high"
+            or bool(chunk.get("injection_approved"))
+        ]
+        self._validate_embeddings(
+            [f"{chunk['section_title']}\n{chunk['text']}" for chunk in searchable]
+        )
 
     def rebuild_cards(self, cards: list[dict[str, Any]] | None = None) -> int:
-        with self._lock:
-            cards = self._load_cards() if cards is None else cards
-            searchable = [card for card in cards if is_indexable(card)]
-            collection = self._reset_collection("cards")
-            if searchable:
-                try:
-                    collection.upsert(
-                        ids=[str(card["id"]) for card in searchable],
-                        documents=[
-                            str(card["returned_document"]) for card in searchable
-                        ],
-                        embeddings=self._embedder.embed(
-                            [str(card["embedding_text"]) for card in searchable]
-                        ),
-                        metadatas=[
-                            {
-                                "resolution": str(card["resolution"]),
-                                "side": str(card["side"]),
-                                "source_file": str(card["source_file"]),
-                                "card_id": str(card["id"]),
-                                "indexable": True,
-                            }
-                            for card in searchable
-                        ],
-                    )
-                except CaseFileError:
-                    raise
-                except Exception as exc:
-                    raise CaseFileError(
-                        ErrorCode.INDEX_REBUILD_FAILED,
-                        "The Chroma evidence collection could not be rebuilt.",
-                        stage="retrieval.cards.rebuild",
-                        cause=exc,
-                    ) from exc
-            return len(searchable)
+        cards = self._load_cards() if cards is None else cards
+        searchable = [card for card in cards if is_indexable(card)]
+        self._validate_embeddings(
+            [str(card["embedding_text"]) for card in searchable]
+        )
+        return len(searchable)
 
     def rebuild_rules(self, chunks: list[RuleChunk] | None = None) -> int:
         try:
@@ -274,31 +231,16 @@ class CaseFileIndex:
                 json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            collection = self._reset_collection("rules")
-            if searchable:
-                collection.upsert(
-                    ids=[chunk.id for chunk in searchable],
-                    documents=[chunk.text for chunk in searchable],
-                    embeddings=self._embedder.embed(
-                        [f"{chunk.section_title}\n{chunk.text}" for chunk in searchable]
-                    ),
-                    metadatas=[
-                        {
-                            "section_number": chunk.section_number,
-                            "section_title": chunk.section_title,
-                            "document": chunk.document,
-                            "event": chunk.event,
-                        }
-                        for chunk in searchable
-                    ],
-                )
+            self._validate_embeddings(
+                [f"{chunk.section_title}\n{chunk.text}" for chunk in searchable]
+            )
             return len(searchable)
         except CaseFileError:
             raise
         except Exception as exc:
             raise CaseFileError(
                 ErrorCode.INDEX_REBUILD_FAILED,
-                "The Chroma rules collection could not be rebuilt.",
+                "The in-memory rules index could not be validated.",
                 stage="retrieval.rules.rebuild",
                 cause=exc,
             ) from exc
@@ -320,9 +262,6 @@ class CaseFileIndex:
                 stage="retrieval.cards.query",
                 tool="search_cards",
             )
-        threshold = (
-            self.settings.min_relevance if min_relevance is None else min_relevance
-        )
         allowed_sources = set(source_files or [])
         cards = [
             card
@@ -335,29 +274,18 @@ class CaseFileIndex:
                 or str(card.get("source_file", "")) in allowed_sources
             )
         ]
-        if not cards:
-            return []
-        by_id = {str(card["id"]): card for card in cards}
-        clauses: list[dict[str, Any]] = [{"resolution": {"$eq": resolution}}]
-        if side is not None:
-            clauses.append({"side": {"$eq": side}})
-        if allowed_sources:
-            sources = sorted(allowed_sources)
-            clauses.append(
-                {
-                    "source_file": (
-                        {"$eq": sources[0]} if len(sources) == 1 else {"$in": sources}
-                    )
-                }
-            )
-        where = clauses[0] if len(clauses) == 1 else {"$and": clauses}
-        result = self._query(
-            "cards",
+        return self._rank(
+            cards,
+            [str(card["embedding_text"]) for card in cards],
             query=query,
-            n=min(n, len(cards)),
-            where=where,
+            n=n,
+            threshold=(
+                self.settings.min_relevance
+                if min_relevance is None
+                else min_relevance
+            ),
+            kind="cards",
         )
-        return self._resolve_hits(result, by_id, threshold, kind="card")
 
     def available_card_files(
         self,
@@ -385,157 +313,86 @@ class CaseFileIndex:
             if chunk.get("injection_risk", "low") != "high"
             or bool(chunk.get("injection_approved"))
         ]
-        if not chunks:
-            return []
-        by_id = {str(chunk["id"]): chunk for chunk in chunks}
-        result = self._query("rules", query=question, n=min(n, len(chunks)))
-        return self._resolve_hits(
-            result,
-            by_id,
-            self.settings.min_relevance,
-            kind="rule",
+        return self._rank(
+            chunks,
+            [f"{chunk['section_title']}\n{chunk['text']}" for chunk in chunks],
+            query=question,
+            n=n,
+            threshold=self.settings.min_relevance,
+            kind="rules",
         )
 
-    def _query(
+    def _rank(
         self,
-        collection_name: str,
+        records: list[dict[str, Any]],
+        texts: list[str],
         *,
         query: str,
         n: int,
-        where: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        try:
-            collection = self._client.get_collection(
-                collection_name,
-                embedding_function=None,
-            )
-            arguments: dict[str, Any] = {
-                "query_embeddings": self._embedder.embed([query]),
-                "n_results": n,
-                "include": ["distances"],
+        threshold: float,
+        kind: str,
+    ) -> list[dict[str, Any]]:
+        if not records or n <= 0:
+            return []
+        vectors = self._embed([query, *texts], stage=f"retrieval.{kind}.query")
+        query_vector = vectors[0]
+        scored = [
+            (self._cosine(query_vector, vector), str(record["id"]), record)
+            for record, vector in zip(records, vectors[1:])
+        ]
+        scored.sort(key=lambda item: (-item[0], item[1]))
+        return [
+            {
+                **record,
+                "content_trust": record.get("content_trust", "untrusted_document"),
+                "retrieval_trust": "untrusted_retrieval",
+                "injection_risk": record.get("injection_risk", "low"),
+                "injection_signals": record.get("injection_signals", []),
+                "score": round(score, 6),
+                "_chunk_id": item_id,
             }
-            if where is not None:
-                arguments["where"] = where
-            result = collection.query(**arguments)
+            for score, item_id, record in scored[:n]
+            if score >= threshold
+        ]
+
+    def _validate_embeddings(self, texts: list[str]) -> None:
+        if texts:
+            self._embed(texts, stage="retrieval.embedding.validate")
+
+    def _embed(self, texts: list[str], *, stage: str) -> list[list[float]]:
+        try:
+            with self._lock:
+                vectors = self._embedder.embed(texts)
         except CaseFileError:
             raise
         except Exception as exc:
             raise CaseFileError(
                 ErrorCode.RETRIEVAL_UNAVAILABLE,
-                "The configured Chroma collection could not be queried.",
-                stage=f"retrieval.{collection_name}.query",
+                "The embedding model could not rank the retrieval request.",
+                stage=stage,
                 retryable=True,
                 cause=exc,
             ) from exc
-        if not isinstance(result, dict):
+        dimensions = int(self._embedder.dimensions)
+        if len(vectors) != len(texts) or any(
+            len(vector) != dimensions for vector in vectors
+        ):
             raise CaseFileError(
                 ErrorCode.RETRIEVAL_UNAVAILABLE,
-                "The configured Chroma collection returned an invalid query result.",
-                stage=f"retrieval.{collection_name}.query",
+                "The embedding model returned malformed vectors.",
+                stage=stage,
+                retryable=True,
             )
-        return result
+        return vectors
 
-    def _resolve_hits(
-        self,
-        result: dict[str, Any],
-        by_id: dict[str, dict[str, Any]],
-        threshold: float,
-        *,
-        kind: str,
-    ) -> list[dict[str, Any]]:
-        ids = result.get("ids", [[]])
-        distances = result.get("distances", [[]])
-        hit_ids = ids[0] if isinstance(ids, list) and ids else []
-        hit_distances = (
-            distances[0] if isinstance(distances, list) and distances else []
+    @staticmethod
+    def _cosine(left: list[float], right: list[float]) -> float:
+        denominator = math.sqrt(sum(value * value for value in left)) * math.sqrt(
+            sum(value * value for value in right)
         )
-        if not isinstance(hit_ids, list) or not isinstance(hit_distances, list):
-            raise CaseFileError(
-                ErrorCode.RETRIEVAL_UNAVAILABLE,
-                "The configured Chroma collection returned malformed hits.",
-                stage=f"retrieval.{kind}s.resolve",
-            )
-        unknown = [str(item) for item in hit_ids if str(item) not in by_id]
-        if unknown:
-            raise CaseFileError(
-                ErrorCode.RETRIEVAL_INDEX_MISMATCH,
-                "Chroma referenced an id that is missing from the committed ledger.",
-                stage=f"retrieval.{kind}s.resolve",
-                safe_details={"unknown_id_count": len(unknown)},
-            )
-        resolved: list[dict[str, Any]] = []
-        for item, distance in zip(hit_ids, hit_distances):
-            score = 1.0 - float(distance)
-            if score < threshold:
-                continue
-            record = by_id[str(item)]
-            resolved.append(
-                {
-                    **record,
-                    "content_trust": record.get("content_trust", "untrusted_document"),
-                    "retrieval_trust": "untrusted_retrieval",
-                    "injection_risk": record.get("injection_risk", "low"),
-                    "injection_signals": record.get("injection_signals", []),
-                    "score": round(score, 6),
-                    "_chunk_id": str(item),
-                }
-            )
-        return resolved
-
-    def _expected_metadata(self) -> dict[str, Any]:
-        return {
-            "casefile_schema_version": COLLECTION_SCHEMA_VERSION,
-            "embedding_model": self._embedder.name,
-            "embedding_dimensions": self._embedder.dimensions,
-            "hnsw:space": "cosine",
-        }
-
-    def _ensure_collection(self, name: str) -> Any:
-        expected = self._expected_metadata()
-        try:
-            collection = self._client.get_or_create_collection(
-                name,
-                metadata=expected,
-                embedding_function=None,
-            )
-        except Exception as exc:
-            raise CaseFileError(
-                ErrorCode.RETRIEVAL_UNAVAILABLE,
-                "The configured Chroma collection is unavailable.",
-                stage=f"retrieval.{name}.startup",
-                retryable=True,
-                cause=exc,
-            ) from exc
-        metadata = getattr(collection, "metadata", None) or {}
-        mismatch = {
-            key: {"expected": value, "actual": metadata.get(key)}
-            for key, value in expected.items()
-            if metadata.get(key) != value
-        }
-        if mismatch:
-            raise CaseFileError(
-                ErrorCode.RETRIEVAL_INDEX_MISMATCH,
-                "The Chroma collection schema does not match the configured embedding.",
-                stage=f"retrieval.{name}.startup",
-                safe_details={"mismatched_fields": sorted(mismatch)},
-            )
-        return collection
-
-    def _reset_collection(self, name: str) -> Any:
-        try:
-            self._client.delete_collection(name)
-            return self._client.get_or_create_collection(
-                name,
-                metadata=self._expected_metadata(),
-                embedding_function=None,
-            )
-        except Exception as exc:
-            raise CaseFileError(
-                ErrorCode.INDEX_REBUILD_FAILED,
-                "The configured Chroma collection could not be reset.",
-                stage=f"retrieval.{name}.rebuild",
-                cause=exc,
-            ) from exc
+        if not denominator:
+            return 0.0
+        return sum(a * b for a, b in zip(left, right)) / denominator
 
     def _load_cards(self) -> list[dict[str, Any]]:
         return self._load_json_list(self.settings.cards_path, "evidence ledger")

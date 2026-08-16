@@ -18,7 +18,7 @@ Return JSON only with exactly these keys:
 - flags
 - explanation
 
-Allowed flags are no_header, no_body, cite_is_bare_url, cite_is_bare_headline,
+Allowed flags are no_header, no_tag, no_body, cite_is_bare_url, cite_is_bare_headline,
 tag_merged_into_cite, cite_body_same_paragraph, pdf_paste_fragmented, text_corrupt,
 html_entity, duplicate_source, no_marking, fully_marked, paraphrase_no_source,
 do_not_ingest, and body_truncated.

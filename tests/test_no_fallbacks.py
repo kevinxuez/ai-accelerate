@@ -16,6 +16,17 @@ from casefile.retrieval import CaseFileIndex, SentenceTransformerEmbedder
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_chroma_runtime_dependency_is_removed() -> None:
+    retrieval = (ROOT / "casefile" / "retrieval.py").read_text(encoding="utf-8")
+    config = (ROOT / "casefile" / "config.py").read_text(encoding="utf-8")
+    packaging = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+
+    assert "chromadb" not in retrieval
+    assert "PersistentClient" not in retrieval
+    assert "chroma_dir" not in config
+    assert '"chromadb' not in packaging
+
+
 def test_deleted_runtime_and_obsolete_switches_are_absent() -> None:
     assert not (ROOT / "casefile" / "agent").exists()
     source = "\n".join(
@@ -90,7 +101,7 @@ def test_missing_embedding_assets_prevent_startup(isolated_settings) -> None:
     assert caught.value.code == ErrorCode.CONFIGURATION_ERROR
 
 
-def test_chroma_query_failure_is_not_replaced_by_json_ranking(
+def test_embedding_failure_is_reported_by_in_memory_ranking(
     isolated_settings,
 ) -> None:
     class Embedder:
@@ -98,27 +109,7 @@ def test_chroma_query_failure_is_not_replaced_by_json_ranking(
         dimensions = 384
 
         def embed(self, texts):
-            return [[0.0] * self.dimensions for _ in texts]
-
-    class Collection:
-        metadata = {
-            "casefile_schema_version": 1,
-            "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
-            "embedding_dimensions": 384,
-            "hnsw:space": "cosine",
-        }
-
-        def query(self, **kwargs):
-            raise RuntimeError("injected Chroma failure")
-
-    class Client:
-        collection = Collection()
-
-        def get_or_create_collection(self, *args, **kwargs):
-            return self.collection
-
-        def get_collection(self, *args, **kwargs):
-            return self.collection
+            raise RuntimeError("injected embedding failure")
 
     isolated_settings.cards_path.write_text(
         '[{"id":"card-1","resolution":"R1","side":"pro",'
@@ -130,7 +121,6 @@ def test_chroma_query_failure_is_not_replaced_by_json_ranking(
     )
     index = CaseFileIndex(
         isolated_settings,
-        client=Client(),
         embedder=Embedder(),
     )
 

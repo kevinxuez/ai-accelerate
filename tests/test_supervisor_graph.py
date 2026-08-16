@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from typing import Any
 
 import pytest
@@ -10,11 +11,13 @@ from casefile.agents.contracts import (
     DrillPlan,
     EvidenceQueryPlan,
     EvidenceRequest,
+    ModelTraceEntry,
     ProgressSummary,
     ScheduleToolCall,
     SupervisorDecision,
 )
 from casefile.agents.errors import CaseFileError, ErrorCode
+from casefile.agents.graph import FourAgentGraphNodes
 from casefile.agents.runtime import CaseFileRuntime
 from casefile.agents.session import CaseFileSessionStore
 
@@ -85,6 +88,13 @@ class ScheduleRegistry:
 class ScheduleTools:
     def __init__(self) -> None:
         self.registry = ScheduleRegistry()
+
+
+def test_explicit_side_is_read_without_model_interpretation() -> None:
+    assert FourAgentGraphNodes._explicit_side("Find Pro evidence.") == "pro"
+    assert FourAgentGraphNodes._explicit_side("First affirmative") == "pro"
+    assert FourAgentGraphNodes._explicit_side("Negative rebuttal") == "con"
+    assert FourAgentGraphNodes._explicit_side("Compare Pro and Con") is None
 
 
 def test_supervisor_delegates_research_and_persists_full_session(
@@ -394,6 +404,7 @@ def test_coach_evidence_request_returns_through_supervisor_and_librarian(
     assert state.status == "completed"
     assert [artifact.artifact_type for artifact in state.artifacts] == [
         "evidence_packet",
+        "progress_summary",
         "drill_plan",
     ]
     handoff_targets = [
@@ -457,6 +468,32 @@ def test_invalid_supervisor_output_fails_without_a_router_substitute(
     assert state.error.code == ErrorCode.AGENT_OUTPUT_INVALID
     assert state.error.agent == "supervisor"
     assert model.responses == []
+
+    state = state.model_copy(
+        update={
+            "model_trace": [
+                ModelTraceEntry(
+                    sequence=0,
+                    agent="supervisor",
+                    model="scripted-supervisor",
+                    prompt_template="agents/prompts/supervisor.md",
+                    prompt_sha256="a" * 64,
+                    response_sha256=None,
+                    schema_name="SupervisorDecision",
+                    started_at=datetime.now(timezone.utc),
+                    status="failed",
+                    error_code=ErrorCode.MODEL_OUTPUT_INVALID.value,
+                )
+            ]
+        }
+    )
+    store = CaseFileSessionStore(isolated_settings)
+    store.save(state)
+    restored = store.load("session-invalid-supervisor", required=True)
+    assert restored is not None
+    assert restored.error is not None
+    assert restored.error.code == ErrorCode.AGENT_OUTPUT_INVALID
+    assert restored.model_trace[0].started_at.tzinfo is not None
 
 
 def test_corrupt_and_unversioned_sessions_are_visible_and_not_deleted(

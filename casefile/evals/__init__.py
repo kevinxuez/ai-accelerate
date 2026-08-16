@@ -1,1 +1,1 @@
-"""Required Chroma retrieval evaluation utilities."""
+"""In-memory semantic retrieval evaluation utilities."""

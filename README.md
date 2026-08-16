@@ -24,7 +24,7 @@ flowchart LR
     Supervisor <--> Strategist[Argument Strategist]
     Supervisor <--> Coach[Skills Coach]
     Supervisor --> Calendar[Configured calendar provider]
-    Librarian --> Chroma[(Required Chroma collections)]
+    Librarian --> Retrieval[In-memory semantic ranking]
     Librarian --> Ledger[(Versioned evidence ledger)]
     Librarian --> NSDA[Configured topic provider]
     Coach --> Progress[(Progress records)]
@@ -43,7 +43,6 @@ Detailed Mermaid sources are in [`docs/workflow-diagrams`](docs/workflow-diagram
 - Python 3.11 or newer
 - An Anthropic-compatible API key and model endpoint
 - LangGraph
-- Chroma
 - The pinned `sentence-transformers/all-MiniLM-L6-v2` assets available locally
 
 Install the application and development dependencies:
@@ -84,7 +83,6 @@ Core runtime values:
 | `CASEFILE_MODEL` | Required model identifier |
 | `CASEFILE_EMBEDDING_MODEL_PATH` | Local pinned embedding assets |
 | `CASEFILE_DATA_DIR` | Ledgers, sessions, audits, and pending writes |
-| `CASEFILE_CHROMA_DIR` | Required persistent Chroma store |
 | `CASEFILE_INGEST_ROOTS` | Explicit filesystem roots allowed for ingestion |
 | `CASEFILE_EXPOSE_MODEL_PROMPTS` | Include full prompts/responses in local developer traces |
 
@@ -120,7 +118,7 @@ uvicorn casefile.api.main:app --reload
 Open <http://127.0.0.1:8000>. Readiness endpoints are:
 
 - `GET /health/live` — the process is serving requests.
-- `GET /health/ready` — validates graph/model startup and Chroma readiness, then reports storage
+- `GET /health/ready` — validates graph/model startup and in-memory retrieval, then reports storage
   and the explicitly selected providers. Dependency failures use the typed error envelope.
 
 Run one CLI conversation:
@@ -210,9 +208,9 @@ DOCX ingestion is a two-step operation:
    provenance, flags, and exclusion reasons. Commit its token through the session composer or
    `POST /ingestion/confirm`.
 
-The commit verifies the source hash, writes the versioned ledger atomically, rebuilds the
-required Chroma collection, retires the confirmation token, and removes staged uploads.
-Pending or quarantined cards are never searchable.
+The commit verifies the source hash, writes the versioned ledger atomically, retires the
+confirmation token, and removes staged uploads. Retrieval reads the committed ledger directly;
+pending or quarantined cards are never searchable.
 
 The direct ingestion command uses the same pipeline:
 
@@ -232,7 +230,7 @@ Use the returned token with `casefile-ingest --confirm TOKEN --json`.
 - Assessment, ingestion, quarantine approval, and real calendar operations are confirmation or
   role gated and idempotent.
 - Source text, citations, card IDs, hashes, paragraph assignments, and marked spans are preserved.
-- Only confirmed, indexable cards enter Chroma retrieval.
+- Only confirmed, indexable cards enter in-memory semantic retrieval.
 - Argument citations must be an exact subset of the returned `EvidencePacket`; unsupported
   sections cannot cite cards.
 - Simulated coaching is labeled and never writes progress automatically.
@@ -266,7 +264,7 @@ ruff check casefile tests
 ruff format --check casefile tests
 ```
 
-Evaluate the required Chroma ranking path:
+Evaluate the in-memory semantic ranking path:
 
 ```bash
 casefile-retrieval-eval --card-text stored --k 3 --min-relevance 0.08
@@ -285,7 +283,7 @@ casefile/
   ingest/       lossless OOXML extraction, model passes, validation, staging, commit
   providers/    explicitly selected NSDA fixture and HTTP implementations
   security/     request/document screening and audit redaction
-  evals/        required Chroma retrieval evaluation
+  evals/        in-memory semantic retrieval evaluation
   mcp/          optional stdio integration
 docs/
   DEMO_SCRIPT.md

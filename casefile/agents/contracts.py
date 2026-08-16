@@ -27,6 +27,7 @@ AgentName = Literal[
 
 BoundaryFlag = Literal[
     "no_header",
+    "no_tag",
     "no_body",
     "cite_is_bare_url",
     "cite_is_bare_headline",
@@ -68,6 +69,30 @@ class StrictContract(BaseModel):
         str_strip_whitespace=True,
         validate_assignment=True,
     )
+
+
+class ModelContract(StrictContract):
+    """Tolerant parser for model JSON before deterministic boundary checks."""
+
+    model_config = ConfigDict(extra="ignore", strict=False)
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_side_aliases(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        normalized = dict(value)
+        if isinstance(side := normalized.get("side"), str):
+            side_aliases = {
+                "pro": "pro",
+                "affirmative": "pro",
+                "aff": "pro",
+                "con": "con",
+                "negative": "con",
+                "neg": "con",
+            }
+            normalized["side"] = side_aliases.get(side.strip().lower(), side)
+        return normalized
 
 
 class ConversationMessage(StrictContract):
@@ -113,13 +138,13 @@ class ConfirmationRequest(StrictContract):
     expires_at: datetime | None = None
 
 
-class SupervisorDecision(StrictContract):
+class SupervisorDecision(ModelContract):
     action: Literal[
         "delegate", "ask_clarification", "call_schedule", "finish", "refuse"
     ]
-    target_agent: SpecialistAgent | None
-    goal: ShortText
-    task: Annotated[str, StringConstraints(max_length=2000)]
+    target_agent: SpecialistAgent | None = None
+    goal: str | None = None
+    task: Annotated[str, StringConstraints(max_length=2000)] | None = None
     required_artifact: (
         Literal[
             "evidence_packet",
@@ -135,11 +160,13 @@ class SupervisorDecision(StrictContract):
             "calendar_event",
         ]
         | None
-    )
+    ) = None
     clarification_question: (
         Annotated[str, StringConstraints(min_length=1, max_length=1000)] | None
+    ) = None
+    reason_code: Annotated[str, StringConstraints(min_length=1, max_length=100)] = (
+        "model_decision"
     )
-    reason_code: Annotated[str, StringConstraints(min_length=1, max_length=100)]
 
     @model_validator(mode="after")
     def validate_action_fields(self) -> "SupervisorDecision":
@@ -152,6 +179,8 @@ class SupervisorDecision(StrictContract):
                 raise ValueError(
                     "delegate requires target_agent, task, and required_artifact"
                 )
+        elif self.action in {"finish", "refuse"} and not self.task:
+            raise ValueError("finish and refuse require a user-facing task")
         elif self.target_agent is not None:
             raise ValueError("target_agent is allowed only for delegate")
         if self.action == "ask_clarification":
@@ -164,7 +193,7 @@ class SupervisorDecision(StrictContract):
         return self
 
 
-class ScheduleToolCall(StrictContract):
+class ScheduleToolCall(ModelContract):
     """Typed arguments prepared by the Supervisor for its only tool."""
 
     student_id: Identifier
@@ -178,15 +207,10 @@ class ScheduleToolCall(StrictContract):
     idempotency_key: ShortText | None = None
 
 
-class CoachingTask(StrictContract):
+class CoachingTask(ModelContract):
     """Typed Supervisor-to-Coach execution context for a bounded handoff."""
 
-    operation: Literal[
-        "generate_drill",
-        "coach_turn",
-        "progress_summary",
-        "assessment_proposal",
-    ]
+    operation: str | None = None
     student_id: Identifier
     speech_position: ShortText | None = None
     side: Side | None = None
@@ -196,45 +220,18 @@ class CoachingTask(StrictContract):
         Annotated[str, StringConstraints(min_length=1, max_length=300)]
     ] = Field(default_factory=list, max_length=20)
 
-    @model_validator(mode="after")
-    def validate_operation_fields(self) -> "CoachingTask":
-        if self.operation in {"generate_drill", "coach_turn"}:
-            if self.speech_position is None or self.side is None or self.focus is None:
-                raise ValueError(
-                    "drill and coaching tasks require speech_position, side, and focus"
-                )
-        if self.operation == "assessment_proposal" and self.speech_position is None:
-            raise ValueError("assessment proposals require speech_position")
-        if len(set(self.source_files)) != len(self.source_files):
-            raise ValueError("coaching source files must be unique")
-        return self
-
-
-class IngestionMetadataPlan(StrictContract):
+class IngestionMetadataPlan(ModelContract):
     """Librarian validation of user-supplied ingestion metadata."""
 
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=500)]
-    side: Side | None
+    side: Side | None = None
     clarification_needed: bool
     clarification_question: (
         Annotated[str, StringConstraints(min_length=1, max_length=1000)] | None
-    )
-
-    @model_validator(mode="after")
-    def validate_clarification(self) -> "IngestionMetadataPlan":
-        if self.clarification_needed:
-            if self.clarification_question is None:
-                raise ValueError(
-                    "clarification_question is required when clarification is needed"
-                )
-        elif self.side is None:
-            raise ValueError("an executable ingestion plan requires a side")
-        elif self.clarification_question is not None:
-            raise ValueError("clarification_question requires clarification_needed")
-        return self
+    ) = None
 
 
-class EvidenceRequest(StrictContract):
+class EvidenceRequest(ModelContract):
     request_summary: ShortText
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=500)]
     side: Side
@@ -245,18 +242,10 @@ class EvidenceRequest(StrictContract):
     ] = Field(default_factory=list, max_length=20)
     intended_use: Literal["drill", "coaching"]
 
-    @field_validator("entities", "source_files")
-    @classmethod
-    def evidence_request_values_are_unique(cls, values: list[str]) -> list[str]:
-        if len(set(values)) != len(values):
-            raise ValueError("evidence request list values must be unique")
-        return values
-
-
-class EvidenceQueryPlan(StrictContract):
+class EvidenceQueryPlan(ModelContract):
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=500)]
-    side: Side | None
-    subject: Annotated[str, StringConstraints(max_length=1000)]
+    side: Side | None = None
+    subject: Annotated[str, StringConstraints(max_length=1000)] = ""
     entities: list[ShortText] = Field(default_factory=list, max_length=12)
     source_files: list[
         Annotated[str, StringConstraints(min_length=1, max_length=300)]
@@ -268,24 +257,10 @@ class EvidenceQueryPlan(StrictContract):
     clarification_needed: bool
     clarification_question: (
         Annotated[str, StringConstraints(min_length=1, max_length=1000)] | None
-    )
-
-    @model_validator(mode="after")
-    def validate_clarification(self) -> "EvidenceQueryPlan":
-        if self.clarification_needed:
-            if not self.clarification_question:
-                raise ValueError(
-                    "clarification_question is required when clarification is needed"
-                )
-        else:
-            if self.clarification_question is not None:
-                raise ValueError("clarification_question requires clarification_needed")
-            if not self.subject or not self.queries:
-                raise ValueError("a research plan requires subject and queries")
-        return self
+    ) = None
 
 
-class BoundaryCardOutput(StrictContract):
+class BoundaryCardOutput(ModelContract):
     header: int | None = Field(ge=0)
     tag: list[int] = Field(default_factory=list, max_length=64)
     cite: list[int] = Field(min_length=1, max_length=64)
@@ -302,7 +277,7 @@ class BoundaryCardOutput(StrictContract):
         return values
 
 
-class BoundaryOutput(StrictContract):
+class BoundaryOutput(ModelContract):
     cards: list[BoundaryCardOutput] = Field(default_factory=list, max_length=200)
     junk: list[int] = Field(default_factory=list, max_length=5000)
 
@@ -330,7 +305,7 @@ class BoundaryOutput(StrictContract):
             )
 
 
-class CardLabelOutput(StrictContract):
+class CardLabelOutput(ModelContract):
     evidence_type: Literal["quoted", "paraphrased", "unknown"]
     source_text_present: bool
     side: Literal["pro", "con", "unknown"]
@@ -359,6 +334,8 @@ class TextSpan(StrictContract):
 
 
 class EvidenceCard(StrictContract):
+    model_config = ConfigDict(str_strip_whitespace=False)
+
     card_id: CardId
     source_filename: Annotated[str, StringConstraints(min_length=1, max_length=300)]
     citation: Annotated[str, StringConstraints(min_length=1, max_length=5000)]
@@ -382,7 +359,7 @@ class EvidenceCard(StrictContract):
 
 class EvidenceProvenance(StrictContract):
     ledger_schema_version: int = Field(ge=1)
-    retrieval_backend: Literal["chroma"]
+    retrieval_backend: Literal["in_memory", "chroma"]
     embedding_model: Annotated[str, StringConstraints(min_length=1, max_length=300)]
     confirmed_only: Literal[True]
 
@@ -520,7 +497,7 @@ class IngestionCommitResult(StrictContract):
         return self
 
 
-class ArgumentRequest(StrictContract):
+class ArgumentRequest(ModelContract):
     original_request: Annotated[str, StringConstraints(min_length=1, max_length=20_000)]
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=500)]
     side: Side
@@ -547,20 +524,7 @@ class ArgumentRequest(StrictContract):
         Annotated[str, StringConstraints(min_length=1, max_length=5000)] | None
     ) = None
 
-    @field_validator(
-        "entities",
-        "requested_sections",
-        "source_files",
-        "constraints",
-    )
-    @classmethod
-    def argument_constraints_are_unique(cls, values: list[Any]) -> list[Any]:
-        if len(set(values)) != len(values):
-            raise ValueError("argument request list values must be unique")
-        return values
-
-
-class ArgumentSection(StrictContract):
+class ArgumentSection(ModelContract):
     text: Annotated[str, StringConstraints(min_length=1, max_length=5000)]
     support: SupportStatus
     card_ids: list[CardId] = Field(default_factory=list, max_length=MAX_EVIDENCE_CARDS)
@@ -571,12 +535,10 @@ class ArgumentSection(StrictContract):
             raise ValueError("supported sections require at least one card id")
         if self.support == "unsupported" and self.card_ids:
             raise ValueError("unsupported sections cannot cite a card")
-        if len(set(self.card_ids)) != len(self.card_ids):
-            raise ValueError("section card ids must be unique")
         return self
 
 
-class ArgumentDraft(StrictContract):
+class ArgumentDraft(ModelContract):
     artifact_type: Literal["argument_draft"] = "argument_draft"
     title: ShortText
     resolution: Annotated[str, StringConstraints(min_length=1, max_length=500)]
@@ -609,8 +571,6 @@ class ArgumentDraft(StrictContract):
             )
             for card_id in section.card_ids
         }
-        if len(set(self.source_card_ids)) != len(self.source_card_ids):
-            raise ValueError("source_card_ids must be unique")
         if cited != set(self.source_card_ids):
             raise ValueError(
                 "source_card_ids must exactly match the section citation union"
@@ -618,7 +578,7 @@ class ArgumentDraft(StrictContract):
         return self
 
 
-class DrillPlan(StrictContract):
+class DrillPlan(ModelContract):
     artifact_type: Literal["drill_plan"] = "drill_plan"
     student_id: Identifier
     speech_position: ShortText
@@ -633,15 +593,7 @@ class DrillPlan(StrictContract):
     evidence_card_ids: list[CardId] = Field(default_factory=list, max_length=20)
     personalization_summary: Annotated[str, StringConstraints(max_length=2000)]
 
-    @field_validator("focus", "evidence_card_ids")
-    @classmethod
-    def drill_values_are_unique(cls, values: list[str]) -> list[str]:
-        if len(set(values)) != len(values):
-            raise ValueError("drill list values must be unique")
-        return values
-
-
-class CoachTurn(StrictContract):
+class CoachTurn(ModelContract):
     artifact_type: Literal["coach_turn"] = "coach_turn"
     label: Literal["simulated_coach"] = "simulated_coach"
     student_id: Identifier
@@ -651,14 +603,7 @@ class CoachTurn(StrictContract):
     feedback: Annotated[str, StringConstraints(min_length=1, max_length=5000)]
     question: Annotated[str, StringConstraints(min_length=1, max_length=2000)]
     evidence_card_ids: list[CardId] = Field(default_factory=list, max_length=20)
-    continue_session: Literal[True] = True
-
-    @field_validator("evidence_card_ids")
-    @classmethod
-    def coach_evidence_ids_are_unique(cls, values: list[str]) -> list[str]:
-        if len(set(values)) != len(values):
-            raise ValueError("coach evidence card ids must be unique")
-        return values
+    continue_session: bool = True
 
 
 class ProgressEntry(StrictContract):
@@ -678,7 +623,7 @@ class ProgressEntry(StrictContract):
         return value
 
 
-class ProgressSummary(StrictContract):
+class ProgressSummary(ModelContract):
     artifact_type: Literal["progress_summary"] = "progress_summary"
     student_id: Identifier
     records: list[ProgressEntry] = Field(
@@ -688,21 +633,14 @@ class ProgressSummary(StrictContract):
     summary: Annotated[str, StringConstraints(min_length=1, max_length=5000)]
 
 
-class AssessmentProposal(StrictContract):
+class AssessmentProposal(ModelContract):
     artifact_type: Literal["assessment_proposal"] = "assessment_proposal"
     student_id: Identifier
     speech_position: ShortText
     resolution: Annotated[str, StringConstraints(max_length=500)]
     weakness_tags: list[ShortText] = Field(default_factory=list, max_length=20)
     assessment_text: Annotated[str, StringConstraints(min_length=1, max_length=10_000)]
-    confirmation_required: Literal[True] = True
-
-    @field_validator("weakness_tags")
-    @classmethod
-    def proposal_tags_are_unique(cls, values: list[str]) -> list[str]:
-        if len(set(values)) != len(values):
-            raise ValueError("assessment weakness tags must be unique")
-        return values
+    confirmation_required: bool = True
 
 
 class CalendarEvent(StrictContract):

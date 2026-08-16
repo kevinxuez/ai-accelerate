@@ -11,14 +11,7 @@ const attachmentInput = byId("attachment");
 const removeAttachmentButton = byId("remove-attachment");
 let sessionId = newSessionId();
 
-const SCENARIOS = {
-  evidence: (side) => `Research confirmed ${side} evidence about consumer protections for the current resolution. Return full source cards and provenance.`,
-  argument: (side) => `Generate a structured ${side} argument about consumer protections. Cite only confirmed cards and identify every unsupported fact.`,
-  ingest: (side) => `Import the attached DOCX as ${side} evidence. Show every proposed card, flag, exclusion reason, marked span, and provenance before asking for confirmation.`,
-  coaching: (side) => `Start a simulated Skills Coach session for my ${side} summary speech. Focus on weighing and ask me one question at a time.`,
-  progress: () => "Show my progress, then help me schedule a human coaching session next Tuesday at 4:00 PM America/Los_Angeles.",
-  error: () => "Show progress for another-student so I can inspect the typed authorization failure.",
-};
+const ingestionPrompt = (side) => `Import the attached DOCX as ${side} evidence. Show every proposed card, flag, exclusion reason, marked span, and provenance before asking for confirmation.`;
 
 function newSessionId() {
   return globalThis.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -209,7 +202,7 @@ function renderIngestionCommit(result) {
     `Written: ${result.written_cards}`,
     `Searchable: ${result.searchable_cards}`,
     `Ledger v${result.ledger_schema_version}`,
-    result.index_rebuilt && "Index rebuilt",
+    result.index_rebuilt && "Retrieval ready",
   ]));
   card.append(node("p", "source-provenance", `Job: ${result.job_id}`));
   return card;
@@ -360,11 +353,11 @@ function renderResult(data) {
   }
   if (data.status === "needs_input") target.append(node("div", "alert notice state-banner", "Needs input · reply in this session to continue."));
   if (data.status === "needs_confirmation") target.append(node("div", "alert notice state-banner", "Needs confirmation · review the staged action before confirming."));
-  if (data.response) target.append(node("pre", "response-copy", data.response));
   const artifacts = Array.isArray(data.artifacts) ? data.artifacts : [];
   const artifactStack = node("div", "evidence-stack");
   for (const artifact of artifacts) artifactStack.append(renderArtifact(artifact, artifacts));
   if (artifacts.length) target.append(artifactStack);
+  if (data.response) target.append(node("pre", "response-copy", data.response));
 }
 
 function emptyTrace(targetId, text) {
@@ -487,13 +480,6 @@ function resetSession({ clearPrompt = false, clearOutput = false } = {}) {
     emptyTrace("trace-models", "No model calls yet");
     renderDeveloperModelCalls([]);
   }
-}
-
-function applyScenario(name) {
-  const side = byId("side").value;
-  messageInput.value = SCENARIOS[name](side);
-  if (name === "ingest") attachmentInput.click();
-  messageInput.focus();
 }
 
 function updateComposer(data) {
@@ -650,7 +636,6 @@ async function loadHealth() {
   }
 }
 
-document.querySelectorAll("[data-scenario]").forEach((button) => button.addEventListener("click", () => applyScenario(button.dataset.scenario)));
 byId("uid").addEventListener("change", () => resetSession());
 byId("resolution").addEventListener("change", () => resetSession());
 byId("new-session").addEventListener("click", () => { resetSession({ clearPrompt: true, clearOutput: true }); messageInput.focus(); });
@@ -666,7 +651,7 @@ attachmentInput.addEventListener("change", () => {
     clearAttachment();
     return;
   }
-  if (file && !messageInput.value.trim()) messageInput.value = SCENARIOS.ingest(byId("side").value);
+  if (file && !messageInput.value.trim()) messageInput.value = ingestionPrompt(byId("side").value);
   updateAttachmentControl();
 });
 removeAttachmentButton.addEventListener("click", clearAttachment);

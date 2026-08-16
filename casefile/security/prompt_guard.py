@@ -145,8 +145,6 @@ def _decoded_signal(text: str) -> tuple[bool, bool]:
 
 
 def _repetition_signal(text: str) -> bool:
-    if len(text) > 16_000:
-        return True
     tokens = re.findall(r"\S+", text.lower())
     if len(tokens) < 50:
         return False

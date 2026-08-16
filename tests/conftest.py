@@ -53,70 +53,6 @@ class _TestEmbedder:
         return [_test_embedding(text) for text in texts]
 
 
-def _matches_where(metadata: dict[str, Any], where: dict[str, Any]) -> bool:
-    if "$and" in where:
-        return all(_matches_where(metadata, clause) for clause in where["$and"])
-    key, condition = next(iter(where.items()))
-    if "$eq" in condition:
-        return metadata.get(key) == condition["$eq"]
-    return metadata.get(key) in condition["$in"]
-
-
-class _TestCollection:
-    def __init__(self, metadata: dict[str, Any]) -> None:
-        self.metadata = dict(metadata)
-        self.records: dict[str, tuple[list[float], dict[str, Any]]] = {}
-
-    def upsert(
-        self,
-        *,
-        ids: list[str],
-        embeddings: list[list[float]],
-        metadatas: list[dict[str, Any]],
-        **_: Any,
-    ) -> None:
-        for item_id, embedding, metadata in zip(ids, embeddings, metadatas):
-            self.records[str(item_id)] = (embedding, metadata)
-
-    def query(
-        self,
-        *,
-        query_embeddings: list[list[float]],
-        n_results: int,
-        where: dict[str, Any] | None = None,
-        **_: Any,
-    ) -> dict[str, list[list[Any]]]:
-        query = query_embeddings[0]
-        ranked = sorted(
-            (
-                (sum(left * right for left, right in zip(query, embedding)), item_id)
-                for item_id, (embedding, metadata) in self.records.items()
-                if where is None or _matches_where(metadata, where)
-            ),
-            reverse=True,
-        )[:n_results]
-        return {
-            "ids": [[item_id for _, item_id in ranked]],
-            "distances": [[1.0 - score for score, _ in ranked]],
-        }
-
-
-class _TestChromaClient:
-    def __init__(self) -> None:
-        self.collections: dict[str, _TestCollection] = {}
-
-    def get_or_create_collection(
-        self, name: str, *, metadata: dict[str, Any], **_: Any
-    ) -> _TestCollection:
-        return self.collections.setdefault(name, _TestCollection(metadata))
-
-    def get_collection(self, name: str, **_: Any) -> _TestCollection:
-        return self.collections[name]
-
-    def delete_collection(self, name: str) -> None:
-        del self.collections[name]
-
-
 class _TestModel:
     model = "test-model"
 
@@ -350,12 +286,6 @@ class _TestModel:
 
 @pytest.fixture(autouse=True)
 def explicit_runtime_test_doubles(monkeypatch):
-    clients: dict[str, _TestChromaClient] = {}
-
-    def chroma_for(settings):
-        return clients.setdefault(str(settings.chroma_dir), _TestChromaClient())
-
-    monkeypatch.setattr("casefile.retrieval.build_chroma_client", chroma_for)
     monkeypatch.setattr(
         "casefile.retrieval.build_embedder", lambda settings: _TestEmbedder()
     )
@@ -375,7 +305,6 @@ def isolated_settings(tmp_path):
     settings = replace(
         get_settings(),
         data_dir=tmp_path / "data",
-        chroma_dir=tmp_path / "chroma",
         rules_dir=tmp_path / "rules",
         anthropic_api_key=None,
         calendar_provider="fixture",

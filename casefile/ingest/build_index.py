@@ -1,4 +1,4 @@
-"""Rebuild card and rule indexes from committed JSON/Markdown sources."""
+"""Validate card and rule retrieval from committed JSON/Markdown sources."""
 
 from __future__ import annotations
 

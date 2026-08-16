@@ -7,7 +7,7 @@ flowchart LR
     Supervisor <-->|"CoachingTask · DrillPlan<br/>CoachTurn · ProgressSummary<br/>AssessmentProposal"| Coach["Skills Coach"]
 
     Supervisor -->|"schedule_session"| Calendar["Explicit calendar provider"]
-    Librarian -->|"registered read/ingestion tools"| Chroma[("Chroma cards + rules")]
+    Librarian -->|"registered read tools"| Retrieval["In-memory semantic ranking"]
     Librarian --> Ledger[("Versioned evidence ledger")]
     Librarian --> Topic["Explicit NSDA-compatible provider"]
     Coach --> Progress[("Progress records")]

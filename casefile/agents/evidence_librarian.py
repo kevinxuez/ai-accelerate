@@ -8,7 +8,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from casefile.retrieval import COLLECTION_SCHEMA_VERSION
+from casefile.retrieval import LEDGER_SCHEMA_VERSION
 from casefile.tools import CaseFileTools, ToolContext
 
 from .contracts import (
@@ -61,7 +61,7 @@ class EvidenceLibrarian:
                 },
                 ensure_ascii=False,
             ),
-            max_tokens=1_200,
+            max_tokens=3_000,
             schema=EvidenceQueryPlan,
             agent=LIBRARIAN,
             prompt_template=prompt.template_name,
@@ -132,7 +132,7 @@ class EvidenceLibrarian:
                     },
                     ensure_ascii=False,
                 ),
-                max_tokens=600,
+                max_tokens=1_500,
                 schema=IngestionMetadataPlan,
                 agent=LIBRARIAN,
                 prompt_template=prompt.template_name,
@@ -237,8 +237,8 @@ class EvidenceLibrarian:
             cards=cards,
             empty_result=not cards,
             provenance=EvidenceProvenance(
-                ledger_schema_version=COLLECTION_SCHEMA_VERSION,
-                retrieval_backend="chroma",
+                ledger_schema_version=LEDGER_SCHEMA_VERSION,
+                retrieval_backend=self.tools.index.backend,
                 embedding_model=self.tools.index.embedding_model,
                 confirmed_only=True,
             ),

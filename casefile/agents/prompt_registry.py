@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import lru_cache
 from importlib import resources
 
 from typing import Literal
@@ -67,9 +66,13 @@ PROMPTS: dict[PromptName, tuple[AgentName, str, str]] = {
 }
 
 
-@lru_cache(maxsize=None)
 def load_prompt(name: PromptName) -> PromptAsset:
-    """Load a required packaged prompt or raise a configuration error."""
+    """Load a required packaged prompt fresh from disk on every call.
+
+    Prompt files are edited far more often than they're read in this
+    codebase's request volume, so re-reading avoids ever serving a stale
+    prompt after an edit — deliberately not cached.
+    """
 
     definition = PROMPTS.get(name)
     if definition is None:

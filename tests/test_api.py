@@ -19,11 +19,19 @@ from casefile.agents.errors import ErrorCode, ErrorDetail
 from casefile.agents.state import CaseFileState
 
 
+class StubSessionStore:
+    """No prior session on disk: every turn behaves like a fresh session."""
+
+    def load(self, session_id: str, **kwargs: Any) -> None:
+        return None
+
+
 class StubRuntime:
     def __init__(self, settings: Any, response_factory: Any) -> None:
         self.settings = settings
         self.response_factory = response_factory
         self.calls: list[tuple[str, dict[str, Any]]] = []
+        self.sessions = StubSessionStore()
 
     def ask(self, message: str, **kwargs: Any) -> CaseFileState:
         self.calls.append((message, kwargs))
@@ -133,17 +141,10 @@ def test_demo_console_serves_phase_nine_typed_ui() -> None:
     assert javascript.status_code == 200
     assert javascript.headers["content-type"].startswith("application/javascript")
     assert "CaseFile Demo Console" in html.text
-    for test_id in (
-        "scenario-evidence",
-        "scenario-argument",
-        "scenario-ingest",
-        "scenario-coaching",
-        "scenario-progress",
-        "scenario-error",
-        "submitted-prompt",
-        "model-details",
-    ):
+    for test_id in ("submitted-prompt", "model-details"):
         assert f'data-testid="{test_id}"' in html.text
+    assert "Quick scenarios" not in html.text
+    assert "data-scenario=" not in html.text
     assert 'id="trace-agent"' in html.text
     assert 'id="trace-handoffs"' in html.text
     assert 'id="trace-tools"' in html.text
@@ -173,7 +174,7 @@ def test_demo_console_serves_phase_nine_typed_ui() -> None:
 def test_health_exposes_required_runtime_dependencies(monkeypatch) -> None:
     ready_calls: list[bool] = []
     index = SimpleNamespace(
-        backend="chroma",
+        backend="in_memory",
         embedding_model="sentence-transformers/all-MiniLM-L6-v2",
         validate_ready=lambda: ready_calls.append(True),
     )
@@ -198,8 +199,8 @@ def test_health_exposes_required_runtime_dependencies(monkeypatch) -> None:
         "status": "ready",
         "graph": "langgraph",
         "model": "claude-test",
-        "retrieval": "chroma",
-        "retrieval_collections": "cards,rules",
+        "retrieval": "in_memory",
+        "retrieval_sources": "cards,rules",
         "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
         "storage": "ready",
         "calendar": "fixture",
@@ -241,6 +242,82 @@ def test_chat_maps_new_runtime_state_to_typed_success_envelope(
     assert body["artifacts"][0]["artifact_type"] == "topic_packet"
     assert body["agent_trace"][0]["event"] == "handoff"
     assert runtime.calls[0][0] == "Find the topic."
+
+
+def test_chat_omits_prior_turns_artifacts_already_seen_by_the_caller(
+    monkeypatch,
+    isolated_settings,
+) -> None:
+    """A turn that produces no new artifact must not resurface an old one.
+
+    state.artifacts accumulates for the life of a session so later turns can
+    reference earlier work, but the HTTP response for a given turn should
+    only report what that turn actually produced -- otherwise an unrelated
+    reply (e.g. an authorization denial) appears to carry stale evidence.
+    """
+
+    session_id = "phase-nine-session-carryover"
+    topic = TopicPacket(
+        event="Public Forum",
+        resolution="Resolved: A demo topic.",
+        provider="Test provider",
+        backend="fixture",
+        synthetic=True,
+        source_ref="fixture://topic",
+    )
+
+    class StubSessionStoreWithPriorArtifact:
+        def load(self, loaded_session_id: str, **kwargs: Any) -> CaseFileState | None:
+            if loaded_session_id != session_id:
+                return None
+            return CaseFileState(
+                request=_request(
+                    {
+                        "request_id": "prior-turn-request",
+                        "session_id": session_id,
+                        "role": "student",
+                        "user_id": "student-1",
+                        "resolution": "R1",
+                    }
+                ),
+                status="completed",
+                artifacts=[topic],
+            )
+
+    def _denied_turn_carrying_old_artifact(
+        _: str, kwargs: dict[str, Any]
+    ) -> CaseFileState:
+        return CaseFileState(
+            request=_request(kwargs),
+            status="completed",
+            active_agent="skills_coach",
+            messages=[
+                ConversationMessage(role="user", content="Show another student."),
+                ConversationMessage(role="assistant", content="Access denied."),
+            ],
+            artifacts=[topic],
+        )
+
+    runtime = StubRuntime(isolated_settings, _denied_turn_carrying_old_artifact)
+    runtime.sessions = StubSessionStoreWithPriorArtifact()
+    monkeypatch.setattr(api_main, "get_runtime", lambda: runtime)
+
+    response = TestClient(api_main.app).post(
+        "/chat",
+        json={
+            "message": "Show another student.",
+            "role": "student",
+            "user_id": "student-1",
+            "resolution": "R1",
+            "session_id": session_id,
+        },
+        headers={"X-Request-ID": "phase-nine-request-carryover"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["response"] == "Access denied."
+    assert body["artifacts"] == []
 
 
 def test_chat_maps_failed_state_to_non_200_typed_error_with_trace(
@@ -391,7 +468,7 @@ def test_only_integration_required_explicit_mutation_routes_remain() -> None:
     routes = {
         (method, route.path)
         for route in api_main.app.routes
-        for method in route.methods or set()
+        for method in getattr(route, "methods", set()) or set()
     }
 
     assert ("POST", "/calendar/session/confirm") in routes
